@@ -26,6 +26,10 @@ const theme = createTheme({
       fontSize: '2rem',
       fontWeight: 500,
     },
+    h3: {
+        fontSize: '1.5rem',
+        fontWeight: 500,
+      },
     body1: {
       fontSize: '1rem',
     },
@@ -33,7 +37,7 @@ const theme = createTheme({
       fontSize: '0.875rem',
     },
     button: {
-      textTransform: 'none', // Prevents buttons from being all-uppercase by default
+      textTransform: 'uppercase', // Prevents buttons from being all-uppercase by default
     },
   },
   spacing: 8, // This sets the base spacing unit (1 unit = 8px)
