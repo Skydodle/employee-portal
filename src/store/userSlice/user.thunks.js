@@ -18,14 +18,23 @@ export const loginUser = createAsyncThunk(
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to login');
+
+        // Provide user-friendly error messages based on status code
+        if (response.status === 401) {
+          throw new Error('Invalid username or password. Please try again.');
+        } else {
+          throw new Error(
+            errorData.message || 'Failed to login. Please try again later.'
+          );
+        }
       }
 
       const data = await response.json();
 
-      // Store the JWT token, e.g., in localStorage
+      // Store the JWT token, e.g., in localStorage or cookies
       localStorage.setItem('token', data.token);
-      // Dispatch the login action with the user datareturn data.user;
+
+      // Dispatch the login action with the user data
       dispatch(login(data.user));
       return data.user;
     } catch (error) {
