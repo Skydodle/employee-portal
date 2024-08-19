@@ -13,15 +13,18 @@ import {
   Report
 } from './pages';
 import LoginGuard from './components/LoginGuard';
+import RegisterGuard from './components/RegisterGuard';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route
-          path='/register'
-          element={<Register />}
-        />
+        <Route element={<RegisterGuard />}>
+          <Route
+            path='/register'
+            element={<Register />}
+          />
+        </Route>
         <Route
           path='/login'
           element={<Login />}
