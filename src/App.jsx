@@ -12,7 +12,8 @@ import {
   Housing,
   Report
 } from './pages';
-import Guard from './components/Guard';
+import LoginGuard from './components/LoginGuard';
+
 function App() {
   return (
     <BrowserRouter>
@@ -25,7 +26,7 @@ function App() {
           path='/login'
           element={<Login />}
         />
-        <Route element={<Guard />}>
+        <Route element={<LoginGuard />}>
           <Route
             path='/onboarding'
             element={<Onboarding />}
