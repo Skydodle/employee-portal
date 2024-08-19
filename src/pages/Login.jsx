@@ -2,8 +2,7 @@
 
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { loginUser } from '../store';
-import { selectIsAuthenticated } from '../store';
+import { loginUser, selectIsAuthenticated } from '../store';
 import LoginForm from '../components/LoginForm';
 import { Typography, Box } from '@mui/material';
 
