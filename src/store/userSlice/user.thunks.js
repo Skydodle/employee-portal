@@ -73,14 +73,14 @@ export const validateToken = createAsyncThunk(
 // Thunk for Registering User
 export const registerUser = createAsyncThunk(
   'user/registerUser',
-  async (userData, { rejectWithValue }) => {
+  async ({ registToken, username, email, password }, { rejectWithValue }) => {
     try {
       const response = await fetch('http://localhost:4000/api/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(userData),
+        body: JSON.stringify({ token: registToken, username, email, password }),
         credentials: 'include' // Include cookies if needed
       });
 
