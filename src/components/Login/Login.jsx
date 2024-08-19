@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { login } from '../../store';
+import { loginUser } from '../../store';
 import { selectIsAuthenticated } from '../../store';
 
 const Login = () => {
@@ -10,11 +10,11 @@ const Login = () => {
   const isAuthenticated = useSelector(selectIsAuthenticated);
 
   const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   const handleLogin = (e) => {
     e.preventDefault();
-    dispatch(login({ username, email }));
+    dispatch(loginUser({ username, password })); // Dispatch the thunk with username and password
   };
 
   return (
@@ -31,11 +31,11 @@ const Login = () => {
           />
         </div>
         <div>
-          <label>Email:</label>
+          <label>Password:</label>
           <input
-            type='email'
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            type='password'
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             required
           />
         </div>
