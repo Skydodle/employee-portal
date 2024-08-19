@@ -1,7 +1,7 @@
-import React, { Component } from "react";
+import React from 'react'
 
-export default class VisaStatus extends Component {
-  render() {
-    return <div>VisaStatus</div>;
-  }
+export default function VisaStatus() {
+  return (
+    <div>VisaStatus</div>
+  )
 }
