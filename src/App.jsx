@@ -11,14 +11,18 @@ import {
   Housing,
   Report,
 } from "./pages";
-import Guard from "./components/Guard";
+import LoginGuard from "./components/LoginGuard";
+import RegisterGuard from "./components/RegisterGuard";
+
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/register" element={<Register />} />
+        <Route element={<RegisterGuard />}>
+          <Route path="/register" element={<Register />} />
+        </Route>
         <Route path="/login" element={<Login />} />
-        <Route element={<Guard />}>
+        <Route element={<LoginGuard />}>
           <Route path="/onboarding" element={<Onboarding />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/visa-status" element={<VisaStatus />} />
