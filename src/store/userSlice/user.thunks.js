@@ -1,6 +1,7 @@
 /** @format */
 
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import axiosInstance from '../../interceptors/axiosInstance'; // Ensure to import your axiosInstance
 import { login } from './user.slice';
 
 // Thunk for Logging In User
@@ -8,38 +9,24 @@ export const loginUser = createAsyncThunk(
   'user/loginUser',
   async (userData, { dispatch, rejectWithValue }) => {
     try {
-      const response = await fetch('http://localhost:4000/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(userData),
-        credentials: 'include' // Include cookies if needed
+      const response = await axiosInstance.post('/auth/login', userData, {
+        withCredentials: true
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
+      if (response.status === 200) {
+        const data = response.data;
 
-        // Provide user-friendly error messages based on status code
-        if (response.status === 401) {
-          throw new Error('Invalid username or password. Please try again.');
-        } else {
-          throw new Error(
-            errorData.message || 'Failed to login. Please try again later.'
-          );
-        }
+        // Store the JWT token in localStorage
+        localStorage.setItem('token', data.token);
+
+        // Dispatch the login action with the user data
+        dispatch(login(data.user));
+        return data.user;
+      } else {
+        throw new Error('Failed to login. Please try again later.');
       }
-
-      const data = await response.json();
-
-      // Store the JWT token, e.g., in localStorage or cookies
-      localStorage.setItem('token', data.token);
-
-      // Dispatch the login action with the user data
-      dispatch(login(data.user));
-      return data.user;
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error.response?.data?.message || error.message);
     }
   }
 );
@@ -49,23 +36,17 @@ export const validateToken = createAsyncThunk(
   'user/validateToken',
   async (token, { rejectWithValue }) => {
     try {
-      const response = await fetch(
-        `http://localhost:4000/api/auth/validate-token?token=${token}`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        }
+      const response = await axiosInstance.get(
+        `/auth/validate-token?token=${token}`
       );
 
-      if (!response.ok) {
+      if (response.status === 200) {
+        return response.data; // Assuming this returns some data you need to handle
+      } else {
         throw new Error('Invalid or expired registration token');
       }
-
-      return await response.json(); // This could return any data you need to store, like validation status
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error.response?.data?.message || error.message);
     }
   }
 );
@@ -75,25 +56,26 @@ export const registerUser = createAsyncThunk(
   'user/registerUser',
   async ({ registToken, username, email, password }, { rejectWithValue }) => {
     try {
-      const response = await fetch('http://localhost:4000/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
+      const response = await axiosInstance.post(
+        '/auth/register',
+        {
+          token: registToken,
+          username,
+          email,
+          password
         },
-        body: JSON.stringify({ token: registToken, username, email, password }),
-        credentials: 'include' // Include cookies if needed
-      });
+        {
+          withCredentials: true // Include cookies if needed
+        }
+      );
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(
-          errorData.message || 'Failed to register. Please try again later.'
-        );
+      if (response.status === 200) {
+        return response.data;
+      } else {
+        throw new Error('Failed to register. Please try again later.');
       }
-
-      return await response.json();
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error.response?.data?.message || error.message);
     }
   }
 );
