@@ -5,5 +5,5 @@ import Register from "./Register";
 import Report from "./Report";
 import Onboarding from "./Onboarding";
 import VisaStatus from "./VisaStatus";
-
-export { Housing, Login, Profile, Register, Onboarding, VisaStatus, Report };
+import OnboardingTesting from "./OnboardingTesting";
+export { Housing, Login, Profile, Register, Onboarding, VisaStatus, Report, OnboardingTesting };

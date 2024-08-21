@@ -7,7 +7,9 @@ const initialState = {
   user: null,
   isAuthenticated: false,
   isRegisTokenValid: false,
-  isRegistered: false // New state to track registration status
+  isRegistered: false,
+
+  // New state to track registration status
 };
 
 const userSlice = createSlice({
@@ -37,7 +39,7 @@ const userSlice = createSlice({
       })
       .addCase(registerUser.rejected, (state) => {
         state.isRegistered = false; // Mark registration as failed
-      });
+      })
   }
 });
 
