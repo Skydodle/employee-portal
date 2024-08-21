@@ -1,6 +1,6 @@
 import React from "react";
 import { STATUS, SECTION } from "../constants/onBoarding";
-import { Typography, Box, Button } from "@mui/material";
+import { Typography, Box, Button, Grid } from "@mui/material";
 import OnBoardingForm from "../components/OnBoardingForm";
 import OnBoardingStepper from "../components/OnBoardingStepper";
 import OnboardingHeader from "../components/OnBoardingHeader";
@@ -16,7 +16,7 @@ const sections = [
 ];
 
 function Onboarding() {
-  const status = STATUS.NOT_STARTED;
+  const status = STATUS.PENDING;
   const [activeStep, setActiveStep] = React.useState(0);
 
   const handleNext = () => {
@@ -40,7 +40,7 @@ function Onboarding() {
           sections={sections}
         />
       </Box>
-      <Box>
+      <Box width="100%" maxWidth={800} padding={4}>
         {activeStep === sections.length ? (
           <Typography sx={{ mt: 2, mb: 1 }}>
             All steps completed - you&apos;re finished
@@ -48,21 +48,23 @@ function Onboarding() {
         ) : (
           <React.Fragment>
             <Box padding={2}>
-              <Box>
+              <Box margin={2}>
                 <OnboardingHeader status={status} />
-                <Button
-                  variant="text"
-                  color="primary"
-                >
-                  Log Out
-                </Button>
               </Box>
-              <Box xs={{ width: 500 }} md={{ width: 600 }}>
+              <Grid
+                container
+                direction="row"
+                justifyContent="flex-start"
+                alignItems="flex-start"
+                alignContent="flex-start"
+                wrap="wrap"
+                minHeight={500}
+              >
                 <OnBoardingForm
                   disabled={status === STATUS.PENDING}
                   section={sections[activeStep]}
                 />
-              </Box>
+              </Grid>
             </Box>
             <Box
               sx={{

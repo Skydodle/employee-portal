@@ -21,7 +21,9 @@ function OnBoardingHeader({ status }) {
       );
     }
     case STATUS.REJECTED: {
-      return <Typography variant="h3">Please update the fields</Typography>;
+      return (
+        <Typography variant="h3">Please update the errored fields</Typography>
+      );
     }
   }
 }

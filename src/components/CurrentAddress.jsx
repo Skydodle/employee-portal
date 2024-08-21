@@ -2,21 +2,15 @@ import React from "react";
 import PropTypes from "prop-types";
 import Grid from "@mui/material/Grid";
 import TextField from "./TextField";
+import profile from "../mock/data";
 function CurrentAddress({ disabled = false }) {
   function onChange() {}
   return (
-    <Grid
-      container
-      direction="row"
-      justifyContent="flex-start"
-      alignItems="flex-start"
-      alignContent="stretch"
-      wrap="wrap"
-    >
+    <>
       <TextField
         id="streetName"
         label="Street Name"
-        value=""
+        value={profile.streetName}
         onChange={onChange}
         required
         isWholeLine
@@ -25,14 +19,14 @@ function CurrentAddress({ disabled = false }) {
       <TextField
         id="unit"
         label="Unit"
-        value=""
+        value={profile.unit}
         onChange={onChange}
         disabled={disabled}
       />
       <TextField
         id="city"
         label="City"
-        value=""
+        value={profile.city}
         onChange={onChange}
         required
         disabled={disabled}
@@ -40,7 +34,7 @@ function CurrentAddress({ disabled = false }) {
       <TextField
         id="state"
         label="State"
-        value=""
+        value={profile.state}
         onChange={onChange}
         required
         disabled={disabled}
@@ -48,12 +42,12 @@ function CurrentAddress({ disabled = false }) {
       <TextField
         id="zipCode"
         label="Zip Code"
-        value=""
+        value={profile.zipCode}
         onChange={onChange}
         required
         disabled={disabled}
       />
-    </Grid>
+    </>
   );
 }
 

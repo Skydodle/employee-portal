@@ -1,19 +1,23 @@
-import { Grid } from "@mui/material";
-import { DatePicker as MUIDatePicker } from "@mui/x-date-pickers";
+import { Grid, Typography } from "@mui/material";
+import React from "react";
 import dayjs from "dayjs";
+import { DatePicker as MUIDatePicker } from "@mui/x-date-pickers";
 import PropTypes from "prop-types";
-function DatePicker({ ...props }) {
+function DatePicker({ label, error, ...props }) {
+  const [value, setValue] = React.useState(dayjs("2022-04-17"));
   return (
-    <Grid item xs={12} sx={{ p: 1 }}>
+    <Grid item xs={12} sx={{ m: 1, p: 1 }} minWidth={250}>
       <MUIDatePicker
-        defaultValue={dayjs("2022-04-17")}
+        value={value}
+        label={label}
+        onChange={(newValue) => setValue(newValue)}
         {...props}
-        sx={{ m: 1 }}
       />
+      {error && <Typography color="error">{error}</Typography>}
     </Grid>
   );
 }
 
-DatePicker.propTypes = { label: PropTypes.string };
+DatePicker.propTypes = { error: PropTypes.string, label: PropTypes.string };
 
 export default DatePicker;

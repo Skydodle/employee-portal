@@ -4,46 +4,41 @@ import TextField from "./TextField";
 import DatePicker from "./DatePicker";
 import dayjs from "dayjs";
 import { Grid } from "@mui/material";
+import profile from "../mock/data";
 function PersonalDetails({ disabled = false }) {
-  function change() {}
+  function onChange() {}
   return (
-    <Grid
-      container
-      direction="row"
-      justifyContent="flex-start"
-      alignItems="flex-start"
-      alignContent="stretch"
-      wrap="wrap"
-    >
+    <>
       <TextField
         id="firstName"
         label="First Name"
-        value={"fn"}
-        onChange={change}
+        value={profile.firstName}
+        onChange={onChange}
         disabled={disabled}
         required
       />
       <TextField
         id="middeleName"
         label="Middle Name"
-        value={"mn"}
-        onChange={change}
+        value={profile.middleName}
+        onChange={onChange}
         disabled={disabled}
       />
       <TextField
         id="lastName"
         label="Last Name"
-        value={"ln"}
-        onChange={change}
+        value={profile.lastName}
+        onChange={onChange}
         disabled={disabled}
         required
       />
       <DatePicker
-        defaultValue={dayjs("2022-04-17")}
+        value={dayjs("2022-04-17")}
         disabled={disabled}
+        onChange={onChange}
         label="Date of Birth *"
       />
-    </Grid>
+    </>
   );
 }
 
