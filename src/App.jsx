@@ -10,7 +10,8 @@ import {
   Profile,
   VisaStatus,
   Housing,
-  Report
+  Report,
+  OnboardingTesting
 } from './pages';
 import LoginGuard from './components/LoginGuard';
 import RegisterGuard from './components/RegisterGuard';
@@ -50,6 +51,11 @@ function App() {
             path='/housing/report'
             element={<Report />}
           />
+          <Route
+          path='/testing'
+          element={<OnboardingTesting />
+        }
+        />
         </Route>
       </Routes>
       <Typography
