@@ -16,10 +16,19 @@ const sections = [
 ];
 
 function Onboarding() {
-  const status = STATUS.PENDING;
+  const status = STATUS.NOT_STARTED;
+  const [completed, setCompleted] = React.useState(
+    status === STATUS.PENDING
+      ? [true, true, true, true, true, true, true, true]
+      : [false, false, false, false, false, false, false, false]
+  );
+
   const [activeStep, setActiveStep] = React.useState(0);
 
   const handleNext = () => {
+    setCompleted((prev) =>
+      prev.map((val, index) => (index === activeStep ? true : val))
+    );
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
@@ -34,11 +43,30 @@ function Onboarding() {
         borderRight={"1px solid lightgrey"}
         overflow={"auto"}
       >
-        <OnBoardingStepper
-          activeStep={activeStep}
-          setActiveStep={setActiveStep}
-          sections={sections}
-        />
+        <Box
+          width={250}
+          sx={{ position: "fixed" }}
+          display={"flex"}
+          flexDirection={"column"}
+        >
+          <Typography
+            variant="h3"
+            color="white"
+            textAlign={"center"}
+            bgcolor={"primary.main"}
+            p={5}
+          >
+            {status}
+          </Typography>
+          <Box m={4} textAlign={"center"}>
+            <OnBoardingStepper
+              activeStep={activeStep}
+              setActiveStep={setActiveStep}
+              sections={sections}
+              completed={completed}
+            />
+          </Box>
+        </Box>
       </Box>
       <Box width="100%" maxWidth={800} padding={4}>
         {activeStep === sections.length ? (

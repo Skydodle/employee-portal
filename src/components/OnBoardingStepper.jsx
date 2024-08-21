@@ -16,17 +16,7 @@ function OnBoardingStepper({
     }
   };
   return (
-    <Box
-      width={250}
-      padding={3}
-      sx={{ position: "fixed" }}
-      display={"flex"}
-      flexDirection={"column"}
-      gap={2}
-    >
-      <Typography variant="h3" color="initial" textAlign={"left"} padding={1}>
-        {STATUS.NOT_STARTED}
-      </Typography>
+    <>
       <Stepper nonLinear activeStep={activeStep} orientation="vertical">
         {sections.map((section, index) => (
           <Step key={section} completed={completed[index]}>
@@ -39,7 +29,7 @@ function OnBoardingStepper({
       <Button variant="text" color="secondary" sx={{ marginTop: 10 }}>
         Log Out
       </Button>
-    </Box>
+    </>
   );
 }
 
