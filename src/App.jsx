@@ -1,6 +1,5 @@
 /** @format */
 
-import { Button, Typography } from "@mui/material";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import {
   Register,
@@ -13,8 +12,7 @@ import {
 } from "./pages";
 import LoginGuard from "./components/LoginGuard";
 import RegisterGuard from "./components/RegisterGuard";
-
-
+import OnboardingTesting from "./pages/OnboardingTesting";
 function App() {
   return (
     <BrowserRouter>
@@ -24,31 +22,12 @@ function App() {
         </Route>
         <Route path="/login" element={<Login />} />
         <Route element={<LoginGuard />}>
-          <Route
-            path='/onboarding'
-            element={<Onboarding />}
-          />
-          <Route
-            path='/profile'
-            element={<Profile />}
-          />
-          <Route
-            path='/visa-status'
-            element={<VisaStatus />}
-          />
-          <Route
-            path='/housing'
-            element={<Housing />}
-          />
-          <Route
-            path='/housing/report'
-            element={<Report />}
-          />
-          <Route
-          path='/testing'
-          element={<OnboardingTesting />
-        }
-        />
+          <Route path="/onboarding" element={<Onboarding />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/visa-status" element={<VisaStatus />} />
+          <Route path="/housing" element={<Housing />} />
+          <Route path="/housing/report" element={<Report />} />
+          <Route path="/testing" element={<OnboardingTesting />} />
         </Route>
       </Routes>
     </BrowserRouter>
