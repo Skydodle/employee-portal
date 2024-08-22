@@ -45,7 +45,6 @@ export default function EmergencyCustomTabPanel({
   emergencyContacts,
   disabled,
 }) {
-  console.log(emergencyContacts);
   const [value, setValue] = React.useState(0);
   const dispatch = useDispatch();
   const handleChange = (event, newValue) => {
@@ -70,13 +69,14 @@ export default function EmergencyCustomTabPanel({
     <Box sx={{ width: "100%" }}>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs value={value} onChange={handleChange} aria-label={label}>
-          {emergencyContacts.map((emergencyContact, index) => (
-            <Tab
-              key={`${label}-tab-${index}`}
-              label={`${label} ${index + 1}`}
-              {...a11yProps(0)}
-            />
-          ))}
+          {emergencyContacts &&
+            emergencyContacts.map((emergencyContact, index) => (
+              <Tab
+                key={`${label}-tab-${index}`}
+                label={`${label} ${index + 1}`}
+                {...a11yProps(0)}
+              />
+            ))}
           <Tab
             disabled={disabled}
             label="+"
@@ -86,7 +86,7 @@ export default function EmergencyCustomTabPanel({
           />
         </Tabs>
       </Box>
-      {emergencyContacts.map((emergencyContact, index) => (
+      {emergencyContacts?.map((emergencyContact, index) => (
         <CustomTabPanel
           key={`${label}-panel-${index}`}
           value={value}
