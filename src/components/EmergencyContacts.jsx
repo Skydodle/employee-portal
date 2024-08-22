@@ -1,13 +1,14 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Grid } from "@mui/material";
 import EmergencyContactsTabs from "./EmergencyContactsTabs";
-import profile from "../mock/data";
+import { useSelector } from "react-redux";
+import { selectEmergencyContacts } from "../store/onBoardingSlice/onBoarding.selectors";
 function EmergencyContacts({ disabled = false }) {
+  const emergencyContacts = useSelector(selectEmergencyContacts) || [];
   return (
     <>
       <EmergencyContactsTabs
-        emergencyContacts={profile.emergencyContacts}
+        emergencyContacts={emergencyContacts}
         label="Emergency Contact"
         disabled={disabled}
       />

@@ -5,24 +5,29 @@ import { RadioGroup as MUIRadioGroup, Typography } from "@mui/material";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
+import { useSelector, useDispatch } from "react-redux";
+import { updateField } from "../store/onBoardingSlice/onBoarding.slice";
 function RadioGroup({
+  name,
   error,
   label,
   id,
   options = [],
-  value,
-  onChange,
+  required,
   ...props
 }) {
+  const value = useSelector((state) => state.onboarding.profile[name]);
+  const dispatch = useDispatch();
   return (
     <Grid item sx={{ m: 2 }} minWidth={200} maxWidth={400} xs={12}>
       <FormControl>
         <FormLabel id={id}>{label}</FormLabel>
         <MUIRadioGroup
           aria-labelledby={id}
-          name={label}
+          id={id}
+          name={name}
           value={value}
-          onChange={onChange}
+          onChange={(e) => updateField(e, dispatch)}
           row
         >
           {options.map((option) => (
@@ -31,6 +36,7 @@ function RadioGroup({
               value={option?.value}
               control={<Radio />}
               label={option?.label}
+              required={required}
               {...props}
             />
           ))}
@@ -48,6 +54,8 @@ RadioGroup.propTypes = {
   value: PropTypes.string,
   onChange: PropTypes.func,
   error: PropTypes.string,
+  name: PropTypes.string.isRequired,
+  required: PropTypes.bool,
 };
 
 export default RadioGroup;

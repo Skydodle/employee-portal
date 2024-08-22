@@ -1,14 +1,20 @@
 import React from "react";
 import PropTypes from "prop-types";
-import Grid from "@mui/material/Grid";
 import EmergencyContact from "./EmergencyContact";
-import profile from "../mock/data";
+import { useDispatch, useSelector } from "react-redux";
+import { selectReference } from "../store/onBoardingSlice/onBoarding.selectors";
+import { updateReference } from "../store/onBoardingSlice/onBoarding.slice";
 function Reference({ disabled = false }) {
+  const reference = useSelector(selectReference);
+  const dispatch = useDispatch();
   return (
     <>
       <EmergencyContact
-        emergencyContact={profile.reference}
+        emergencyContact={reference}
         disabled={disabled}
+        onChange={(e) => {
+          dispatch(updateReference({ [e.target.name]: e.target.value }));
+        }}
       />
     </>
   );

@@ -5,6 +5,12 @@ import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import EmergencyContact from "./EmergencyContact";
 import Button from "@mui/material/Button";
+import { useDispatch } from "react-redux";
+import {
+  deleteEmergencyContact,
+  updateEmergencyContact,
+  addEmergencyContact,
+} from "../store/onBoardingSlice/onBoarding.slice";
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -36,18 +42,26 @@ function a11yProps(index) {
 
 export default function EmergencyCustomTabPanel({
   label,
-  emergencyContacts: ec,
+  emergencyContacts,
   disabled,
 }) {
-  const [emergencyContacts, setEmergencyContacts] = React.useState(ec);
   const [value, setValue] = React.useState(0);
-
+  const dispatch = useDispatch();
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-  const handleDelete = (emergencyContact) => {
-    setEmergencyContacts((prev) =>
-      prev.filter((val) => val !== emergencyContact)
+  const handleDelete = (index) => {
+    dispatch(deleteEmergencyContact(index));
+  };
+  const handleAdd = () => {
+    dispatch(addEmergencyContact());
+  };
+  const updateEmergency = (event, index) => {
+    dispatch(
+      updateEmergencyContact({
+        index,
+        data: { [event.target.name]: event.target.value },
+      })
     );
   };
 
@@ -55,35 +69,24 @@ export default function EmergencyCustomTabPanel({
     <Box sx={{ width: "100%" }}>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs value={value} onChange={handleChange} aria-label={label}>
-          {emergencyContacts.map((emergencyContact, index) => (
-            <Tab
-              key={`${label}-tab-${index}`}
-              label={`${label} ${index + 1}`}
-              {...a11yProps(0)}
-            />
-          ))}
-          <Button
+          {emergencyContacts &&
+            emergencyContacts.map((emergencyContact, index) => (
+              <Tab
+                key={`${label}-tab-${index}`}
+                label={`${label} ${index + 1}`}
+                {...a11yProps(0)}
+              />
+            ))}
+          <Tab
             disabled={disabled}
-            onClick={() =>
-              emergencyContacts.length < 3 &&
-              setEmergencyContacts((prev) => [
-                ...prev,
-                {
-                  firstName: "",
-                  lastName: "",
-                  middleName: "",
-                  relationship: "",
-                  emailAddress: "",
-                  phoneNumber: "",
-                },
-              ])
-            }
-          >
-            +
-          </Button>
+            label="+"
+            onClick={() => {
+              if (emergencyContacts.length < 3) handleAdd();
+            }}
+          />
         </Tabs>
       </Box>
-      {emergencyContacts.map((emergencyContact, index) => (
+      {emergencyContacts?.map((emergencyContact, index) => (
         <CustomTabPanel
           key={`${label}-panel-${index}`}
           value={value}
@@ -92,12 +95,13 @@ export default function EmergencyCustomTabPanel({
           <EmergencyContact
             emergencyContact={emergencyContact}
             disabled={disabled}
+            onChange={(e) => updateEmergency(e, index)}
           />
 
           <Box ml={2}>
             <Button
               color="secondary"
-              onClick={() => handleDelete(emergencyContact)}
+              onClick={() => handleDelete(index)}
               sx={{
                 visibility:
                   index === emergencyContacts.length - 1 && index !== 0

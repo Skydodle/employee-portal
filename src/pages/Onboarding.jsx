@@ -19,14 +19,14 @@ const sections = [
 ];
 
 function Onboarding() {
-  const status = STATUS.NOT_STARTED;
+  const [status, setStatus] = React.useState(STATUS.NOT_STARTED);
   const [completed, setCompleted] = React.useState(
     status === STATUS.PENDING
       ? [true, true, true, true, true, true, true, true]
       : [false, false, false, false, false, false, false, false]
   );
   const statusTest = useSelector(selectOnboardingStatus);
-
+  const [hasError, setHasError] = React.useState(false);
   const [activeStep, setActiveStep] = React.useState(0);
   const dispatch = useDispatch();
 
@@ -41,7 +41,13 @@ function Onboarding() {
   const profile = useSelector(state => state.onboarding);
   console.log('Profile state:', profile);
 
-  const handleNext = () => {
+  const handleNext = (e) => {
+    e.preventDefault();
+    if (!e.target.checkValidity()) {
+      setHasError(true);
+      return;
+    }
+    setHasError(false);
     setCompleted((prev) =>
       prev.map((val, index) => (index === activeStep ? true : val))
     );
@@ -51,6 +57,9 @@ function Onboarding() {
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
+  useEffect(() => {
+    if (activeStep === sections.length) setStatus(STATUS.PENDING);
+  }, [activeStep]);
   return (
     <Box display="flex">
       {statusTest && <p>Onboarding Status: {statusTest.onboardingStatus}</p>}
@@ -85,11 +94,23 @@ function Onboarding() {
           </Box>
         </Box>
       </Box>
-      <Box width="100%" maxWidth={800} padding={4}>
+      <Box
+        width="100%"
+        maxWidth={800}
+        padding={4}
+        component={"form"}
+        onSubmit={handleNext}
+        noValidate
+      >
         {activeStep === sections.length ? (
-          <Typography sx={{ mt: 2, mb: 1 }}>
-            All steps completed - you&apos;re finished
-          </Typography>
+          <>
+            <Typography sx={{ mt: 2, mb: 1 }}>
+              All steps completed - you&apos;re finished
+            </Typography>
+            <Typography sx={{ mt: 2, mb: 1 }}>
+              Please wait for HR to review your application
+            </Typography>
+          </>
         ) : (
           <React.Fragment>
             <Box padding={2}>
@@ -110,6 +131,11 @@ function Onboarding() {
                   section={sections[activeStep]}
                 />
               </Grid>
+              {hasError && (
+                <Typography variant="error" sx={{ m: 2 }}>
+                  Some field is invalid
+                </Typography>
+              )}
             </Box>
             <Box
               sx={{
@@ -127,7 +153,7 @@ function Onboarding() {
               >
                 Back
               </Button>
-              <Button onClick={handleNext}>
+              <Button type="submit">
                 {activeStep === sections.length - 1 ? "Finish" : "Next"}
               </Button>
             </Box>
