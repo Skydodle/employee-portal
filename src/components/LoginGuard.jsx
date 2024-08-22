@@ -1,26 +1,45 @@
 /** @format */
 
-import { Outlet } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
+import { selectIsAuthenticated } from '../store';
+import { useEffect } from 'react';
 
 const LoginGuard = () => {
-  /** Hardcoded Guard that should be deleted later and
-   * user the real guard below. Keeping this for easy
-   * developing phase for now
-   */
-  const isLoggedIn = true;
+  const isAuthenticated = useSelector(selectIsAuthenticated);
+  const token = localStorage.getItem('token');
+  const location = useLocation();
 
-  // // conditional rendering
-  return isLoggedIn ? <Outlet /> : <h1>You are not logged in</h1>;
+  // State to track whether the user has been redirected to onboarding
+  const onboardingRedirected = localStorage.getItem('onboardingRedirected');
 
-  /** Actual Guard that checks token or is logged in
-   * Uncomment this section when done developing
-   */
+  useEffect(() => {
+    if ((isAuthenticated || token) && !onboardingRedirected) {
+      localStorage.setItem('onboardingRedirected', 'true');
+    }
+  }, [isAuthenticated, token, onboardingRedirected]);
 
-  // const isAuthenticated = useSelector(selectIsAuthenticated);
-  // const token = localStorage.getItem('token');
+  if (!isAuthenticated && !token) {
+    // If not authenticated, redirect to login
+    return <Navigate to='/login' />;
+  }
 
-  // // Check if the user is authenticated or if a token exists in localStorage
-  // return isAuthenticated || token ? <Outlet /> : <Navigate to='/login' />;
+  if ((isAuthenticated || token) && !onboardingRedirected) {
+    // Redirect to onboarding if not yet redirected
+    return (
+      <Navigate
+        to='/onboarding'
+        state={{ from: location }}
+      />
+    );
+  }
+
+  // If authenticated and already redirected to onboarding, allow access to other protected routes
+  return <Outlet />;
+
+  // Uncomment this section during development if needed to avoid login
+  // const isLoggedIn = true;
+  // return isLoggedIn ? <Outlet /> : <h1>You are not logged in</h1>;
 };
 
 export default LoginGuard;
