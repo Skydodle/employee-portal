@@ -5,7 +5,7 @@ import EmergencyContact from '../../components/EmergencyContact';
 // Initial state
 const initialState = {
   status: null,
-  profile: mockProfile,
+  profile: {mockProfile},
   loading: false,
   error: null,
 };

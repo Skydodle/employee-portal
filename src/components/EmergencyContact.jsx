@@ -10,7 +10,7 @@ function EmergencyContact({ emergencyContact, onChange, disabled }) {
         name="firstName"
         label="First Name"
         inputProps={{ pattern: "[A-Za-z ]+" }}
-        value={emergencyContact.firstName}
+        value={emergencyContact?.firstName}
         onChange={onChange}
         disabled={disabled}
         required
@@ -20,7 +20,7 @@ function EmergencyContact({ emergencyContact, onChange, disabled }) {
         name="middleName"
         label="Middle Name"
         inputProps={{ pattern: "[A-Za-z ]+" }}
-        value={emergencyContact.middleName}
+        value={emergencyContact?.middleName}
         onChange={onChange}
         disabled={disabled}
       />
@@ -29,7 +29,7 @@ function EmergencyContact({ emergencyContact, onChange, disabled }) {
         name="lastName"
         label="Last Name"
         inputProps={{ pattern: "[A-Za-z ]+" }}
-        value={emergencyContact.lastName}
+        value={emergencyContact?.lastName}
         onChange={onChange}
         disabled={disabled}
         required
@@ -38,7 +38,7 @@ function EmergencyContact({ emergencyContact, onChange, disabled }) {
         id="emailAddress"
         name="emailAddress"
         label="Email Address"
-        value={emergencyContact.emailAddress}
+        value={emergencyContact?.emailAddress}
         onChange={onChange}
         isWholeLine
         required
@@ -48,7 +48,7 @@ function EmergencyContact({ emergencyContact, onChange, disabled }) {
         id="phoneNumber"
         name="phoneNumber"
         label="Phone Number"
-        value={emergencyContact.phoneNumber}
+        value={emergencyContact?.phoneNumber}
         onChange={onChange}
         required
         isWholeLine
@@ -58,7 +58,7 @@ function EmergencyContact({ emergencyContact, onChange, disabled }) {
         id="relationship"
         name="relationship"
         label="Relationship"
-        value={emergencyContact.relationship}
+        value={emergencyContact?.relationship}
         onChange={onChange}
         required
         isWholeLine

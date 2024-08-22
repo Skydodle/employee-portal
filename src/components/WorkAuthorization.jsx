@@ -25,7 +25,7 @@ function WorkAuthorization({ disabled }) {
         id="workAuthorization"
         name="workAuthorization"
         label={"What is your work authorization?"}
-        value={workAuthorization.workAuthorization}
+        value={workAuthorization?.workAuthorization}
         onChange={(e) =>
           dispatch(
             updateWorkAuthorization({ workAuthorization: e.target.value })
@@ -35,11 +35,11 @@ function WorkAuthorization({ disabled }) {
         options={options}
         required
       />
-      {workAuthorization.workAuthorization === "F1" && (
+      {workAuthorization?.workAuthorization === "F1" && (
         <Upload
           label="Upload Receipt *"
           name="receipt"
-          value={workAuthorization.receipt}
+          value={workAuthorization?.receipt}
           onChange={(e) =>
             dispatch(
               updateWorkAuthorization({
@@ -52,11 +52,11 @@ function WorkAuthorization({ disabled }) {
           disabled={disabled}
         />
       )}
-      {workAuthorization.workAuthorization === "other" && (
+      {workAuthorization?.workAuthorization === "other" && (
         <TextField
           name="visaType"
           id="visaType"
-          value={workAuthorization.visaType}
+          value={workAuthorization?.visaType}
           onChange={(e) =>
             dispatch(updateWorkAuthorization({ visaType: e.target.value }))
           }
@@ -67,7 +67,7 @@ function WorkAuthorization({ disabled }) {
       <DatePicker
         name="startDate"
         label="Start Date"
-        value={dayjs(workAuthorization.startDate || new Date())}
+        value={dayjs(workAuthorization?.startDate || new Date())}
         onChange={(value) => {
           dispatch(
             updateWorkAuthorization({ startDate: value.format("MM/DD/YYYY") })
@@ -79,7 +79,7 @@ function WorkAuthorization({ disabled }) {
         name="endDate"
         label="End Date"
         disabled={disabled}
-        value={dayjs(workAuthorization.endDate || new Date())}
+        value={dayjs(workAuthorization?.endDate || new Date())}
         onChange={(value) => {
           dispatch(
             updateWorkAuthorization({ endDate: value.format("MM/DD/YYYY") })

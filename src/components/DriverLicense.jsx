@@ -33,15 +33,15 @@ function DriverLicense({ disabled = false }) {
           dispatch(updateDriverLicense({ hasDriverLicense: e.target.value }))
         }
         disabled={disabled}
-        value={driverLicense.hasDriverLicense}
+        value={driverLicense?.hasDriverLicense}
       />
-      {driverLicense.hasDriverLicense === "yes" && (
+      {driverLicense?.hasDriverLicense === "yes" && (
         <Grid item xs={12}>
           <TextField
             name="driverLicenseNumber"
             id="driverLicenseNumber"
             label="Drive License Number"
-            value={driverLicense.driverLicenseNumber}
+            value={driverLicense?.driverLicenseNumber}
             onChange={(e) =>
               dispatch(
                 updateDriverLicense({ driverLicenseNumber: e.target.value })
@@ -54,7 +54,7 @@ function DriverLicense({ disabled = false }) {
             name="expirationDate"
             label="Expiration Date *"
             disabled={disabled}
-            value={dayjs(driverLicense.expirationDate || new Date())}
+            value={dayjs(driverLicense?.expirationDate || new Date())}
             onChange={(value) => {
               dispatch(
                 updateDriverLicense({
@@ -67,7 +67,7 @@ function DriverLicense({ disabled = false }) {
             name="driverLicense"
             id="driverLicense"
             label="Upload Driver's License *"
-            value={driverLicense.driverLicense}
+            value={driverLicense?.driverLicense}
             onChange={(e) =>
               dispatch(
                 updateDriverLicense({

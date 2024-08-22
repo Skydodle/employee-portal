@@ -12,7 +12,7 @@ function CarInformation({ disabled = false }) {
         id="make"
         name="make"
         label="Make"
-        value={carInformation.make}
+        value={carInformation?.make}
         onChange={(e) =>
           dispatch(updateCarInformation({ make: e.target.value }))
         }
@@ -25,7 +25,7 @@ function CarInformation({ disabled = false }) {
         label="Model"
         isWholeLine
         disabled={disabled}
-        value={carInformation.model}
+        value={carInformation?.model}
         onChange={(e) =>
           dispatch(updateCarInformation({ model: e.target.value }))
         }
@@ -36,7 +36,7 @@ function CarInformation({ disabled = false }) {
         label="Color"
         isWholeLine
         disabled={disabled}
-        value={carInformation.color}
+        value={carInformation?.color}
         onChange={(e) =>
           dispatch(updateCarInformation({ color: e.target.value }))
         }
