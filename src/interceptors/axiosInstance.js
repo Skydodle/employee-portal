@@ -3,7 +3,7 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:4000/api',
+  baseURL: 'http://localhost:3000/api',
   withCredentials: true // allow attached of cookies
 });
 
@@ -11,7 +11,6 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token'); // Get the token from localStorage
-
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`; // Attach the token to the headers
     }
