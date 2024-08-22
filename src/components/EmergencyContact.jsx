@@ -40,6 +40,7 @@ function EmergencyContact({ emergencyContact, onChange, disabled }) {
         label="Email Address"
         value={emergencyContact?.emailAddress}
         onChange={onChange}
+        inputProps={{ type: "email" }}
         isWholeLine
         required
         disabled={disabled}
@@ -48,6 +49,7 @@ function EmergencyContact({ emergencyContact, onChange, disabled }) {
         id="phoneNumber"
         name="phoneNumber"
         label="Phone Number"
+        inputProps={{ type: "tel" }}
         value={emergencyContact?.phoneNumber}
         onChange={onChange}
         required

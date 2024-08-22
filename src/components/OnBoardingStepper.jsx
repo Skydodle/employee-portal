@@ -16,7 +16,7 @@ function OnBoardingStepper({
     }
   };
   return (
-    <>
+    <Box p={4} textAlign={"center"} overflow={"visible"}>
       <Stepper nonLinear activeStep={activeStep} orientation="vertical">
         {sections.map((section, index) => (
           <Step key={section} completed={completed[index]}>
@@ -29,7 +29,7 @@ function OnBoardingStepper({
       <Button variant="text" color="secondary" sx={{ marginTop: 10 }}>
         Log Out
       </Button>
-    </>
+    </Box>
   );
 }
 

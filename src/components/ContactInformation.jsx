@@ -8,7 +8,7 @@ function ContactInformation({ disabled = false }) {
         id="emailAddress"
         name="emailAddress"
         label="Email Address"
-        type="email"
+        inputProps={{ type: "email" }}
         isWholeLine
         disabled
       />
