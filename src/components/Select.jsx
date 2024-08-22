@@ -7,7 +7,11 @@ import {
   Grid,
   Typography,
 } from "@mui/material";
-function Select({ error, disabled, id, value, onChange, options = [], label }) {
+import { useSelector, useDispatch } from "react-redux";
+import { updateField } from "../store/onBoardingSlice/onBoarding.slice";
+function Select({ error, disabled, id, options = [], label, ...props }) {
+  const value = useSelector((state) => state.onboarding.profile[name]);
+  const dispatch = useDispatch();
   return (
     <Grid item xs={6} sx={{ m: 2 }}>
       <FormControl fullWidth>
@@ -16,8 +20,9 @@ function Select({ error, disabled, id, value, onChange, options = [], label }) {
           labelId={id}
           value={value}
           label={label}
-          onChange={onChange}
+          onChange={(e) => updateField(e, dispatch)}
           disabled={disabled}
+          {...props}
         >
           {options.map((option) => (
             <MenuItem key={option.label} value={option.value}>

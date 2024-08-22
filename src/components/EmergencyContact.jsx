@@ -2,13 +2,14 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Paper } from "@mui/material";
 import TextField from "./TextField";
-function EmergencyContact({ emergencyContact, disabled }) {
-  function onChange() {}
+function EmergencyContact({ emergencyContact, onChange, disabled }) {
   return (
     <>
       <TextField
         id="firstName"
+        name="firstName"
         label="First Name"
+        inputProps={{ pattern: "[A-Za-z ]+" }}
         value={emergencyContact.firstName}
         onChange={onChange}
         disabled={disabled}
@@ -16,14 +17,18 @@ function EmergencyContact({ emergencyContact, disabled }) {
       />
       <TextField
         id="middeleName"
+        name="middleName"
         label="Middle Name"
+        inputProps={{ pattern: "[A-Za-z ]+" }}
         value={emergencyContact.middleName}
         onChange={onChange}
         disabled={disabled}
       />
       <TextField
         id="lastName"
+        name="lastName"
         label="Last Name"
+        inputProps={{ pattern: "[A-Za-z ]+" }}
         value={emergencyContact.lastName}
         onChange={onChange}
         disabled={disabled}
@@ -31,14 +36,17 @@ function EmergencyContact({ emergencyContact, disabled }) {
       />
       <TextField
         id="emailAddress"
+        name="emailAddress"
         label="Email Address"
         value={emergencyContact.emailAddress}
         onChange={onChange}
         isWholeLine
+        required
         disabled={disabled}
       />
       <TextField
         id="phoneNumber"
+        name="phoneNumber"
         label="Phone Number"
         value={emergencyContact.phoneNumber}
         onChange={onChange}
@@ -48,6 +56,7 @@ function EmergencyContact({ emergencyContact, disabled }) {
       />
       <TextField
         id="relationship"
+        name="relationship"
         label="Relationship"
         value={emergencyContact.relationship}
         onChange={onChange}
@@ -62,6 +71,7 @@ function EmergencyContact({ emergencyContact, disabled }) {
 EmergencyContact.propTypes = {
   emergencyContact: PropTypes.object,
   disabled: PropTypes.bool,
+  onChange: PropTypes.func,
 };
 
 export default EmergencyContact;

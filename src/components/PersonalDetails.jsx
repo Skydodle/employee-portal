@@ -3,40 +3,76 @@ import PropTypes from "prop-types";
 import TextField from "./TextField";
 import DatePicker from "./DatePicker";
 import dayjs from "dayjs";
-import { Grid } from "@mui/material";
-import profile from "../mock/data";
+import { useSelector, useDispatch } from "react-redux";
+import { update } from "../store/onBoardingSlice/onBoarding.slice";
+import RadioGroup from "./RadioGroup";
+
+const options = [
+  { label: "Male", value: "male" },
+  { label: "Female", value: "female" },
+  { label: "I do not wish to answer", value: "N/A" },
+];
 function PersonalDetails({ disabled = false }) {
-  function onChange() {}
+  const profile = useSelector((state) => state.onboarding.profile);
+  const dispatch = useDispatch();
+
   return (
     <>
       <TextField
+        name="firstName"
         id="firstName"
         label="First Name"
-        value={profile.firstName}
-        onChange={onChange}
         disabled={disabled}
+        inputProps={{ pattern: "[A-Za-z ]+" }}
         required
       />
       <TextField
-        id="middeleName"
+        id="middleName"
+        name="middleName"
+        inputProps={{ pattern: "[A-Za-z ]+" }}
         label="Middle Name"
-        value={profile.middleName}
-        onChange={onChange}
         disabled={disabled}
       />
       <TextField
         id="lastName"
+        name="lastName"
         label="Last Name"
-        value={profile.lastName}
-        onChange={onChange}
+        inputProps={{ pattern: "[A-Za-z ]+" }}
         disabled={disabled}
         required
       />
-      <DatePicker
-        value={dayjs("2022-04-17")}
+      <TextField
+        id="preferredName"
+        name="preferredName"
+        inputProps={{ pattern: "[A-Za-z ]+" }}
+        label="Preferred Name"
         disabled={disabled}
-        onChange={onChange}
+      />
+      <DatePicker
+        value={dayjs(profile.dateOfBirth || new Date())}
+        name="dateOfBirth"
+        onChange={(value) => {
+          dispatch(update({ dateOfBirth: value.format("MM/DD/YYYY") }));
+        }}
+        id="dateOfBirth"
+        disabled={disabled}
         label="Date of Birth *"
+        required
+      />
+      <RadioGroup
+        name="gender"
+        id="gender"
+        label="Gender"
+        options={options}
+        disabled={disabled}
+      />
+      <TextField
+        id="ssn"
+        name="ssn"
+        label="SSN"
+        disabled={disabled}
+        inputProps={{ pattern: "[0-9]+" }}
+        required
       />
     </>
   );

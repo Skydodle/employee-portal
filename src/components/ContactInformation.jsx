@@ -1,33 +1,30 @@
 import PropTypes from "prop-types";
-import { Grid } from "@mui/material";
 import TextField from "./TextField";
-import profile from "../mock/data";
+
 function ContactInformation({ disabled = false }) {
-  function onChange() {}
   return (
     <>
       <TextField
         id="emailAddress"
+        name="emailAddress"
         label="Email Address"
-        value={profile.emailAddress}
-        onChange={onChange}
+        type="email"
         isWholeLine
         disabled
       />
       <TextField
         id="phoneNumber"
+        name="phoneNumber"
         label="Phone Number"
-        value={profile.phoneNumber}
-        onChange={onChange}
+        inputProps={{ type: "tel" }}
         required
         isWholeLine
         disabled={disabled}
       />
       <TextField
+        name="workPhoneNumber"
         id="workPhoneNumber"
         label="Work Phone Number"
-        value={profile.workPhoneNumber}
-        onChange={onChange}
         isWholeLine
         disabled={disabled}
       />
