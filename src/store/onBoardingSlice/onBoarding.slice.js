@@ -1,11 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { getOnboardingStatus, getUserProfile, postUserProfile } from './onBoarding.thunks'; // Adjust the path if necessary
 import mockProfile from '../../mock/data'
-import EmergencyContact from '../../components/EmergencyContact';
 // Initial state
 const initialState = {
   status: null,
-  profile: {mockProfile},
+  profile: mockProfile,
   loading: false,
   error: null,
 };

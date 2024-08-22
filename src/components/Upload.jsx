@@ -40,22 +40,7 @@ function Upload({
           id={id}
           {...props}
         />
-        <input
-          style={{
-            clip: "rect(0 0 0 0)",
-            clipPath: "inset(50%)",
-            height: 1,
-            overflow: "hidden",
-            position: "absolute",
-            bottom: 0,
-            left: 0,
-            whiteSpace: "nowrap",
-            width: 1,
-          }}
-          value={value}
-          name={name}
-          required={required}
-        />
+        <input hidden value={value} required={required} />
       </Button>
       <Button href={value} target="_blank">
         preview

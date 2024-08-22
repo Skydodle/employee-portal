@@ -67,14 +67,12 @@ function Onboarding() {
           >
             {status}
           </Typography>
-          <Box m={4} textAlign={"center"}>
-            <OnBoardingStepper
-              activeStep={activeStep}
-              setActiveStep={setActiveStep}
-              sections={sections}
-              completed={completed}
-            />
-          </Box>
+          <OnBoardingStepper
+            activeStep={activeStep}
+            setActiveStep={setActiveStep}
+            sections={sections}
+            completed={completed}
+          />
         </Box>
       </Box>
       <Box
