@@ -1,21 +1,17 @@
-import React from "react";
 import PropTypes from "prop-types";
 import { Grid, Button, Typography } from "@mui/material";
-import { styled } from "@mui/material/styles";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
-const VisuallyHiddenInput = styled("input")({
-  clip: "rect(0 0 0 0)",
-  clipPath: "inset(50%)",
-  height: 1,
-  overflow: "hidden",
-  position: "absolute",
-  bottom: 0,
-  left: 0,
-  whiteSpace: "nowrap",
-  width: 1,
-});
-function Upload({ error, id, label, onChange, disabled }) {
+function Upload({
+  value,
+  required,
+  name,
+  error,
+  id,
+  label,
+  disabled,
+  ...props
+}) {
   return (
     <Grid item xs={12} sx={{ m: 2 }}>
       <Button
@@ -27,13 +23,42 @@ function Upload({ error, id, label, onChange, disabled }) {
         disabled={disabled}
       >
         {label}
-
-        <VisuallyHiddenInput
+        <input
+          style={{
+            clip: "rect(0 0 0 0)",
+            clipPath: "inset(50%)",
+            height: 1,
+            overflow: "hidden",
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            whiteSpace: "nowrap",
+            width: 1,
+          }}
           type="file"
-          name={id}
+          name={name}
           id={id}
-          onChange={onChange}
+          {...props}
         />
+        <input
+          style={{
+            clip: "rect(0 0 0 0)",
+            clipPath: "inset(50%)",
+            height: 1,
+            overflow: "hidden",
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            whiteSpace: "nowrap",
+            width: 1,
+          }}
+          value={value}
+          name={name}
+          required={required}
+        />
+      </Button>
+      <Button href={value} target="_blank">
+        preview
       </Button>
       {error && <Typography color="error">{error}</Typography>}
     </Grid>
@@ -46,6 +71,9 @@ Upload.propTypes = {
   onChange: PropTypes.func,
   disabled: PropTypes.bool,
   error: PropTypes.string,
+  name: PropTypes.string,
+  value: PropTypes.string,
+  required: PropTypes.bool,
 };
 
 export default Upload;

@@ -43,6 +43,10 @@ const theme = createTheme({
     button: {
       textTransform: 'uppercase', // Prevents buttons from being all-uppercase by default
     },
+    error:{
+      fontWeight: 500,
+      color:'red'
+    }
   },
   spacing: 8, // This sets the base spacing unit (1 unit = 8px)
 });
