@@ -7,10 +7,9 @@ import axiosInstance from "../../interceptors/axiosInstance";
 // for new a dataset in visadoc schema when the visa status is F1
 export const postVisaDocument = createAsyncThunk(
     'visa/postVisaDocument',
-    async (userId , {rejectWithValue}) => {
+    async (_, {rejectWithValue}) => {
         try {
-            const response = await axiosInstance.post('/visa/employee', { userid: userId});
-
+            const response = await axiosInstance.post('/visa/employee');
             if (response.status === 201) {
                 return response.data
             } else {
@@ -24,9 +23,9 @@ export const postVisaDocument = createAsyncThunk(
 
 export const fetchVisaDocument = createAsyncThunk(
     'visa/fetchVisaDocument',
-    async (userId, {rejectWithValue}) => {
+    async (_, {rejectWithValue}) => {
         try{
-            const response = await axiosInstance.get('/visa/employee',{ userid: userId })
+            const response = await axiosInstance.get('/visa/employee')
             if (response.status === 200) {
                 return response.data
             } else {
@@ -40,12 +39,10 @@ export const fetchVisaDocument = createAsyncThunk(
 
 export const uploadVisaDocument = createAsyncThunk(
     'visa/uploadVisaDocument',
-    async ({ userId, username, documentType, file }, { rejectWithValue }) => {
+    async ({ documentType, file }, { rejectWithValue }) => {
         try {
             const formData = new FormData();
             formData.append('document', file);
-            formData.append('userid', userId);
-            formData.append('username', username);
             formData.append('documentType', documentType);
 
             const response = await axiosInstance.put('/visa/employee', formData, {
@@ -66,9 +63,9 @@ export const uploadVisaDocument = createAsyncThunk(
 
 export const fetchVisaDocumentUrls = createAsyncThunk(
     'visa/fetchVisaDocumentUrls',
-    async (userId, { rejectWithValue }) => {
+    async (_, { rejectWithValue }) => {
         try {
-            const response = await axiosInstance.get('/visa/employee/doc', { userid: userId })
+            const response = await axiosInstance.get('/visa/employee/doc')
             if (response.status === 200) {
                 return response.data
             } else {
