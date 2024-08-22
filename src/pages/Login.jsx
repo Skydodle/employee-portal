@@ -1,18 +1,27 @@
 /** @format */
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginUser, selectIsAuthenticated } from '../store';
 import LoginForm from '../components/LoginForm';
 import { Typography, Box } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const dispatch = useDispatch();
   const isAuthenticated = useSelector(selectIsAuthenticated);
+  const navigate = useNavigate();
+  const token = localStorage.getItem('token');
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (isAuthenticated || token) {
+      navigate('/onboarding'); // Redirect to onboarding if authenticated
+    }
+  }, [isAuthenticated, navigate, token]);
 
   const validateForm = () => {
     if (!username || !password) {
@@ -41,11 +50,7 @@ const Login = () => {
       minHeight='100vh' // This makes the Box take the full height of the viewport
       px={2} // Padding on the x-axis to prevent the form from touching the screen edges on small devices
     >
-      <Typography
-        variant='h4'
-        component='h4'
-        gutterBottom
-      >
+      <Typography variant='h4' component='h4' gutterBottom>
         Login
       </Typography>
       <Box
