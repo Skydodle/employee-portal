@@ -19,7 +19,7 @@ function RadioGroup({
   const value = useSelector((state) => state.onboarding.profile[name]);
   const dispatch = useDispatch();
   return (
-    <Grid item sx={{ m: 2 }} minWidth={200} maxWidth={400} xs={12}>
+    <Grid item sx={{ my: 2 }} minWidth={200} maxWidth={400} xs={12}>
       <FormControl>
         <FormLabel id={id}>{label}</FormLabel>
         <MUIRadioGroup

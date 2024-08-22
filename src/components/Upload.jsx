@@ -13,7 +13,7 @@ function Upload({
   ...props
 }) {
   return (
-    <Grid item xs={12} sx={{ m: 2 }}>
+    <Grid item xs={12} sx={{ my: 2 }}>
       <Button
         component="label"
         role={undefined}

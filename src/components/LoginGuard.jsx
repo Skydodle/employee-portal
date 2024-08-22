@@ -1,7 +1,6 @@
 /** @format */
 
-import { Outlet } from 'react-router-dom';
-
+import { Outlet } from "react-router-dom";
 const LoginGuard = () => {
   /** Hardcoded Guard that should be deleted later and
    * user the real guard below. Keeping this for easy
@@ -10,7 +9,13 @@ const LoginGuard = () => {
   const isLoggedIn = true;
 
   // // conditional rendering
-  return isLoggedIn ? <Outlet /> : <h1>You are not logged in</h1>;
+  return isLoggedIn ? (
+    <>
+      <Outlet />
+    </>
+  ) : (
+    <h1>You are not logged in</h1>
+  );
 
   /** Actual Guard that checks token or is logged in
    * Uncomment this section when done developing

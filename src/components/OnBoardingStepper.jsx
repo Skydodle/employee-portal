@@ -9,6 +9,7 @@ function OnBoardingStepper({
   sections,
   errors = [],
   completed = [],
+  orientation = "vertical",
 }) {
   const handleStep = (step) => () => {
     if (step < activeStep) {
@@ -17,7 +18,7 @@ function OnBoardingStepper({
   };
   return (
     <Box p={4} textAlign={"center"} overflow={"visible"}>
-      <Stepper nonLinear activeStep={activeStep} orientation="vertical">
+      <Stepper nonLinear activeStep={activeStep} orientation={orientation}>
         {sections.map((section, index) => (
           <Step key={section} completed={completed[index]}>
             <StepButton color="inhererit" onClick={handleStep(index)}>
@@ -39,6 +40,7 @@ OnBoardingStepper.propTypes = {
   sections: PropTypes.arrayOf(PropTypes.string),
   errors: PropTypes.arrayOf(PropTypes.bool),
   completed: PropTypes.arrayOf(PropTypes.bool),
+  orientation: PropTypes.oneOf(["vertical", "horizontal"]),
 };
 
 export default OnBoardingStepper;

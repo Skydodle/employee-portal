@@ -4,30 +4,30 @@ import { createSlice } from "@reduxjs/toolkit"
 import { fetchVisaDocument, fetchVisaDocumentUrls, uploadVisaDocument } from "./visa.thunks";
 
 const initialState = {
-    // visaDocument:{
-    //     userid: '123456789', 
-    //     optReceipt: {
-    //         name: 'OPT_Receipt_2023.pdf',
-    //         status: 'approved',
-    //         feedback: '',
-    //     },
-    //     optEAD: {
-    //         name: 'OPT_EAD_2023.pdf',
-    //         status: 'rejected',
-    //         feedback: 'The document is missing a required signature.',
-    //     },
-    //     i983: {
-    //         name: '',
-    //         status: 'pending',
-    //         feedback: '',
-    //     },
-    //     i20: {
-    //         name: '',
-    //         status: 'pending',
-    //         feedback: '',
-    //     }
-    // },
-    visaDocument: null,
+    visaDocument:{
+        userid: '123456789', 
+        optReceipt: {
+            name: 'OPT_Receipt_2023.pdf',
+            status: 'approved',
+            feedback: '',
+        },
+        optEAD: {
+           name: '',
+            status: 'pending',
+            feedback: 'The document is  missing a required signature.',
+        },
+        i983: {
+            name: '',
+            status: 'pending',
+            feedback: '',
+        },
+        i20: {
+            name: '',
+            status: 'pending',
+            feedback: '',
+        }
+    },
+    // visaDocument: null,
     uploadedDocumentUrls: [],
     loading: false,
     error: null,

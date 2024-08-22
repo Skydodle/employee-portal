@@ -13,6 +13,7 @@ import {
 import LoginGuard from "./components/LoginGuard";
 import RegisterGuard from "./components/RegisterGuard";
 import OnboardingTesting from "./pages/OnboardingTesting";
+import Layout from "./components/Layout";
 function App() {
   return (
     <BrowserRouter>
@@ -23,11 +24,13 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route element={<LoginGuard />}>
           <Route path="/onboarding" element={<Onboarding />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/visa-status" element={<VisaStatus />} />
-          <Route path="/housing" element={<Housing />} />
-          <Route path="/housing/report" element={<Report />} />
-          <Route path="/testing" element={<OnboardingTesting />} />
+          <Route element={<Layout />}>
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/visa-status" element={<VisaStatus />} />
+            <Route path="/housing" element={<Housing />} />
+            <Route path="/housing/report" element={<Report />} />
+            <Route path="/testing" element={<OnboardingTesting />} />
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>

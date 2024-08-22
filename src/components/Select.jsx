@@ -21,7 +21,7 @@ function Select({
   const value = useSelector((state) => state.onboarding.profile[name]);
   const dispatch = useDispatch();
   return (
-    <Grid item xs={6} sx={{ m: 2 }}>
+    <Grid item xs={6} sx={{ my: 2 }}>
       <FormControl fullWidth>
         <InputLabel id={id}>
           {label}

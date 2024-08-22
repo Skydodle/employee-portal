@@ -45,12 +45,27 @@ function Onboarding() {
     if (activeStep === sections.length) setStatus(STATUS.PENDING);
   }, [activeStep]);
   return (
-    <Box display="flex">
+    <Box sx={{ display: { xs: "block", sm: "flex" } }}>
+      <Typography
+        variant="body2"
+        color="white"
+        textAlign={"center"}
+        bgcolor={"primary.main"}
+        sx={{
+          display: { xs: "block", sm: "none" },
+          p: 2,
+          position: "fixed",
+          width: "100%",
+        }}
+      >
+        {status}
+      </Typography>
       <Box
         minWidth={250}
         height={"100vh"}
         borderRight={"1px solid lightgrey"}
         overflow={"auto"}
+        sx={{ display: { xs: "none", sm: "block" } }}
       >
         <Box
           width={250}
