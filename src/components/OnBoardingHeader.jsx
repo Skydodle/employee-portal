@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import { STATUS } from "../constants/onBoarding";
 import { Typography } from "@mui/material";
+
 function OnBoardingHeader({ status }) {
   switch (status) {
     case STATUS.NOT_STARTED: {
@@ -22,7 +23,11 @@ function OnBoardingHeader({ status }) {
     }
     case STATUS.REJECTED: {
       return (
+        <>
         <Typography variant="h3">Please update the errored fields</Typography>
+        <Typography variant="h3">Feedback here</Typography>
+        </>
+
       );
     }
   }

@@ -8,7 +8,6 @@ export const getOnboardingStatus = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get('/employee/status');
-      console.log(response.data)
       return response.data; // Assuming the response data is what you want
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || error.message);
@@ -22,6 +21,7 @@ export const getUserProfile = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get('/employee/profile');
+      console.log(response.data.user)
       return response.data.user; // Assuming `data.user` contains the user profile
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || error.message);
