@@ -8,22 +8,22 @@ const initialState = {
         userid: '123456789', 
         optReceipt: {
             name: 'OPT_Receipt_2023.pdf',
-            status: 'approved',
+            status: 'pending',
             feedback: '',
         },
         optEAD: {
-           name: '',
+           name: 'xcsxs',
             status: 'pending',
             feedback: 'The document is  missing a required signature.',
         },
         i983: {
-            name: '',
+            name: 'cdscds',
             status: 'pending',
             feedback: '',
         },
         i20: {
-            name: '',
-            status: 'pending',
+            name: 'csdcs',
+            status: 'approved',
             feedback: '',
         }
     },
