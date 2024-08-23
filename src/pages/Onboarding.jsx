@@ -54,7 +54,6 @@ function Onboarding() {
         sx={{
           display: { xs: "block", sm: "none" },
           p: 2,
-          position: "fixed",
           width: "100%",
         }}
       >
@@ -109,8 +108,8 @@ function Onboarding() {
           </>
         ) : (
           <React.Fragment>
-            <Box padding={2}>
-              <Box margin={2}>
+            <Box>
+              <Box my={4}>
                 <OnboardingHeader status={status} />
               </Box>
               <Grid
@@ -121,6 +120,7 @@ function Onboarding() {
                 alignContent="flex-start"
                 wrap="wrap"
                 minHeight={500}
+                spacing={2}
               >
                 <OnBoardingForm
                   disabled={status === STATUS.PENDING}
