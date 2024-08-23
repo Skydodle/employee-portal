@@ -1,6 +1,6 @@
 /** @format */
 
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import {
   Register,
   Login,
@@ -34,6 +34,9 @@ function App() {
             <Route path="/logout" element={<Logout />} />
           </Route>
         </Route>
+
+        {/* Catch-all route that redirects base URL to /login */}
+        <Route path="/" element={<Navigate to="/login" />} />
       </Routes>
     </BrowserRouter>
   );

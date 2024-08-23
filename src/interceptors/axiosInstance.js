@@ -29,8 +29,12 @@ axiosInstance.interceptors.response.use(
   },
   (error) => {
     if (error.response && error.response.status === 401) {
-      // Check if the current page is not the login page before redirecting
-      if (window.location.pathname !== '/login') {
+      // Check if the current page is not the login page and is not the registration page
+      // before redirecting
+      if (
+        window.location.pathname !== '/login' &&
+        window.location.pathname !== '/register'
+      ) {
         // Handle unauthorized errors (e.g., redirect to login)
         // You could also remove the token from localStorage if it's invalid
         localStorage.removeItem('token');

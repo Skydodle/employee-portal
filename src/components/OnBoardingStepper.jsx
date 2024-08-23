@@ -1,8 +1,9 @@
+/** @format */
+
 import PropTypes from "prop-types";
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import { Stepper, Step, StepButton, Button, StepLabel } from "@mui/material";
-import { STATUS } from "../constants/onBoarding";
+import { Stepper, Step, StepButton, StepLabel } from "@mui/material";
+import LogoutButton from "./LogoutButton";
 function OnBoardingStepper({
   activeStep,
   setActiveStep,
@@ -27,9 +28,10 @@ function OnBoardingStepper({
           </Step>
         ))}
       </Stepper>
-      <Button variant="text" color="secondary" sx={{ marginTop: 10 }}>
+      {/* <Button variant='text' color='secondary' sx={{ marginTop: 10 }}>
         Log Out
-      </Button>
+      </Button> */}
+      <LogoutButton sx={{ marginTop: 10 }} />
     </Box>
   );
 }

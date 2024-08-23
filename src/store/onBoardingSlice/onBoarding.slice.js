@@ -1,6 +1,12 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { getOnboardingStatus, getUserProfile, postUserProfile } from './onBoarding.thunks'; // Adjust the path if necessary
-import mockProfile from '../../mock/data'
+/** @format */
+
+import { createSlice } from "@reduxjs/toolkit";
+import {
+  getOnboardingStatus,
+  getUserProfile,
+  postUserProfile,
+} from "./onBoarding.thunks"; // Adjust the path if necessary
+import mockProfile from "../../mock/data";
 // Initial state
 const initialState = {
   status: null,
@@ -11,40 +17,62 @@ const initialState = {
 
 // Onboarding slice
 const onboardingSlice = createSlice({
-  name: 'onboarding',
+  name: "onboarding",
   initialState,
   reducers: {
     // You can add synchronous actions here if needed
-    update:(state, action) => {
-      state.profile = {...state.profile, ...action.payload};
+    update: (state, action) => {
+      state.profile = { ...state.profile, ...action.payload };
     },
-    updateDriverLicense:(state, action) => {
-      state.profile.driverLicense = {...state.profile.driverLicense, ...action.payload};
+    updateDriverLicense: (state, action) => {
+      state.profile.driverLicense = {
+        ...state.profile.driverLicense,
+        ...action.payload,
+      };
     },
-    updateWorkAuthorization:(state, action) => {
-      state.profile.workAuthorization = {...state.profile.workAuthorization, ...action.payload};
+    updateWorkAuthorization: (state, action) => {
+      state.profile.workAuthorization = {
+        ...state.profile.workAuthorization,
+        ...action.payload,
+      };
     },
-    updateCarInformation:(state, action) => {
-      state.profile.carInformation = {...state.profile.carInformation, ...action.payload};
+    updateCarInformation: (state, action) => {
+      state.profile.carInformation = {
+        ...state.profile.carInformation,
+        ...action.payload,
+      };
     },
-    updateReference:(state, action) => {
-      state.profile.reference = {...state.profile.reference, ...action.payload};
+    updateReference: (state, action) => {
+      state.profile.reference = {
+        ...state.profile.reference,
+        ...action.payload,
+      };
     },
-    updateEmergencyContact:(state, action) => {
-      state.profile.emergencyContacts = state.profile.emergencyContacts.map((emergencyContact,index)=>index===action.payload.index?{...emergencyContact, ...action.payload.data}:emergencyContact);
+    updateEmergencyContact: (state, action) => {
+      state.profile.emergencyContacts = state.profile.emergencyContacts.map(
+        (emergencyContact, index) =>
+          index === action.payload.index
+            ? { ...emergencyContact, ...action.payload.data }
+            : emergencyContact
+      );
     },
-    deleteEmergencyContact:(state, action) => {
-      state.profile.emergencyContacts = state.profile.emergencyContacts.filter((emergencyContact,index)=>index!==action.payload);
+    deleteEmergencyContact: (state, action) => {
+      state.profile.emergencyContacts = state.profile.emergencyContacts.filter(
+        (emergencyContact, index) => index !== action.payload
+      );
     },
-    addEmergencyContact:(state) => {
-      state.profile.emergencyContacts = [...state.profile.emergencyContacts, {
-        firstName: "",
-        lastName: "",
-        middleName: "",
-        relationship: "",
-        emailAddress: "",
-        phoneNumber: "",
-      },];
+    addEmergencyContact: (state) => {
+      state.profile.emergencyContacts = [
+        ...state.profile.emergencyContacts,
+        {
+          firstName: "",
+          lastName: "",
+          middleName: "",
+          relationship: "",
+          emailAddress: "",
+          phoneNumber: "",
+        },
+      ];
     },
   },
   extraReducers: (builder) => {
@@ -98,5 +126,15 @@ const onboardingSlice = createSlice({
 
 export default onboardingSlice.reducer;
 
-export const {update, updateCarInformation, updateDriverLicense, updateReference,addEmergencyContact, updateEmergencyContact, updateWorkAuthorization, deleteEmergencyContact} = onboardingSlice.actions;
-export const updateField = (e, dispatch) => dispatch(update({ [e.target.name]: e.target.value }))
+export const {
+  update,
+  updateCarInformation,
+  updateDriverLicense,
+  updateReference,
+  addEmergencyContact,
+  updateEmergencyContact,
+  updateWorkAuthorization,
+  deleteEmergencyContact,
+} = onboardingSlice.actions;
+export const updateField = (e, dispatch) =>
+  dispatch(update({ [e.target.name]: e.target.value }));
