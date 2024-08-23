@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import TextField from "./TextField";
+import TextField from "../TextField";
 
 function ContactInformation({ disabled = false }) {
   return (

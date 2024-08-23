@@ -1,8 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
-import EmergencyContactsTabs from "./EmergencyContactsTabs";
+import EmergencyContactsTabs from "../EmergencyContactsTabs";
 import { useSelector } from "react-redux";
-import { selectEmergencyContacts } from "../store/onBoardingSlice/onBoarding.selectors";
+import { selectEmergencyContacts } from "../../store/onBoardingSlice/onBoarding.selectors";
 function EmergencyContacts({ disabled = false }) {
   const emergencyContacts = useSelector(selectEmergencyContacts) || [];
   return (

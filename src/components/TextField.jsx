@@ -34,7 +34,7 @@ function TextField({
       item
       md={isWholeLine ? 12 : 6}
       xs={12}
-      sx={{ my: 2 }}
+      py={2}
       minWidth={200}
       maxWidth={400}
     >

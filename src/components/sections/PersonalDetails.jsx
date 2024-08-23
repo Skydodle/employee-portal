@@ -1,11 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
-import TextField from "./TextField";
-import DatePicker from "./DatePicker";
+import TextField from "../TextField";
+import DatePicker from "../DatePicker";
 import dayjs from "dayjs";
 import { useSelector, useDispatch } from "react-redux";
-import { update } from "../store/onBoardingSlice/onBoarding.slice";
-import RadioGroup from "./RadioGroup";
+import { update } from "../../store/onBoardingSlice/onBoarding.slice";
+import RadioGroup from "../RadioGroup";
 
 const options = [
   { label: "Male", value: "male" },

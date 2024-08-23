@@ -16,9 +16,9 @@ export default function VisaStatus() {
   const loading = useSelector(selectVisaLoading);
   const error = useSelector(selectVisaError);
 
-  // useEffect(() => {
-  //   dispatch(fetchVisaDocument())
-  // }, [dispatch])
+  useEffect(() => {
+    dispatch(fetchVisaDocument());
+  }, [dispatch]);
 
   const handleUpload = (documentType) => (file) => {
     dispatch(uploadVisaDocument({ documentType, file })).then(() => {
