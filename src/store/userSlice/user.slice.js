@@ -1,7 +1,7 @@
 /** @format */
 
-import { createSlice } from '@reduxjs/toolkit';
-import { validateToken, registerUser } from './user.thunks';
+import { createSlice } from "@reduxjs/toolkit";
+import { validateToken, registerUser } from "./user.thunks";
 
 const initialState = {
   user: null,
@@ -13,7 +13,7 @@ const initialState = {
 };
 
 const userSlice = createSlice({
-  name: 'user',
+  name: "user",
   initialState,
   reducers: {
     login: (state, action) => {
@@ -21,9 +21,10 @@ const userSlice = createSlice({
       state.isAuthenticated = true;
     },
     logout: (state) => {
+      localStorage.removeItem("token");
       state.user = null;
       state.isAuthenticated = false;
-    }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -39,8 +40,8 @@ const userSlice = createSlice({
       })
       .addCase(registerUser.rejected, (state) => {
         state.isRegistered = false; // Mark registration as failed
-      })
-  }
+      });
+  },
 });
 
 export const { login, logout } = userSlice.actions;

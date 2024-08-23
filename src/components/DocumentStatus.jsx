@@ -1,10 +1,10 @@
-import React from "react";
 import Upload from "./Upload";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import PropTypes from "prop-types";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
 export default function DocumentStatus({
   documentType,
   name,
@@ -29,26 +29,26 @@ export default function DocumentStatus({
               preview
             </Button>
           </Typography>
-          <p>
+          <Box>
             <Typography varian="body1">Document Name: {name} </Typography>
-          </p>
+          </Box>
 
-          <p>
+          <Box>
             <Typography varian="body1">Status: {status}</Typography>
-          </p>
+          </Box>
           {status === "rejected" && (
-            <p>
+            <Box>
               <Typography varian="body1">Feedback:</Typography> {feedback}
-            </p>
+            </Box>
           )}
           {status === "pending" && (
-            <p>
+            <Box>
               <Typography varian="body1">
                 Waiting for HR to approve your {documentType}
                 {documentType === "I-983" && " and sign your I-983"}
               </Typography>{" "}
               {feedback}
-            </p>
+            </Box>
           )}
         </Paper>
       </Grid>
@@ -68,9 +68,28 @@ export default function DocumentStatus({
               ? "Please send the I-983 along with all necessary documents to your school and upload the new I-20"
               : "All documents have been approved"}
           </Typography>
+          {documentType === "I-983" && (
+            <>
+              <Button
+                variant="outlined"
+                href="https://i983public.s3.amazonaws.com/i983.pdf"
+                target="_blank"
+                sx={{ mr: 2 }}
+              >
+                I-983 Form
+              </Button>
+              <Button
+                variant="outlined"
+                href="https://isss.utah.edu/forms-publications/documents/f-1/f1-form-i-983-sample.pdf"
+                target="_blank"
+              >
+                I-983 Sample
+              </Button>
+            </>
+          )}
           <Upload
             id={documentType}
-            label={"upload"}
+            label={`upload ${documentType}`}
             onChange={handleFileUpload}
           />
         </Paper>

@@ -9,6 +9,7 @@ import {
   VisaStatus,
   Housing,
   Report,
+  Logout,
 } from "./pages";
 import LoginGuard from "./components/LoginGuard";
 import RegisterGuard from "./components/RegisterGuard";
@@ -30,6 +31,7 @@ function App() {
             <Route path="/housing" element={<Housing />} />
             <Route path="/housing/report" element={<Report />} />
             <Route path="/testing" element={<OnboardingTesting />} />
+            <Route path="/logout" element={<Logout />} />
           </Route>
         </Route>
       </Routes>

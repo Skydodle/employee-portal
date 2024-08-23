@@ -1,4 +1,3 @@
-import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchVisaDocument,
@@ -10,6 +9,7 @@ import {
 import DocumentStatus from "../components/DocumentStatus";
 import { Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
+import { useEffect } from "react";
 export default function VisaStatus() {
   const dispatch = useDispatch();
   const visaDocument = useSelector(selectVisaDocument);

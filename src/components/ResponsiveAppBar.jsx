@@ -19,7 +19,11 @@ const pages = [
   { title: "Visa Status", url: "visa-status" },
   { title: "Housing", url: "/housing" },
 ];
-const settings = ["Profile", "Account", "Logout"];
+const settings = [
+  { title: "Profile", url: "/profile" },
+  { title: "Account", url: "/account" },
+  { title: "Logout", url: "/logout" },
+];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -162,8 +166,11 @@ function ResponsiveAppBar() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
+                <MenuItem
+                  key={setting.title}
+                  onClick={() => handleClickLink(setting)}
+                >
+                  <Typography textAlign="center">{setting.title}</Typography>
                 </MenuItem>
               ))}
             </Menu>
