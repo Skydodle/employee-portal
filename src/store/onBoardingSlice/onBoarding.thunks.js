@@ -1,5 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axiosInstance from '../../interceptors/axiosInstance'; // Adjust the path if necessary
+import { jwtDecode } from "jwt-decode";
 
 
 // Thunk to get onboarding status
@@ -21,8 +22,13 @@ export const getUserProfile = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get('/employee/profile');
-      console.log(response.data.user)
-      return response.data.user; // Assuming `data.user` contains the user profile
+      const token = localStorage.getItem('token');
+      // console.log(token)
+      const userProfile = response.data.user;
+      // const decoded = jwtDecode(token);
+      // userProfile.emailAddress = decoded.email; 
+
+      return userProfile;  
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || error.message);
     }
@@ -30,12 +36,51 @@ export const getUserProfile = createAsyncThunk(
 );
 
 // Thunk to post user profile
+// export const postUserProfile = createAsyncThunk(
+//   'employee/postUserProfile',
+//   async (profileData, { rejectWithValue }) => {
+//     try {
+//       const response = await axiosInstance.post('/employee/profile', profileData);
+//       return response.data.message; // Assuming `data.message` contains the success message
+//     } catch (error) {
+//       return rejectWithValue(error.response?.data?.message || error.message);
+//     }
+//   }
+// );
+
 export const postUserProfile = createAsyncThunk(
   'employee/postUserProfile',
-  async (profileData, { rejectWithValue }) => {
+  async ({ profileData, receiptFile }, { rejectWithValue }) => {
     try {
+      // First, upload the visa document if a receipt file is provided
+      // console.log(receiptFile)
+      // if (receiptFile) {
+      //   const formData = new FormData();
+      //   formData.append('document', receiptFile);
+      //   for (let pair of formData.entries()) {
+      //     console.log(`${pair[0]}: ${pair[1]}`);
+      //   }
+      //   // const uploadResponse = await axiosInstance.post('/visa/employee', formData, {
+      //   //   headers: {
+      //   //     'Content-Type': 'multipart/form-data',
+      //   //   },
+      //   // });
+        
+      //   // Check if the upload was successful
+      //   if (uploadResponse.status !== 200) {
+      //     throw new Error('Failed to upload visa document.');
+      //   }
+
+      //   // // // Update the profile data with the document ID returned from the upload
+      //   profileData.citizenship.optDocument = uploadResponse.data.documentId;
+      //   console.log(profileData.citizenship.optDocument)
+      // }
+      console.log(profileData)
+      // Then, post the user profile data
       const response = await axiosInstance.post('/employee/profile', profileData);
-      return response.data.message; // Assuming `data.message` contains the success message
+
+      // Return the success message
+      return response.data.message;
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || error.message);
     }

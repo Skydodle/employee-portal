@@ -8,10 +8,11 @@ import { update } from "../store/onBoardingSlice/onBoarding.slice";
 import RadioGroup from "./RadioGroup";
 
 const options = [
-  { label: "Male", value: "male" },
-  { label: "Female", value: "female" },
-  { label: "I do not wish to answer", value: "N/A" },
+  { label: "Male", value: "Male" },
+  { label: "Female", value: "Female" },
+  { label: "I do not wish to answer", value: "I do not wish to answer" },
 ];
+
 function PersonalDetails({ disabled = false }) {
   const profile = useSelector((state) => state.onboarding.profile);
   const dispatch = useDispatch();
@@ -29,7 +30,7 @@ function PersonalDetails({ disabled = false }) {
       <TextField
         id="middleName"
         name="middleName"
-        inputProps={{ pattern: "[A-Za-z ]+" }}
+        inputProps={{ pattern: "[A-Za-z .]+" }} // Updated pattern
         label="Middle Name"
         disabled={disabled}
       />
@@ -71,7 +72,7 @@ function PersonalDetails({ disabled = false }) {
         name="ssn"
         label="SSN"
         disabled={disabled}
-        inputProps={{ pattern: "[0-9]+" }}
+        inputProps={{ pattern: "[-0-9]+" }} // Updated pattern
         required
       />
     </>

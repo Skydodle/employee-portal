@@ -1,6 +1,7 @@
 export const selectOnboardingStatus = (state) => state.onboarding.status;
 export const selectOnboardingProfile = (state) => state.onboarding.profile;
 export const selectOnboardingFeedback = (state) => state.onboarding.feedback;
+
 export const selectWorkAuthorization= (state) => state.onboarding.profile.workAuthorization;
 export const selectCarInformation = (state) => state.onboarding.profile.carInformation;
 export const selectReference = (state)=> state.onboarding.profile.reference;
@@ -12,5 +13,5 @@ export const selectContactInfo = (state) => state.onboarding.contactInfo;
 export const selectCarInfo = (state) => state.onboarding.carInfo;
 export const selectSSNInfo = (state) => state.onboarding.ssnInfo;
 export const selectCitizenship = (state) => state.onboarding.citizenship;
-export const selectDriverLicense = (state) => state.onboarding.driverLicense;
-export const selectEmergencyContacts = (state) => state.onboarding.emergencyContacts;
+// export const selectDriverLicense = (state) => state.onboarding.driverLicense;
+// export const selectEmergencyContacts = (state) => state.onboarding.emergencyContacts;

@@ -5,8 +5,10 @@ import OnBoardingForm from "../components/OnBoardingForm";
 import OnBoardingStepper from "../components/OnBoardingStepper";
 import OnboardingHeader from "../components/OnBoardingHeader";
 import { useDispatch, useSelector } from 'react-redux';
-import { getOnboardingStatus,selectOnboardingStatus, getUserProfile} from '../store';
-import { Navigate} from 'react-router-dom';
+import { getOnboardingStatus, selectOnboardingStatus, getUserProfile,postUserProfile } from '../store';
+import { Navigate } from 'react-router-dom';
+import { jwtDecode } from "jwt-decode";
+import { update } from "../store";
 const sections = [
   SECTION.PERSONAL_DETAILS,
   SECTION.CURRENT_ADDRESS,
@@ -19,27 +21,42 @@ const sections = [
 ];
 
 function Onboarding() {
-  const [status, setStatus] = React.useState(STATUS.NOT_STARTED);
-  const [completed, setCompleted] = React.useState(
+  const [status, setStatus] = useState(STATUS.NOT_STARTED);
+  const [completed, setCompleted] = useState(
     status === STATUS.PENDING
       ? [true, true, true, true, true, true, true, true]
       : [false, false, false, false, false, false, false, false]
   );
-  const statusTest = useSelector(selectOnboardingStatus);
-  const [hasError, setHasError] = React.useState(false);
-  const [activeStep, setActiveStep] = React.useState(0);
+  const [hasError, setHasError] = useState(false);
+  const [activeStep, setActiveStep] = useState(0);
+  const profile = useSelector((state) => state.onboarding.profile);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getOnboardingStatus());
-    dispatch(getUserProfile());
 
+    dispatch(getOnboardingStatus())
+      .then((action) => {
+        const onboardingStatus = action.payload.onboardingStatus;
+        setStatus(onboardingStatus);
+        if (onboardingStatus === STATUS.PENDING) {
+          setCompleted([true, true, true, true, true, true, true, true]);
+        }
+      })
+      .catch((error) => {
+        console.error("Failed to fetch onboarding status:", error);
+      });
+      const token = localStorage.getItem('token'); // Adjust this to where your token is stored
+      if (token) {
+        const decoded = jwtDecode(token);
+        dispatch(update({ emailAddress: decoded.email }));
+      }
+    dispatch(getUserProfile());
   }, [dispatch]);
-  if (statusTest && statusTest.onboardingStatus === 'Approved') {
+
+  if (status === STATUS.APPROVED) {
     return <Navigate to="/profile" />;
   }
-  const profile = useSelector(state => state.onboarding);
-  console.log('Profile state:', profile);
 
   const handleNext = (e) => {
     e.preventDefault();
@@ -57,12 +74,58 @@ function Onboarding() {
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
+  const blobUrlToFile = async (blobUrl) => {
+    try {
+      const response = await fetch(blobUrl);
+      const blob = await response.blob();
+      // Generate a file name and type, you can adjust these as needed
+      const fileName = 'receipt.pdf'; // Adjust the file name if needed
+      const fileType = blob.type || 'application/pdf'; // Default to PDF if type is unknown
+      return new File([blob], fileName, { type: fileType });
+    } catch (error) {
+      console.error('Error converting blob URL to file:', error);
+      throw new Error('Failed to convert blob URL to file.');
+    }
+  };
+  const handleFinish = async () => {
+    const receiptBlobUrl = profile.workAuthorization?.receipt;
+    console.log(receiptBlobUrl)
+    try {
+      let file = null;
+
+      if (receiptBlobUrl && receiptBlobUrl.startsWith('blob:')) {
+        file = await blobUrlToFile(receiptBlobUrl);
+      } else {
+        // Handle the case where receiptBlobUrl is already a File object
+        file = receiptBlobUrl;
+      }
+      // Dispatch the thunk with profile and file
+      dispatch(postUserProfile({ profile, receiptFile: file })).unwrap();
+      // dispatch(getOnboardingStatus());
+
+      // Handle success here, e.g., redirect or show a success message
+    } catch (error) {
+      console.error('Failed to submit profile:', error);
+      // Handle error here, e.g., show an error message
+    }
+    // dispatch(postUserProfile(profile))
+    //   .unwrap()
+    //   .then((message) => {
+    //     console.log('Profile submitted successfully:', message);
+    //     // You can handle success here, like redirecting to another page or showing a success message
+    //   })
+    //   .catch((error) => {
+    //     console.error('Failed to submit profile:', error);
+    //     // Handle error here, like showing an error message
+    //   });
+  };
+
   useEffect(() => {
     if (activeStep === sections.length) setStatus(STATUS.PENDING);
   }, [activeStep]);
+
   return (
     <Box display="flex">
-      {statusTest && <p>Onboarding Status: {statusTest.onboardingStatus}</p>}
       <Box
         minWidth={250}
         height={"100vh"}
@@ -153,83 +216,23 @@ function Onboarding() {
               >
                 Back
               </Button>
-              <Button type="submit">
+              {/* <Button type="submit">
                 {activeStep === sections.length - 1 ? "Finish" : "Next"}
-              </Button>
+              </Button> */}
+              {activeStep === sections.length - 1 ? (
+                <Button type="submit" onClick={handleFinish}>
+                  Finish
+                </Button>
+              ) : (
+                <Button type="submit">
+                  Next
+                </Button>
+              )}
             </Box>
           </React.Fragment>
         )}
       </Box>
-      <div>
-      <h2>Profile Information</h2>
-      <div>
-        <h3>Personal Info</h3>
-        <p>First Name: {profile.personalInfo.firstName}</p>
-        <p>Last Name: {profile.personalInfo.lastName}</p>
-        <p>Middle Name: {profile.personalInfo.middleName}</p>
-        <p>Preferred Name: {profile.personalInfo.preferredName}</p>
-      </div>
-
-      <div>
-        <h3>Address</h3>
-        <p>Street: {profile.address.street}</p>
-        <p>City: {profile.address.city}</p>
-        <p>State: {profile.address.state}</p>
-        <p>ZIP: {profile.address.zip}</p>
-      </div>
-
-      <div>
-        <h3>Contact Info</h3>
-        <p>Cell Phone Number: {profile.contactInfo.cellPhoneNumber}</p>
-        <p>Work Phone Number: {profile.contactInfo.workPhoneNumber}</p>
-      </div>
-
-      <div>
-        <h3>Car Info</h3>
-        <p>Make: {profile.carInfo.make}</p>
-        <p>Model: {profile.carInfo.model}</p>
-        <p>Color: {profile.carInfo.color}</p>
-      </div>
-
-      <div>
-        <h3>SSN Info</h3>
-        <p>SSN: {profile.ssnInfo.ssn}</p>
-        <p>Date of Birth: {profile.ssnInfo.dateOfBirth}</p>
-      </div>
-
-      <div>
-        <h3>Citizenship</h3>
-        <p>Visa Status: {profile.citizenship.visaStatus}</p>
-        <p>Document: {profile.citizenship.document}</p>
-        <p>Start Date: {profile.citizenship.startDate}</p>
-        <p>End Date: {profile.citizenship.endDate}</p>
-        <p>OPT Document: {profile.citizenship.optDocument}</p>
-      </div>
-
-      <div>
-        <h3>Driver License</h3>
-        <p>Has Driver License: {profile.driverLicense.hasDriverLicense ? 'Yes' : 'No'}</p>
-        <p>License Number: {profile.driverLicense.licenseNumber}</p>
-        <p>Expiration Date: {profile.driverLicense.expirationDate}</p>
-        <p>License Copy: {profile.driverLicense.licenseCopy}</p>
-      </div>
-
-      <div>
-        <h3>Emergency Contacts</h3>
-        {profile.emergencyContacts.map((contact, index) => (
-          <div key={index}>
-            <p>First Name: {contact.firstName}</p>
-            <p>Last Name: {contact.lastName}</p>
-            <p>Middle Name: {contact.middleName}</p>
-            <p>Phone: {contact.phone}</p>
-            <p>Email: {contact.email}</p>
-            <p>Relationship: {contact.relationship}</p>
-          </div>
-        ))}
-      </div>
-    </div>
     </Box>
-    
   );
 }
 

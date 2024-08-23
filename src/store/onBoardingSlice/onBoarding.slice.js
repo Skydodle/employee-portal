@@ -1,60 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getOnboardingStatus, getUserProfile, postUserProfile } from './onBoarding.thunks'; // Adjust the path if necessary
+import { getOnboardingStatus, getUserProfile, postUserProfile, } from './onBoarding.thunks'; // Adjust the path if necessary
 import mockProfile from '../../mock/data'
 import EmergencyContact from '../../components/EmergencyContact';
 // Initial state
 const initialState = {
-  personalInfo: {
-    firstName: '',
-    lastName: '',
-    middleName: '',
-    preferredName: '',
-  },
-  address: {
-    street: '',
-    city: '',
-    state: '',
-    zip: ''
-  },
-  contactInfo: {
-    cellPhoneNumber: '',
-    workPhoneNumber: ''
-  },
-  carInfo: {
-    make: '',
-    model: '',
-    color: ''
-  },
-  ssnInfo: {
-    ssn: '',
-    dateOfBirth: '',
-  },
-  citizenship: {
-    visaStatus: '',
-    document: '',
-    startDate: null,
-    endDate: null,
-    optDocument: null
-  },
-  driverLicense: {
-    hasDriverLicense: false,
-    licenseNumber: '',
-    expirationDate: null,
-    licenseCopy: ''
-  },
-  emergencyContacts: [
-    {
-      firstName: '',
-      lastName: '',
-      middleName: '',
-      phone: '',
-      email: '',
-      relationship: ''
-    }
-  ],
-  feedback:'',
   status: null,
-  profile: {mockProfile},
+  profile: {},
+  // profile: {mockProfile},
   loading: false,
   error: null,
 };
@@ -64,30 +16,6 @@ const onboardingSlice = createSlice({
   name: 'onboarding',
   initialState,
   reducers: {
-    // updatePersonalInfo: (state, action) => {
-    //   state.personalInfo = { ...state.personalInfo, ...action.payload };
-    // },
-    // updateAddress: (state, action) => {
-    //   state.address = { ...state.address, ...action.payload };
-    // },
-    // updateContactInfo: (state, action) => {
-    //   state.contactInfo = { ...state.contactInfo, ...action.payload };
-    // },
-    // updateCarInfo: (state, action) => {
-    //   state.carInfo = { ...state.carInfo, ...action.payload };
-    // },
-    // updateSSNInfo: (state, action) => {
-    //   state.ssnInfo = { ...state.ssnInfo, ...action.payload };
-    // },
-    // updateCitizenship: (state, action) => {
-    //   state.citizenship = { ...state.citizenship, ...action.payload };
-    // },
-    // updateDriverLicense: (state, action) => {
-    //   state.driverLicense = { ...state.driverLicense, ...action.payload };
-    // },
-    // updateEmergencyContacts: (state, action) => {
-    //   state.emergencyContacts = action.payload;
-    // },
     update:(state, action) => {
       state.profile = {...state.profile, ...action.payload};
     },
@@ -96,6 +24,7 @@ const onboardingSlice = createSlice({
     },
     updateWorkAuthorization:(state, action) => {
       state.profile.workAuthorization = {...state.profile.workAuthorization, ...action.payload};
+      console.log(state.profile.workAuthorization)
     },
     updateCarInformation:(state, action) => {
       state.profile.carInformation = {...state.profile.carInformation, ...action.payload};
@@ -110,6 +39,9 @@ const onboardingSlice = createSlice({
       state.profile.emergencyContacts = state.profile.emergencyContacts.filter((emergencyContact,index)=>index!==action.payload);
     },
     addEmergencyContact:(state) => {
+      if (state.profile.emergencyContacts==null){
+        state.profile.emergencyContacts=[];
+      }
       state.profile.emergencyContacts = [...state.profile.emergencyContacts, {
         firstName: "",
         lastName: "",
@@ -143,59 +75,86 @@ const onboardingSlice = createSlice({
         state.error = null;
       })
       .addCase(getUserProfile.fulfilled, (state, action) => {
-        const profile = action.payload;
         state.loading = false;
-
+      
         // Update the state with the user profile data
-        state.personalInfo = {
-          firstName: profile.firstName || '',
-          lastName: profile.lastName || '',
-          middleName: profile.middleName || '',
-          preferredName: profile.preferredName || '',
+        state.profile = {
+          ...state.profile,
+          // Basic personal information
+          firstName: action.payload.firstName || '',
+          middleName: action.payload.middleName || '',
+          lastName: action.payload.lastName || '',
+          preferredName: action.payload.preferredName || '',
+          dateOfBirth: action.payload.dateOfBirth || '',
+          gender: action.payload.gender || '',
+          ssn: action.payload.ssn || '',
+          profilePicture: action.payload.profilePicture || '',
+      
+          // Contact information
+          phoneNumber: action.payload.cellPhoneNumber || '',
+          workPhoneNumber: action.payload.workPhoneNumber || '',
+          emailAddress:action.payload.emailAddress || '',
+          
+          // Address information
+          unit:action.payload.address?.unit || '',
+          street: action.payload.address?.street || '',
+          city: action.payload.address?.city || '',
+          state: action.payload.address?.state || '',
+          zipCode: action.payload.address?.zip || '',
+      
+          // Car information
+          carInformation: {
+            ...state.profile.car,
+            make: action.payload.car?.make || '',
+            model: action.payload.car?.model || '',
+            color: action.payload.car?.color || '',
+          },
+      
+          // Citizenship information
+
+          isUsCitizenOrResident: action.payload.citizenship?.visaStatus === 'Green Card' || action.payload.citizenship?.visaStatus === 'Citizen' ? 'yes' : 'no',
+          usCitizenshipStatus: action.payload.citizenship?.visaStatus === 'Green Card' || action.payload.citizenship?.visaStatus === 'Citizen' ? action.payload.citizenship?.visaStatus : '',
+          workAuthorization:{
+            workAuthorization: action.payload.citizenship?.visaStatus || '',
+            visaType:action.payload.citizenship?.visaType || '',
+            startDate: action.payload.citizenship?.startDate || null,
+            endDate: action.payload.citizenship?.endDate || null,
+            receipt: action.payload.citizenship?.document || "",
+              // //   optDocument: action.payload.citizenship?.optDocument || null,
+
+
+          },
+
+          // Driver's license information
+          driverLicense: {
+            ...state.profile.driverLicense,
+            hasDriverLicense: action.payload.driverLicense?.hasDriverLicense || false,
+            driverLicenseNumber: action.payload.driverLicense?.licenseNumber || '',
+            expirationDate: action.payload.driverLicense?.expirationDate || '',
+            licenseCopy: action.payload.driverLicense?.licenseCopy || '',
+          },
+          // Reference
+          reference:{
+            firstName: action.payload.reference?.firstName || "",
+            middleName: action.payload.reference?.middleName || "",
+            lastName: action.payload.reference?.lastName || "",
+            emailAddress: action.payload.reference?.email || "", 
+            relationship:action.payload.reference?.relationship || "", 
+            phoneNumber: action.payload.reference?.phone || "" 
+          },
+
+          // Emergency contacts
+          emergencyContacts: action.payload.emergencyContacts || state.profile.emergencyContacts || [{}],
+      
+          // Onboarding status and feedback
+          onboardingStatus: action.payload.onboardingStatus || '',
+          feedback: action.payload.feedback || '',
+      
+          // Keep any other existing fields that are not in the payload
+          ...state.profile,
         };
-        state.address = {
-          street: profile.address?.street || '',
-          city: profile.address?.city || '',
-          state: profile.address?.state || '',
-          zip: profile.address?.zip || ''
-        };
-        state.contactInfo = {
-          cellPhoneNumber: profile.cellPhoneNumber || '',
-          workPhoneNumber: profile.workPhoneNumber || ''
-        };
-        state.carInfo = {
-          make: profile.car?.make || '',
-          model: profile.car?.model || '',
-          color: profile.car?.color || ''
-        };
-        state.ssnInfo = {
-          ssn: profile.ssn || '',
-          dateOfBirth: profile.dateOfBirth || ''
-        };
-        state.citizenship = {
-          visaStatus: profile.citizenship?.visaStatus || '',
-          document: profile.citizenship?.document || '',
-          startDate: profile.citizenship?.startDate || null,
-          endDate: profile.citizenship?.endDate || null,
-          optDocument: profile.citizenship?.optDocument || null
-        };
-        state.driverLicense = {
-          hasDriverLicense: profile.driverLicense?.hasDriverLicense || false,
-          licenseNumber: profile.driverLicense?.licenseNumber || '',
-          expirationDate: profile.driverLicense?.expirationDate || null,
-          licenseCopy: profile.driverLicense?.licenseCopy || ''
-        };
-        state.emergencyContacts = profile.emergencyContacts || [
-          {
-            firstName: '',
-            lastName: '',
-            middleName: '',
-            phone: '',
-            email: '',
-            relationship: ''
-          }
-        ];
       })
+      
       .addCase(getUserProfile.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
@@ -210,15 +169,7 @@ const onboardingSlice = createSlice({
       .addCase(postUserProfile.fulfilled, (state, action) => {
         state.loading = false;
         // Assuming you might want to update the profile after a successful post
-        const { personalInfo, address, contactInfo, carInfo, ssnInfo, citizenship, driverLicense, emergencyContacts } = action.payload;
-        state.personalInfo = personalInfo;
-        state.address = address;
-        state.contactInfo = contactInfo;
-        state.carInfo = carInfo;
-        state.ssnInfo = ssnInfo;
-        state.citizenship = citizenship;
-        state.driverLicense = driverLicense;
-        state.emergencyContacts = emergencyContacts;
+
       })
       .addCase(postUserProfile.rejected, (state, action) => {
         state.loading = false;

@@ -15,13 +15,12 @@ import {
 } from "../store/onBoardingSlice/onBoarding.slice";
 import { selectDriverLicense } from "../store/onBoardingSlice/onBoarding.selectors";
 const hasDriverLicenseOptions = [
-  { label: "Yes", value: "yes" },
-  { label: "No", value: "no" },
+  { label: "Yes", value: true },
+  { label: "No", value: false },
 ];
 function DriverLicense({ disabled = false }) {
   const driverLicense = useSelector(selectDriverLicense);
   const dispatch = useDispatch();
-  console.log(driverLicense);
   return (
     <>
       <Select
@@ -35,7 +34,7 @@ function DriverLicense({ disabled = false }) {
         disabled={disabled}
         value={driverLicense?.hasDriverLicense}
       />
-      {driverLicense?.hasDriverLicense === "yes" && (
+      {driverLicense?.hasDriverLicense === true && (
         <Grid item xs={12}>
           <TextField
             name="driverLicenseNumber"
