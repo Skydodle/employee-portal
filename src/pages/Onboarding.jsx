@@ -87,6 +87,72 @@ function Onboarding() {
       throw new Error('Failed to convert blob URL to file.');
     }
   };
+
+
+  const transformToBackendProfile = (profile) => {
+    return {
+      firstName: profile.firstName || '',
+      middleName: profile.middleName || '',
+      lastName: profile.lastName || '',
+      preferredName: profile.preferredName || '',
+      dateOfBirth: profile.dateOfBirth || '',
+      gender: profile.gender || '',
+      ssn: profile.ssn || '',
+      profilePicture: profile.profilePicture || '',
+      
+      cellPhoneNumber: profile.phoneNumber || '',
+      workPhoneNumber: profile.workPhoneNumber || '',
+      emailAddress: profile.emailAddress || '',
+      
+      address: {
+        unit: profile.unit || '',
+        street: profile.street || '',
+        city: profile.city || '',
+        state: profile.state || '',
+        zip: profile.zipCode || '',
+      },
+      
+      car: {
+        make: profile.carInformation?.make || '',
+        model: profile.carInformation?.model || '',
+        color: profile.carInformation?.color || '',
+      },
+      
+      citizenship: {
+        visaStatus: profile.workAuthorization?.workAuthorization || profile.usCitizenshipStatus || '',
+        visaType: profile.workAuthorization?.visaType || '',
+        startDate: profile.workAuthorization?.startDate || null,
+        endDate: profile.workAuthorization?.endDate || null,
+        document: profile.workAuthorization?.receipt || '',
+      },
+      
+      driverLicense: {
+        hasDriverLicense: profile.driverLicense?.hasDriverLicense || false,
+        licenseNumber: profile.driverLicense?.driverLicenseNumber || '',
+        expirationDate: profile.driverLicense?.expirationDate || '',
+        licenseCopy: profile.driverLicense?.licenseCopy || '',
+      },
+      
+      reference: {
+        firstName: profile.reference?.firstName || '',
+        middleName: profile.reference?.middleName || '',
+        lastName: profile.reference?.lastName || '',
+        emailAddress: profile.reference?.emailAddress || '',
+        relationship: profile.reference?.relationship || '',
+        phoneNumber: profile.reference?.phoneNumber || '',
+      },
+      
+      emergencyContacts: profile.emergencyContacts.map(contact => ({
+        firstName: contact.firstName || '',
+        middleName: contact.middleName || '',
+        lastName: contact.lastName || '',
+        relationship: contact.relationship || '',
+        emailAddress: contact.emailAddress || '',
+        phoneNumber: contact.phoneNumber || '',
+      })),
+  
+    };
+  };
   const handleFinish = async () => {
     const receiptBlobUrl = profile.workAuthorization?.receipt;
     console.log(receiptBlobUrl)
@@ -100,12 +166,17 @@ function Onboarding() {
         file = receiptBlobUrl;
       }
       // Dispatch the thunk with profile and file
-      dispatch(postUserProfile({ profile, receiptFile: file })).unwrap();
+      const submitProfile = transformToBackendProfile(profile);
+      console.log(profile)
+      console.log(submitProfile)
+      // dispatch(postUserProfile({ submitProfile, receiptFile: file })).unwrap();
       // dispatch(getOnboardingStatus());
 
       // Handle success here, e.g., redirect or show a success message
     } catch (error) {
       console.error('Failed to submit profile:', error);
+      setHasError(true);
+
       // Handle error here, e.g., show an error message
     }
     // dispatch(postUserProfile(profile))
