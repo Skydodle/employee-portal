@@ -1,8 +1,10 @@
 import PropTypes from "prop-types";
 import { STATUS } from "../constants/onBoarding";
 import { Typography } from "@mui/material";
-
+import { useSelector } from "react-redux";
+import { selectOnboardingFeedback } from "../store/onBoardingSlice/onBoarding.selectors";
 function OnBoardingHeader({ status }) {
+  const feedback = useSelector(selectOnboardingFeedback);
   switch (status) {
     case STATUS.NOT_STARTED: {
       return (
@@ -24,10 +26,9 @@ function OnBoardingHeader({ status }) {
     case STATUS.REJECTED: {
       return (
         <>
-        <Typography variant="h3">Please update the errored fields</Typography>
-        <Typography variant="h3">Feedback here</Typography>
+          <Typography variant="h3">Please update the errored fields</Typography>
+          <Typography variant="h3">{feedback}</Typography>
         </>
-
       );
     }
   }

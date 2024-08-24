@@ -10,6 +10,7 @@ import {
   selectOnboardingStatus,
   getUserProfile,
   postUserProfile,
+  updateOnboardingStatus,
 } from "../store";
 import { Navigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
@@ -26,13 +27,19 @@ const sections = [
 ];
 
 function Onboarding() {
-  const [status, setStatus] = useState(STATUS.NOT_STARTED);
-  const [completed, setCompleted] = useState(
-    status === STATUS.PENDING
-      ? [true, true, true, true, true, true, true, true]
-      : [false, false, false, false, false, false, false, false]
-  );
-  const [hasError, setHasError] = useState(false);
+  const status = useSelector(selectOnboardingStatus).onboardingStatus;
+  // const [status, setStatus] = useState(STATUS.REJECTED);
+  const [completed, setCompleted] = useState([
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+  ]);
+  const [error, setError] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
   const profile = useSelector((state) => state.onboarding.profile);
 
@@ -42,7 +49,7 @@ function Onboarding() {
     dispatch(getOnboardingStatus())
       .then((action) => {
         const onboardingStatus = action.payload.onboardingStatus;
-        setStatus(onboardingStatus);
+        // setStatus(onboardingStatus);
         if (onboardingStatus === STATUS.PENDING) {
           setCompleted([true, true, true, true, true, true, true, true]);
         }
@@ -65,10 +72,10 @@ function Onboarding() {
   const handleNext = (e) => {
     e.preventDefault();
     if (!e.target.checkValidity()) {
-      setHasError(true);
+      setError("Some field is invalid");
       return;
     }
-    setHasError(false);
+    setError("");
     setCompleted((prev) =>
       prev.map((val, index) => (index === activeStep ? true : val))
     );
@@ -176,11 +183,11 @@ function Onboarding() {
       console.log("Outside call: ", submitProfile);
       dispatch(postUserProfile({ submitProfile, receiptFile: file })).unwrap();
       // dispatch(getOnboardingStatus());
-
+      dispatch(updateOnboardingStatus());
       // Handle success here, e.g., redirect or show a success message
     } catch (error) {
       console.error("Failed to submit profile:", error);
-      setHasError(true);
+      setError("Failed to submit profile:", error);
 
       // Handle error here, e.g., show an error message
     }
@@ -196,9 +203,9 @@ function Onboarding() {
     //   });
   };
 
-  useEffect(() => {
-    if (activeStep === sections.length) setStatus(STATUS.PENDING);
-  }, [activeStep]);
+  // useEffect(() => {
+  //   if (activeStep === sections.length) setStatus(STATUS.PENDING);
+  // }, [activeStep]);
 
   return (
     <Box sx={{ display: { xs: "block", sm: "flex" } }}>
@@ -283,9 +290,9 @@ function Onboarding() {
                   section={sections[activeStep]}
                 />
               </Grid>
-              {hasError && (
+              {error && (
                 <Typography variant="error" sx={{ m: 2 }}>
-                  Some field is invalid
+                  {error}
                 </Typography>
               )}
             </Box>
