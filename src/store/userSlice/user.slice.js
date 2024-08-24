@@ -1,19 +1,19 @@
 /** @format */
 
-import { createSlice } from "@reduxjs/toolkit";
-import { validateToken, registerUser } from "./user.thunks";
+import { createSlice } from '@reduxjs/toolkit';
+import { validateToken, registerUser } from './user.thunks';
 
 const initialState = {
   user: null,
   isAuthenticated: false,
   isRegisTokenValid: false,
-  isRegistered: false,
+  isRegistered: false
 
   // New state to track registration status
 };
 
 const userSlice = createSlice({
-  name: "user",
+  name: 'user',
   initialState,
   reducers: {
     login: (state, action) => {
@@ -21,10 +21,14 @@ const userSlice = createSlice({
       state.isAuthenticated = true;
     },
     logout: (state) => {
-      localStorage.removeItem("token");
+      // Clear token and onboardingRedirected from localStorage
+      localStorage.removeItem('token');
+      localStorage.removeItem('onboardingRedirected');
+
+      // Clear user data and authentication state
       state.user = null;
       state.isAuthenticated = false;
-    },
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -41,7 +45,7 @@ const userSlice = createSlice({
       .addCase(registerUser.rejected, (state) => {
         state.isRegistered = false; // Mark registration as failed
       });
-  },
+  }
 });
 
 export const { login, logout } = userSlice.actions;
