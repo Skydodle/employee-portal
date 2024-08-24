@@ -8,30 +8,30 @@ import {
 } from "./visa.thunks";
 
 const initialState = {
-  visaDocument: {
-    userid: "123456789",
-    optReceipt: {
-      name: "OPT_Receipt_2023.pdf",
-      status: "pending",
-      feedback: "",
-    },
-    optEAD: {
-      name: "xcsxs",
-      status: "approved",
-      feedback: "The document is  missing a required signature.",
-    },
-    i983: {
-      name: "fdf",
-      status: "approved",
-      feedback: "",
-    },
-    i20: {
-      name: "",
-      status: "pending",
-      feedback: "",
-    },
-  },
-  // visaDocument: null,
+  // visaDocument: {
+  //   userid: "123456789",
+  //   optReceipt: {
+  //     name: "OPT_Receipt_2023.pdf",
+  //     status: "pending",
+  //     feedback: "",
+  //   },
+  //   optEAD: {
+  //     name: "xcsxs",
+  //     status: "approved",
+  //     feedback: "The document is  missing a required signature.",
+  //   },
+  //   i983: {
+  //     name: "fdf",
+  //     status: "approved",
+  //     feedback: "",
+  //   },
+  //   i20: {
+  //     name: "",
+  //     status: "pending",
+  //     feedback: "",
+  //   },
+  // },
+  visaDocument: null,
   uploadedDocumentUrls: [],
   loading: false,
   error: null,

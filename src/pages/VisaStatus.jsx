@@ -40,7 +40,7 @@ export default function VisaStatus() {
       </Typography>
     );
   }
-  if (!visaDocument) {
+  if (!visaDocument || visaDocument.message) {
     return (
       <Typography variant="h2" m={4}>
         No Visa Document available
