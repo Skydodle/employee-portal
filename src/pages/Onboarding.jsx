@@ -75,6 +75,10 @@ function Onboarding() {
       setError("Some field is invalid");
       return;
     }
+    //handle error happening in finish
+    if (error) {
+      return;
+    }
     setError("");
     setCompleted((prev) =>
       prev.map((val, index) => (index === activeStep ? true : val))
