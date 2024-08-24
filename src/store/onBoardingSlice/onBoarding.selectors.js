@@ -1,5 +1,4 @@
-export const selectOnboardingStatus = (state) =>
-  state.onboarding.onboardingStatus;
+export const selectOnboardingStatus = (state) => state.onboarding.status;
 export const selectOnboardingProfile = (state) => state.onboarding.profile;
 export const selectOnboardingFeedback = (state) => state.onboarding.feedback;
 
