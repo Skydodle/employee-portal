@@ -53,31 +53,32 @@ export const postUserProfile = createAsyncThunk(
   async ({ submitProfile, receiptFile }, { rejectWithValue }) => {
     try {
       // First, upload the visa document if a receipt file is provided
-      // console.log(receiptFile)
-      // if (receiptFile) {
-      //   const formData = new FormData();
-      //   formData.append('document', receiptFile);
-      //   for (let pair of formData.entries()) {
-      //     console.log(`${pair[0]}: ${pair[1]}`);
-      //   }
-      //   // const uploadResponse = await axiosInstance.post('/visa/employee', formData, {
-      //   //   headers: {
-      //   //     'Content-Type': 'multipart/form-data',
-      //   //   },
-      //   // });
-        
-      //   // Check if the upload was successful
-      //   if (uploadResponse.status !== 200) {
-      //     throw new Error('Failed to upload visa document.');
-      //   }
+      const response = await axiosInstance.post('/employee/profile', submitProfile);
 
-      //   // // // Update the profile data with the document ID returned from the upload
-      //   profileData.citizenship.optDocument = uploadResponse.data.documentId;
-      //   console.log(profileData.citizenship.optDocument)
-      // }
+      console.log(receiptFile)
+      if (receiptFile) {
+        const formData = new FormData();
+        formData.append('document', receiptFile);
+        for (let pair of formData.entries()) {
+          console.log(`${pair[0]}: ${pair[1]}`);
+        }
+        const uploadResponse = await axiosInstance.post('/visa/employee', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+        
+        // Check if the upload was successful
+        if (uploadResponse.status !== 200) {
+          throw new Error('Failed to upload visa document.');
+        }
+
+        // // // Update the profile data with the document ID returned from the upload
+        profileData.citizenship.optDocument = uploadResponse.data.documentId;
+        console.log(profileData.citizenship.optDocument)
+      }
       console.log("Inside call:", submitProfile)
       // Then, post the user profile data
-      const response = await axiosInstance.post('/employee/profile', submitProfile);
 
       // Return the success message
       return response.data.message;
