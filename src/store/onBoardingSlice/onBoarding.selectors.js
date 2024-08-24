@@ -1,6 +1,7 @@
 export const selectOnboardingStatus = (state) => state.onboarding.status;
 export const selectOnboardingProfile = (state) => state.onboarding.profile;
-export const selectOnboardingFeedback = (state) => state.onboarding.feedback;
+export const selectOnboardingFeedback = (state) =>
+  state.onboarding.status.feedback;
 
 export const selectWorkAuthorization = (state) =>
   state.onboarding.profile.workAuthorization;

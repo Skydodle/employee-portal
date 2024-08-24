@@ -62,18 +62,24 @@ const onboardingSlice = createSlice({
         (emergencyContact, index) => index !== action.payload
       );
     },
-    addEmergencyContact:(state) => {
-      if (state.profile.emergencyContacts==null){
-        state.profile.emergencyContacts=[];
+    addEmergencyContact: (state) => {
+      if (state.profile.emergencyContacts == null) {
+        state.profile.emergencyContacts = [];
       }
-      state.profile.emergencyContacts = [...state.profile.emergencyContacts, {
-        firstName: "",
-        lastName: "",
-        middleName: "",
-        relationship: "",
-        emailAddress: "",
-        phoneNumber: "",
-      },];
+      state.profile.emergencyContacts = [
+        ...state.profile.emergencyContacts,
+        {
+          firstName: "",
+          lastName: "",
+          middleName: "",
+          relationship: "",
+          emailAddress: "",
+          phoneNumber: "",
+        },
+      ];
+    },
+    updateOnboardingStatus: (state, action) => {
+      state.status.onboardingStatus = "Pending";
     },
   },
   extraReducers: (builder) => {
@@ -100,85 +106,94 @@ const onboardingSlice = createSlice({
       })
       .addCase(getUserProfile.fulfilled, (state, action) => {
         state.loading = false;
-      
+
         // Update the state with the user profile data
         state.profile = {
           ...state.profile,
           // Basic personal information
-          firstName: action.payload.firstName || '',
-          middleName: action.payload.middleName || '',
-          lastName: action.payload.lastName || '',
-          preferredName: action.payload.preferredName || '',
-          dateOfBirth: action.payload.dateOfBirth || '',
-          gender: action.payload.gender || '',
-          ssn: action.payload.ssn || '',
-          profilePicture: action.payload.profilePicture || '',
-      
+          firstName: action.payload.firstName || "",
+          middleName: action.payload.middleName || "",
+          lastName: action.payload.lastName || "",
+          preferredName: action.payload.preferredName || "",
+          dateOfBirth: action.payload.dateOfBirth || "",
+          gender: action.payload.gender || "",
+          ssn: action.payload.ssn || "",
+          profilePicture: action.payload.profilePicture || "",
+
           // Contact information
-          phoneNumber: action.payload.cellPhoneNumber || '',
-          workPhoneNumber: action.payload.workPhoneNumber || '',
-          emailAddress:action.payload.emailAddress || '',
-          
+          phoneNumber: action.payload.cellPhoneNumber || "",
+          workPhoneNumber: action.payload.workPhoneNumber || "",
+          emailAddress: action.payload.emailAddress || "",
+
           // Address information
-          unit:action.payload.address?.unit || '',
-          street: action.payload.address?.street || '',
-          city: action.payload.address?.city || '',
-          state: action.payload.address?.state || '',
-          zipCode: action.payload.address?.zip || '',
-      
+          unit: action.payload.address?.unit || "",
+          street: action.payload.address?.street || "",
+          city: action.payload.address?.city || "",
+          state: action.payload.address?.state || "",
+          zipCode: action.payload.address?.zip || "",
+
           // Car information
           carInformation: {
             ...state.profile.car,
-            make: action.payload.car?.make || '',
-            model: action.payload.car?.model || '',
-            color: action.payload.car?.color || '',
+            make: action.payload.car?.make || "",
+            model: action.payload.car?.model || "",
+            color: action.payload.car?.color || "",
           },
-      
+
           // Citizenship information
 
-          isUsCitizenOrResident: action.payload.citizenship?.visaStatus === 'Green Card' || action.payload.citizenship?.visaStatus === 'Citizen' ? 'yes' : 'no',
-          usCitizenshipStatus: action.payload.citizenship?.visaStatus === 'Green Card' || action.payload.citizenship?.visaStatus === 'Citizen' ? action.payload.citizenship?.visaStatus : '',
-          workAuthorization:{
-            workAuthorization: action.payload.citizenship?.visaStatus || '',
-            visaType:action.payload.citizenship?.visaType || '',
+          isUsCitizenOrResident:
+            action.payload.citizenship?.visaStatus === "Green Card" ||
+            action.payload.citizenship?.visaStatus === "Citizen"
+              ? "yes"
+              : "no",
+          usCitizenshipStatus:
+            action.payload.citizenship?.visaStatus === "Green Card" ||
+            action.payload.citizenship?.visaStatus === "Citizen"
+              ? action.payload.citizenship?.visaStatus
+              : "",
+          workAuthorization: {
+            workAuthorization: action.payload.citizenship?.visaStatus || "",
+            visaType: action.payload.citizenship?.visaType || "",
             startDate: action.payload.citizenship?.startDate || null,
             endDate: action.payload.citizenship?.endDate || null,
             receipt: action.payload.citizenship?.document || "",
-              // //   optDocument: action.payload.citizenship?.optDocument || null,
-
-
+            optDocument: action.payload.citizenship?.optDocument || null,
           },
 
           // Driver's license information
           driverLicense: {
             ...state.profile.driverLicense,
-            hasDriverLicense: action.payload.driverLicense?.hasDriverLicense || false,
-            driverLicenseNumber: action.payload.driverLicense?.licenseNumber || '',
-            expirationDate: action.payload.driverLicense?.expirationDate || '',
-            licenseCopy: action.payload.driverLicense?.licenseCopy || '',
+            hasDriverLicense:
+              action.payload.driverLicense?.hasDriverLicense || false,
+            driverLicenseNumber:
+              action.payload.driverLicense?.licenseNumber || "",
+            expirationDate: action.payload.driverLicense?.expirationDate || "",
+            licenseCopy: action.payload.driverLicense?.licenseCopy || "",
           },
           // Reference
-          reference:{
+          reference: {
             firstName: action.payload.reference?.firstName || "",
             middleName: action.payload.reference?.middleName || "",
             lastName: action.payload.reference?.lastName || "",
-            emailAddress: action.payload.reference?.email || "", 
-            relationship:action.payload.reference?.relationship || "", 
-            phoneNumber: action.payload.reference?.phone || "" 
+            emailAddress: action.payload.reference?.email || "",
+            relationship: action.payload.reference?.relationship || "",
+            phoneNumber: action.payload.reference?.phone || "",
           },
 
           // Emergency contacts
-          emergencyContacts: action.payload.emergencyContacts || state.profile.emergencyContacts || [{}],
-      
+          emergencyContacts: action.payload.emergencyContacts ||
+            state.profile.emergencyContacts || [{}],
+
           // Onboarding status and feedback
-          onboardingStatus: action.payload.onboardingStatus || '',
-          feedback: action.payload.feedback || '',
-      
+          onboardingStatus: action.payload.onboardingStatus || "",
+          feedback: action.payload.feedback || "",
+
           // Keep any other existing fields that are not in the payload
           ...state.profile,
         };
       })
-      
+
       .addCase(getUserProfile.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
@@ -193,7 +208,6 @@ const onboardingSlice = createSlice({
       .addCase(postUserProfile.fulfilled, (state, action) => {
         state.loading = false;
         // Assuming you might want to update the profile after a successful post
-
       })
       .addCase(postUserProfile.rejected, (state, action) => {
         state.loading = false;
@@ -211,6 +225,7 @@ export const {
   updateReference,
   addEmergencyContact,
   updateEmergencyContact,
+  updateOnboardingStatus,
   updateWorkAuthorization,
   deleteEmergencyContact,
 } = onboardingSlice.actions;
