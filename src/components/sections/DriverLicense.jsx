@@ -10,8 +10,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { updateDriverLicense } from "../../store/onBoardingSlice/onBoarding.slice";
 import { selectDriverLicense } from "../../store/onBoardingSlice/onBoarding.selectors";
 const hasDriverLicenseOptions = [
-  { label: "Yes", value: true },
-  { label: "No", value: false },
+  { label: "Yes", value: "yes" },
+  { label: "No", value: "no" },
 ];
 function DriverLicense({ disabled = false }) {
   const driverLicense = useSelector(selectDriverLicense);
@@ -29,7 +29,7 @@ function DriverLicense({ disabled = false }) {
         disabled={disabled}
         value={driverLicense?.hasDriverLicense}
       />
-      {driverLicense?.hasDriverLicense === true && (
+      {driverLicense?.hasDriverLicense === "yes" && (
         <Grid item xs={12}>
           <TextField
             name="driverLicenseNumber"
@@ -48,7 +48,7 @@ function DriverLicense({ disabled = false }) {
             name="expirationDate"
             label="Expiration Date *"
             disabled={disabled}
-            value={dayjs(driverLicense?.expirationDate || new Date())}
+            value={dayjs(driverLicense?.expirationDate)}
             onChange={(value) => {
               dispatch(
                 updateDriverLicense({

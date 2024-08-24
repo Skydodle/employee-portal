@@ -50,7 +50,7 @@ function PersonalDetails({ disabled = false }) {
         disabled={disabled}
       />
       <DatePicker
-        value={dayjs(profile.dateOfBirth || new Date())}
+        value={dayjs(profile.dateOfBirth)}
         name="dateOfBirth"
         onChange={(value) => {
           dispatch(update({ dateOfBirth: value.format("MM/DD/YYYY") }));
@@ -72,7 +72,7 @@ function PersonalDetails({ disabled = false }) {
         name="ssn"
         label="SSN"
         disabled={disabled}
-        inputProps={{ pattern: "[-0-9]+" }} // Updated pattern
+        inputProps={{ pattern: /[-0-9]+/ }} // Updated pattern
         required
       />
     </>
