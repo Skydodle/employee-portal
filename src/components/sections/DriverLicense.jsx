@@ -31,7 +31,7 @@ function DriverLicense({ disabled = false }) {
         disabled={disabled}
         value={String(driverLicense?.hasDriverLicense)}
       />
-      {driverLicense?.hasDriverLicense === true && (
+      {driverLicense?.hasDriverLicense === 'yes' && (
         <Grid item xs={12}>
           <TextField
             name='driverLicenseNumber'
@@ -50,7 +50,7 @@ function DriverLicense({ disabled = false }) {
             name='expirationDate'
             label='Expiration Date *'
             disabled={disabled}
-            value={dayjs(driverLicense?.expirationDate || new Date())}
+            value={dayjs(driverLicense?.expirationDate)}
             onChange={(value) => {
               dispatch(
                 updateDriverLicense({

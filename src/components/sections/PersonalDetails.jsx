@@ -50,7 +50,7 @@ function PersonalDetails({ disabled = false }) {
         disabled={disabled}
       />
       <DatePicker
-        value={dayjs(profile.dateOfBirth || new Date())}
+        value={dayjs(profile.dateOfBirth)}
         name='dateOfBirth'
         onChange={(value) => {
           dispatch(update({ dateOfBirth: value.format('MM/DD/YYYY') }));

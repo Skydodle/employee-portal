@@ -4,9 +4,15 @@ import { Typography, Box, Button, Grid } from "@mui/material";
 import OnBoardingForm from "../components/OnBoardingForm";
 import OnBoardingStepper from "../components/OnBoardingStepper";
 import OnboardingHeader from "../components/OnBoardingHeader";
-import { useDispatch, useSelector } from 'react-redux';
-import { getOnboardingStatus, selectOnboardingStatus, getUserProfile,postUserProfile } from '../store';
-import { Navigate } from 'react-router-dom';
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getOnboardingStatus,
+  selectOnboardingStatus,
+  getUserProfile,
+  postUserProfile,
+  updateOnboardingStatus,
+} from "../store";
+import { Navigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import { update } from "../store";
 const sections = [
@@ -21,24 +27,29 @@ const sections = [
 ];
 
 function Onboarding() {
-  const [status, setStatus] = useState(STATUS.NOT_STARTED);
-  const [completed, setCompleted] = useState(
-    status === STATUS.PENDING
-      ? [true, true, true, true, true, true, true, true]
-      : [false, false, false, false, false, false, false, false]
-  );
-  const [hasError, setHasError] = useState(false);
+  const status = useSelector(selectOnboardingStatus).onboardingStatus;
+  // const [status, setStatus] = useState(STATUS.REJECTED);
+  const [completed, setCompleted] = useState([
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+  ]);
+  const [error, setError] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
   const profile = useSelector((state) => state.onboarding.profile);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-
     dispatch(getOnboardingStatus())
       .then((action) => {
         const onboardingStatus = action.payload.onboardingStatus;
-        setStatus(onboardingStatus);
+        // setStatus(onboardingStatus);
         if (onboardingStatus === STATUS.PENDING) {
           setCompleted([true, true, true, true, true, true, true, true]);
         }
@@ -46,11 +57,11 @@ function Onboarding() {
       .catch((error) => {
         console.error("Failed to fetch onboarding status:", error);
       });
-      const token = localStorage.getItem('token'); // Adjust this to where your token is stored
-      if (token) {
-        const decoded = jwtDecode(token);
-        dispatch(update({ emailAddress: decoded.email }));
-      }
+    const token = localStorage.getItem("token"); // Adjust this to where your token is stored
+    if (token) {
+      const decoded = jwtDecode(token);
+      dispatch(update({ emailAddress: decoded.email }));
+    }
     dispatch(getUserProfile());
   }, [dispatch]);
 
@@ -61,10 +72,14 @@ function Onboarding() {
   const handleNext = (e) => {
     e.preventDefault();
     if (!e.target.checkValidity()) {
-      setHasError(true);
+      setError("Some field is invalid");
       return;
     }
-    setHasError(false);
+    //handle error happening in finish
+    if (error) {
+      return;
+    }
+    setError("");
     setCompleted((prev) =>
       prev.map((val, index) => (index === activeStep ? true : val))
     );
@@ -79,87 +94,88 @@ function Onboarding() {
       const response = await fetch(blobUrl);
       const blob = await response.blob();
       // Generate a file name and type, you can adjust these as needed
-      const fileName = 'receipt.pdf'; // Adjust the file name if needed
-      const fileType = blob.type || 'application/pdf'; // Default to PDF if type is unknown
+      const fileName = "receipt.pdf"; // Adjust the file name if needed
+      const fileType = blob.type || "application/pdf"; // Default to PDF if type is unknown
       return new File([blob], fileName, { type: fileType });
     } catch (error) {
-      console.error('Error converting blob URL to file:', error);
-      throw new Error('Failed to convert blob URL to file.');
+      console.error("Error converting blob URL to file:", error);
+      throw new Error("Failed to convert blob URL to file.");
     }
   };
 
-
   const transformToBackendProfile = (profile) => {
     return {
-      firstName: profile.firstName || '',
-      middleName: profile.middleName || '',
-      lastName: profile.lastName || '',
-      preferredName: profile.preferredName || '',
-      dateOfBirth: profile.dateOfBirth || '',
-      gender: profile.gender || '',
-      ssn: profile.ssn || '',
-      profilePicture: profile.profilePicture || '',
-      
-      cellPhoneNumber: profile.phoneNumber || '',
-      workPhoneNumber: profile.workPhoneNumber || '',
-      emailAddress: profile.emailAddress || '',
-      
+      firstName: profile.firstName || "",
+      middleName: profile.middleName || "",
+      lastName: profile.lastName || "",
+      preferredName: profile.preferredName || "",
+      dateOfBirth: profile.dateOfBirth || "",
+      gender: profile.gender || "",
+      ssn: profile.ssn || "",
+      profilePicture: profile.profilePicture || "",
+
+      cellPhoneNumber: profile.phoneNumber || "",
+      workPhoneNumber: profile.workPhoneNumber || "",
+      emailAddress: profile.emailAddress || "",
+
       address: {
-        unit: profile.unit || '',
-        street: profile.street || '',
-        city: profile.city || '',
-        state: profile.state || '',
-        zip: profile.zipCode || '',
+        unit: profile.unit || "",
+        street: profile.street || "",
+        city: profile.city || "",
+        state: profile.state || "",
+        zip: profile.zipCode || "",
       },
-      
+
       car: {
-        make: profile.carInformation?.make || '',
-        model: profile.carInformation?.model || '',
-        color: profile.carInformation?.color || '',
+        make: profile.carInformation?.make || "",
+        model: profile.carInformation?.model || "",
+        color: profile.carInformation?.color || "",
       },
-      
+
       citizenship: {
-        visaStatus: profile.workAuthorization?.workAuthorization || profile.usCitizenshipStatus || '',
-        visaType: profile.workAuthorization?.visaType || '',
+        visaStatus:
+          profile.workAuthorization?.workAuthorization ||
+          profile.usCitizenshipStatus ||
+          "",
+        visaType: profile.workAuthorization?.visaType || "",
         startDate: profile.workAuthorization?.startDate || null,
         endDate: profile.workAuthorization?.endDate || null,
-        document: profile.workAuthorization?.receipt || '',
+        document: profile.workAuthorization?.receipt || "",
       },
-      
+
       driverLicense: {
         hasDriverLicense: profile.driverLicense?.hasDriverLicense || false,
-        licenseNumber: profile.driverLicense?.driverLicenseNumber || '',
-        expirationDate: profile.driverLicense?.expirationDate || '',
-        licenseCopy: profile.driverLicense?.licenseCopy || '',
+        licenseNumber: profile.driverLicense?.driverLicenseNumber || "",
+        expirationDate: profile.driverLicense?.expirationDate || "",
+        licenseCopy: profile.driverLicense?.licenseCopy || "",
       },
-      
+
       reference: {
-        firstName: profile.reference?.firstName || '',
-        middleName: profile.reference?.middleName || '',
-        lastName: profile.reference?.lastName || '',
-        emailAddress: profile.reference?.emailAddress || '',
-        relationship: profile.reference?.relationship || '',
-        phoneNumber: profile.reference?.phoneNumber || '',
+        firstName: profile.reference?.firstName || "",
+        middleName: profile.reference?.middleName || "",
+        lastName: profile.reference?.lastName || "",
+        emailAddress: profile.reference?.emailAddress || "",
+        relationship: profile.reference?.relationship || "",
+        phoneNumber: profile.reference?.phoneNumber || "",
       },
-      
-      emergencyContacts: profile.emergencyContacts.map(contact => ({
-        firstName: contact.firstName || '',
-        middleName: contact.middleName || '',
-        lastName: contact.lastName || '',
-        relationship: contact.relationship || '',
-        emailAddress: contact.emailAddress || '',
-        phoneNumber: contact.phoneNumber || '',
+
+      emergencyContacts: profile.emergencyContacts.map((contact) => ({
+        firstName: contact.firstName || "",
+        middleName: contact.middleName || "",
+        lastName: contact.lastName || "",
+        relationship: contact.relationship || "",
+        emailAddress: contact.emailAddress || "",
+        phoneNumber: contact.phoneNumber || "",
       })),
-  
     };
   };
   const handleFinish = async () => {
     const receiptBlobUrl = profile.workAuthorization?.receipt;
-    console.log(receiptBlobUrl)
+    console.log(receiptBlobUrl);
     try {
       let file = null;
 
-      if (receiptBlobUrl && receiptBlobUrl.startsWith('blob:')) {
+      if (receiptBlobUrl && receiptBlobUrl.startsWith("blob:")) {
         file = await blobUrlToFile(receiptBlobUrl);
       } else {
         // Handle the case where receiptBlobUrl is already a File object
@@ -168,14 +184,14 @@ function Onboarding() {
       // Dispatch the thunk with profile and file
       const submitProfile = transformToBackendProfile(profile);
       // console.log(profile)
-      console.log("Outside call: ",submitProfile)
+      console.log("Outside call: ", submitProfile);
       dispatch(postUserProfile({ submitProfile, receiptFile: file })).unwrap();
       // dispatch(getOnboardingStatus());
-
+      dispatch(updateOnboardingStatus());
       // Handle success here, e.g., redirect or show a success message
     } catch (error) {
-      console.error('Failed to submit profile:', error);
-      setHasError(true);
+      console.error("Failed to submit profile:", error);
+      setError("Failed to submit profile:", error);
 
       // Handle error here, e.g., show an error message
     }
@@ -191,9 +207,9 @@ function Onboarding() {
     //   });
   };
 
-  useEffect(() => {
-    if (activeStep === sections.length) setStatus(STATUS.PENDING);
-  }, [activeStep]);
+  // useEffect(() => {
+  //   if (activeStep === sections.length) setStatus(STATUS.PENDING);
+  // }, [activeStep]);
 
   return (
     <Box sx={{ display: { xs: "block", sm: "flex" } }}>
@@ -278,9 +294,9 @@ function Onboarding() {
                   section={sections[activeStep]}
                 />
               </Grid>
-              {hasError && (
+              {error && (
                 <Typography variant="error" sx={{ m: 2 }}>
-                  Some field is invalid
+                  {error}
                 </Typography>
               )}
             </Box>
@@ -308,9 +324,7 @@ function Onboarding() {
                   Finish
                 </Button>
               ) : (
-                <Button type="submit">
-                  Next
-                </Button>
+                <Button type="submit">Next</Button>
               )}
             </Box>
           </React.Fragment>
