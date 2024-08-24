@@ -50,37 +50,57 @@ export const getUserProfile = createAsyncThunk(
 
 export const postUserProfile = createAsyncThunk(
   'employee/postUserProfile',
-  async ({ submitProfile, receiptFile }, { rejectWithValue }) => {
+  async ({ submitProfile, receiptFile, licenseFile }, { rejectWithValue }) => {
     try {
-      // First, upload the visa document if a receipt file is provided
+      // post the user profile data first
+      // console.log("Inside call:", submitProfile)
       const response = await axiosInstance.post('/employee/profile', submitProfile);
 
-      console.log(receiptFile)
-      if (receiptFile) {
-        const formData = new FormData();
-        formData.append('document', receiptFile);
-        for (let pair of formData.entries()) {
-          console.log(`${pair[0]}: ${pair[1]}`);
+      const uploadFile = async (file, documentType) => {
+        if (file) {
+          const formData = new FormData();
+          formData.append('document', file);
+          formData.append('documentType', documentType); 
+          const uploadResponse = await axiosInstance.post('/visa/employee', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          });
+          
+          if (uploadResponse.status !== 200 && uploadResponse.status !== 201) {
+            throw new Error(`Failed to upload ${documentType} document.`);
         }
-        const uploadResponse = await axiosInstance.post('/visa/employee', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
+
+          return uploadResponse.data.documentId;
+        }
+      };
+      const receiptDocumentId = await uploadFile(receiptFile, 'optReceipt');
+      console.log("Receipt Document ID:", receiptDocumentId);
+
+      // Upload license file
+      const licenseDocumentId = await uploadFile(licenseFile, 'driverLicense');
+      console.log("License Document ID:", licenseDocumentId);
+      // if (receiptFile) {
+      //   const formData = new FormData();
+      //   formData.append('document', receiptFile);
+      //   for (let pair of formData.entries()) {
+      //     console.log(`${pair[0]}: ${pair[1]}`);
+      //   }
+      //   const uploadResponse = await axiosInstance.post('/visa/employee', formData, {
+      //     headers: {
+      //       'Content-Type': 'multipart/form-data',
+      //     },
+      //   });
         
-        // Check if the upload was successful
-        if (uploadResponse.status !== 200) {
-          throw new Error('Failed to upload visa document.');
-        }
+      //   // Check if the upload was successful
+      //   if (uploadResponse.status !== 200) {
+      //     throw new Error('Failed to upload visa document.');
+      //   }
 
-        // // // Update the profile data with the document ID returned from the upload
-        profileData.citizenship.optDocument = uploadResponse.data.documentId;
-        console.log(profileData.citizenship.optDocument)
-      }
-      console.log("Inside call:", submitProfile)
-      // Then, post the user profile data
+      //   // profileData.citizenship.optDocument = uploadResponse.data.documentId;
+      //   // console.log(profileData.citizenship.optDocument)
+      // }
 
-      // Return the success message
       return response.data.message;
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || error.message);

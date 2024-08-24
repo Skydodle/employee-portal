@@ -67,7 +67,7 @@ function WorkAuthorization({ disabled }) {
       <DatePicker
         name="startDate"
         label="Start Date"
-        value={dayjs(workAuthorization?.startDate || new Date())}
+        value={dayjs(workAuthorization?.startDate)}
         onChange={(value) => {
           dispatch(
             updateWorkAuthorization({ startDate: value.format("MM/DD/YYYY") })
@@ -79,7 +79,7 @@ function WorkAuthorization({ disabled }) {
         name="endDate"
         label="End Date"
         disabled={disabled}
-        value={dayjs(workAuthorization?.endDate || new Date())}
+        value={dayjs(workAuthorization?.endDate)}
         onChange={(value) => {
           dispatch(
             updateWorkAuthorization({ endDate: value.format("MM/DD/YYYY") })

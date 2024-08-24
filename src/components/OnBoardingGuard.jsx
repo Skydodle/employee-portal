@@ -1,7 +1,7 @@
-import { Navigate, Outlet } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-import { useEffect, useState } from 'react';
-import { getOnboardingStatus, selectOnboardingStatus } from '../store';
+import { Navigate, Outlet } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
+import { getOnboardingStatus, selectOnboardingStatus } from "../store";
 
 const OnboardingGuard = () => {
   const dispatch = useDispatch();
@@ -26,13 +26,20 @@ const OnboardingGuard = () => {
   }
 
   // If status is 'Approved', allow access to all pages except /onboarding
-  if (status.onboardingStatus === 'Approved' && window.location.pathname === '/onboarding') {
+  if (
+    status.onboardingStatus === "Approved" &&
+    window.location.pathname === "/onboarding"
+  ) {
     return <Navigate to="/profile" />;
   }
 
   // Redirect to /onboarding if status is 'Not Started', 'Pending', or 'Rejected'
-  if (status.onboardingStatus === 'Not Started' || status.onboardingStatus === 'Pending' || status.onboardingStatus === 'Rejected') {
-    if (window.location.pathname !== '/onboarding') {
+  if (
+    status.onboardingStatus === "Not Started" ||
+    status.onboardingStatus === "Pending" ||
+    status.onboardingStatus === "Rejected"
+  ) {
+    if (window.location.pathname !== "/onboarding") {
       return <Navigate to="/onboarding" />;
     }
     return <Outlet />; // Allow access to onboarding page

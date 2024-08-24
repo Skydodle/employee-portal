@@ -11,10 +11,6 @@ const LogoutButton = ({ sx }) => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // Clear token and onboardingRedirected from localStorage
-    localStorage.removeItem('token');
-    localStorage.removeItem('onboardingRedirected');
-
     // Dispatch the logout action
     dispatch(logout());
 

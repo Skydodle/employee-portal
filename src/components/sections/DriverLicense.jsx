@@ -1,4 +1,3 @@
-import React from "react";
 import PropTypes from "prop-types";
 import Grid from "@mui/material/Grid";
 import Select from "../Select";
@@ -10,8 +9,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { updateDriverLicense } from "../../store/onBoardingSlice/onBoarding.slice";
 import { selectDriverLicense } from "../../store/onBoardingSlice/onBoarding.selectors";
 const hasDriverLicenseOptions = [
-  { label: "Yes", value: true },
-  { label: "No", value: false },
+  { label: "Yes", value: "true" },
+  { label: "No", value: "false" },
 ];
 function DriverLicense({ disabled = false }) {
   const driverLicense = useSelector(selectDriverLicense);
@@ -24,12 +23,14 @@ function DriverLicense({ disabled = false }) {
         label={"Do you have a driver’s license?"}
         options={hasDriverLicenseOptions}
         onChange={(e) =>
-          dispatch(updateDriverLicense({ hasDriverLicense: e.target.value }))
+          dispatch(
+            updateDriverLicense({ hasDriverLicense: e.target.value === "true" })
+          )
         }
         disabled={disabled}
-        value={driverLicense?.hasDriverLicense}
+        value={String(driverLicense?.hasDriverLicense)}
       />
-      {driverLicense?.hasDriverLicense === true && (
+      {driverLicense?.hasDriverLicense && (
         <Grid item xs={12}>
           <TextField
             name="driverLicenseNumber"
@@ -48,7 +49,7 @@ function DriverLicense({ disabled = false }) {
             name="expirationDate"
             label="Expiration Date *"
             disabled={disabled}
-            value={dayjs(driverLicense?.expirationDate || new Date())}
+            value={dayjs(driverLicense?.expirationDate)}
             onChange={(value) => {
               dispatch(
                 updateDriverLicense({

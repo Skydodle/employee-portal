@@ -1,18 +1,19 @@
-import PropTypes from "prop-types";
-import { useDispatch, useSelector } from "react-redux";
-import { selectCarInformation } from "../../store/onBoardingSlice/onBoarding.selectors";
-import { updateCarInformation } from "../../store/onBoardingSlice/onBoarding.slice";
-import TextField from "../TextField";
+import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectCarInformation } from '../../store/onBoardingSlice/onBoarding.selectors';
+import { updateCarInformation } from '../../store/onBoardingSlice/onBoarding.slice';
+import TextField from '../TextField';
+
 function CarInformation({ disabled = false }) {
-  const carInformation = useSelector(selectCarInformation);
+  const carInformation = useSelector(selectCarInformation) || {};
   const dispatch = useDispatch();
   return (
     <>
       <TextField
-        id="make"
-        name="make"
-        label="Make"
-        value={carInformation?.make}
+        id='make'
+        name='make'
+        label='Make'
+        value={carInformation.make || ''}
         onChange={(e) =>
           dispatch(updateCarInformation({ make: e.target.value }))
         }
@@ -20,23 +21,23 @@ function CarInformation({ disabled = false }) {
         disabled={disabled}
       />
       <TextField
-        id="model"
-        name="model"
-        label="Model"
+        id='model'
+        name='model'
+        label='Model'
         isWholeLine
         disabled={disabled}
-        value={carInformation?.model}
+        value={carInformation.model || ''}
         onChange={(e) =>
           dispatch(updateCarInformation({ model: e.target.value }))
         }
       />
       <TextField
-        id="color"
-        name="color"
-        label="Color"
+        id='color'
+        name='color'
+        label='Color'
         isWholeLine
         disabled={disabled}
-        value={carInformation?.color}
+        value={carInformation.color || ''}
         onChange={(e) =>
           dispatch(updateCarInformation({ color: e.target.value }))
         }
