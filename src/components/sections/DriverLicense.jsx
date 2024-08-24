@@ -1,21 +1,16 @@
-import PropTypes from 'prop-types';
-import Grid from '@mui/material/Grid';
-import Select from '../Select';
-import TextField from '../TextField';
-import DatePicker from '../DatePicker';
-import dayjs from 'dayjs';
-import Upload from '../Upload';
-import { useSelector, useDispatch } from 'react-redux';
-import { updateDriverLicense } from '../../store/onBoardingSlice/onBoarding.slice';
-import { selectDriverLicense } from '../../store/onBoardingSlice/onBoarding.selectors';
+import PropTypes from "prop-types";
+import Grid from "@mui/material/Grid";
+import Select from "../Select";
+import TextField from "../TextField";
+import DatePicker from "../DatePicker";
+import dayjs from "dayjs";
+import Upload from "../Upload";
+import { useSelector, useDispatch } from "react-redux";
+import { updateDriverLicense } from "../../store/onBoardingSlice/onBoarding.slice";
+import { selectDriverLicense } from "../../store/onBoardingSlice/onBoarding.selectors";
 const hasDriverLicenseOptions = [
-<<<<<<< HEAD
-  { label: "Yes", value: "yes" },
-  { label: "No", value: "no" },
-=======
-  { label: 'Yes', value: 'true' },
-  { label: 'No', value: 'false' }
->>>>>>> main
+  { label: "Yes", value: "true" },
+  { label: "No", value: "false" },
 ];
 function DriverLicense({ disabled = false }) {
   const driverLicense = useSelector(selectDriverLicense);
@@ -23,13 +18,13 @@ function DriverLicense({ disabled = false }) {
   return (
     <>
       <Select
-        id='haveDriverLicense'
-        name='haveDriverLicense'
-        label={'Do you have a driver’s license?'}
+        id="haveDriverLicense"
+        name="haveDriverLicense"
+        label={"Do you have a driver’s license?"}
         options={hasDriverLicenseOptions}
         onChange={(e) =>
           dispatch(
-            updateDriverLicense({ hasDriverLicense: e.target.value === 'true' })
+            updateDriverLicense({ hasDriverLicense: e.target.value === "true" })
           )
         }
         disabled={disabled}
@@ -38,9 +33,9 @@ function DriverLicense({ disabled = false }) {
       {driverLicense?.hasDriverLicense && (
         <Grid item xs={12}>
           <TextField
-            name='driverLicenseNumber'
-            id='driverLicenseNumber'
-            label='Drive License Number'
+            name="driverLicenseNumber"
+            id="driverLicenseNumber"
+            label="Drive License Number"
             value={driverLicense?.driverLicenseNumber}
             onChange={(e) =>
               dispatch(
@@ -51,27 +46,27 @@ function DriverLicense({ disabled = false }) {
             required
           />
           <DatePicker
-            name='expirationDate'
-            label='Expiration Date *'
+            name="expirationDate"
+            label="Expiration Date *"
             disabled={disabled}
             value={dayjs(driverLicense?.expirationDate)}
             onChange={(value) => {
               dispatch(
                 updateDriverLicense({
-                  expirationDate: value.format('MM/DD/YYYY')
+                  expirationDate: value.format("MM/DD/YYYY"),
                 })
               );
             }}
           />
           <Upload
-            name='driverLicense'
-            id='driverLicense'
+            name="driverLicense"
+            id="driverLicense"
             label="Upload Driver's License *"
             value={driverLicense?.driverLicense}
             onChange={(e) =>
               dispatch(
                 updateDriverLicense({
-                  driverLicense: URL.createObjectURL(e.target.files[0])
+                  driverLicense: URL.createObjectURL(e.target.files[0]),
                 })
               )
             }
