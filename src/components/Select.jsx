@@ -13,6 +13,7 @@ function Select({
   error,
   disabled,
   id,
+  name,
   options = [],
   label,
   required,
@@ -57,6 +58,7 @@ Select.propTypes = {
   disabled: PropTypes.bool,
   error: PropTypes.string,
   required: PropTypes.bool,
+  name: PropTypes.string,
 };
 
 export default Select;
