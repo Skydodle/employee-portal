@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getOnboardingStatus,getUserProfile,postUserProfile,selectUserProfileLoading } from '../store';
+import { getOnboardingStatus,getUserProfile,postUserProfile } from '../store';
 
 const OnboardingTesting = () => {
 
   const dispatch = useDispatch();
   const [firstName, setFirstName] = useState('');
   const loading = useSelector(selectUserProfileLoading);
+  const status = useSelector(selectOnboardingStatus);
+
   useEffect(() => {
     dispatch(getOnboardingStatus());
     // dispatch(getUserProfile());
@@ -30,7 +32,7 @@ const OnboardingTesting = () => {
   };
   return (
     <form onSubmit={handleSubmit}>
-    <div>
+    {/* <div>
       <label htmlFor="firstName">First Name:</label>
       <input
         type="text"
@@ -41,7 +43,7 @@ const OnboardingTesting = () => {
     </div>
     <button type="submit" disabled={loading}>
       {loading ? 'Submitting...' : 'Submit Profile'}
-    </button>
+    </button> */}
   </form>
   );
 };

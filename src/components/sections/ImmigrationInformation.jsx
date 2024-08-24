@@ -10,8 +10,8 @@ const isUsCitizenOrResidentOptions = [
   { label: "No", value: "no" },
 ];
 const usCitizenshipStatusOptions = [
-  { label: "Green Card", value: "green card" },
-  { label: "Citizen", value: "citizen" },
+  { label: "Green Card", value: "Green Card" },
+  { label: "Citizen", value: "Citizen" },
 ];
 
 function ImmigrationInformation({ disabled = false }) {

@@ -14,6 +14,7 @@ import {
 import LoginGuard from "./components/LoginGuard";
 import RegisterGuard from "./components/RegisterGuard";
 import OnboardingTesting from "./pages/OnboardingTesting";
+import OnboardingGuard from "./components/OnBoardingGuard";
 import Layout from "./components/Layout";
 function App() {
   return (
@@ -24,6 +25,8 @@ function App() {
         </Route>
         <Route path="/login" element={<Login />} />
         <Route element={<LoginGuard />}>
+        <Route element={<OnboardingGuard />}>
+
           <Route path="/onboarding" element={<Onboarding />} />
           <Route element={<Layout />}>
             <Route path="/profile" element={<Profile />} />
@@ -33,10 +36,12 @@ function App() {
             <Route path="/testing" element={<OnboardingTesting />} />
             <Route path="/logout" element={<Logout />} />
           </Route>
-        </Route>
+          </Route>
 
         {/* Catch-all route that redirects base URL to /login */}
         <Route path="/" element={<Navigate to="/login" />} />
+
+        </Route>
       </Routes>
     </BrowserRouter>
   );
