@@ -171,40 +171,40 @@ function Onboarding() {
   };
   const handleFinish = async () => {
     const receiptBlobUrl = profile.workAuthorization?.receipt;
-    console.log(receiptBlobUrl);
+    const licenseCopyBlobUrl = profile.driverLicense?.driverLicense;
+  
     try {
-      let file = null;
-
-      if (receiptBlobUrl && receiptBlobUrl.startsWith("blob:")) {
-        file = await blobUrlToFile(receiptBlobUrl);
+      let receiptFile = null;
+      let licenseFile = null;
+  
+      // Process receipt file
+      if (receiptBlobUrl && receiptBlobUrl.startsWith('blob:')) {
+        receiptFile = await blobUrlToFile(receiptBlobUrl);
       } else {
-        // Handle the case where receiptBlobUrl is already a File object
-        file = receiptBlobUrl;
+        receiptFile = receiptBlobUrl; // If it's already a File object or a URL
       }
-      // Dispatch the thunk with profile and file
+  
+      // Process license copy file
+      if (licenseCopyBlobUrl && licenseCopyBlobUrl.startsWith('blob:')) {
+        licenseFile = await blobUrlToFile(licenseCopyBlobUrl);
+      } else {
+        licenseFile = licenseCopyBlobUrl; // If it's already a File object or a URL
+      }
+  
+      // Transform the profile data to match the backend requirements
       const submitProfile = transformToBackendProfile(profile);
-      // console.log(profile)
-      console.log("Outside call: ", submitProfile);
-      dispatch(postUserProfile({ submitProfile, receiptFile: file })).unwrap();
-      // dispatch(getOnboardingStatus());
-      dispatch(updateOnboardingStatus());
-      // Handle success here, e.g., redirect or show a success message
-    } catch (error) {
-      console.error("Failed to submit profile:", error);
-      setError("Failed to submit profile:", error);
 
-      // Handle error here, e.g., show an error message
+      // Dispatch the thunk with the profile data and both files
+      console.log("Submitting profile:", submitProfile);
+      dispatch(postUserProfile({ submitProfile, receiptFile, licenseFile })).unwrap();
+      
+      // Optionally dispatch the onboarding status if needed
+      // dispatch(getOnboardingStatus());
+  
+    } catch (error) {
+      console.error('Failed to submit profile:', error);
+      setHasError(true);
     }
-    // dispatch(postUserProfile(profile))
-    //   .unwrap()
-    //   .then((message) => {
-    //     console.log('Profile submitted successfully:', message);
-    //     // You can handle success here, like redirecting to another page or showing a success message
-    //   })
-    //   .catch((error) => {
-    //     console.error('Failed to submit profile:', error);
-    //     // Handle error here, like showing an error message
-    //   });
   };
 
   // useEffect(() => {
