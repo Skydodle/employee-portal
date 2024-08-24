@@ -1,14 +1,16 @@
+/** @format */
+
 import PropTypes from "prop-types";
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import { Stepper, Step, StepButton, Button, StepLabel } from "@mui/material";
-import { STATUS } from "../constants/onBoarding";
+import { Stepper, Step, StepButton, StepLabel } from "@mui/material";
+import LogoutButton from "./LogoutButton";
 function OnBoardingStepper({
   activeStep,
   setActiveStep,
   sections,
   errors = [],
   completed = [],
+  orientation = "vertical",
 }) {
   const handleStep = (step) => () => {
     if (step < activeStep) {
@@ -16,8 +18,8 @@ function OnBoardingStepper({
     }
   };
   return (
-    <>
-      <Stepper nonLinear activeStep={activeStep} orientation="vertical">
+    <Box p={4} textAlign={"center"} overflow={"visible"}>
+      <Stepper nonLinear activeStep={activeStep} orientation={orientation}>
         {sections.map((section, index) => (
           <Step key={section} completed={completed[index]}>
             <StepButton color="inhererit" onClick={handleStep(index)}>
@@ -26,10 +28,11 @@ function OnBoardingStepper({
           </Step>
         ))}
       </Stepper>
-      <Button variant="text" color="secondary" sx={{ marginTop: 10 }}>
+      {/* <Button variant='text' color='secondary' sx={{ marginTop: 10 }}>
         Log Out
-      </Button>
-    </>
+      </Button> */}
+      <LogoutButton sx={{ marginTop: 10 }} />
+    </Box>
   );
 }
 
@@ -39,6 +42,7 @@ OnBoardingStepper.propTypes = {
   sections: PropTypes.arrayOf(PropTypes.string),
   errors: PropTypes.arrayOf(PropTypes.bool),
   completed: PropTypes.arrayOf(PropTypes.bool),
+  orientation: PropTypes.oneOf(["vertical", "horizontal"]),
 };
 
 export default OnBoardingStepper;

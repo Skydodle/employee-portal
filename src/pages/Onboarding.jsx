@@ -196,12 +196,26 @@ function Onboarding() {
   }, [activeStep]);
 
   return (
-    <Box display="flex">
+    <Box sx={{ display: { xs: "block", sm: "flex" } }}>
+      <Typography
+        variant="body2"
+        color="white"
+        textAlign={"center"}
+        bgcolor={"primary.main"}
+        sx={{
+          display: { xs: "block", sm: "none" },
+          p: 2,
+          width: "100%",
+        }}
+      >
+        {status}
+      </Typography>
       <Box
         minWidth={250}
         height={"100vh"}
         borderRight={"1px solid lightgrey"}
         overflow={"auto"}
+        sx={{ display: { xs: "none", sm: "block" } }}
       >
         <Box
           width={250}
@@ -218,14 +232,12 @@ function Onboarding() {
           >
             {status}
           </Typography>
-          <Box m={4} textAlign={"center"}>
-            <OnBoardingStepper
-              activeStep={activeStep}
-              setActiveStep={setActiveStep}
-              sections={sections}
-              completed={completed}
-            />
-          </Box>
+          <OnBoardingStepper
+            activeStep={activeStep}
+            setActiveStep={setActiveStep}
+            sections={sections}
+            completed={completed}
+          />
         </Box>
       </Box>
       <Box
@@ -247,8 +259,8 @@ function Onboarding() {
           </>
         ) : (
           <React.Fragment>
-            <Box padding={2}>
-              <Box margin={2}>
+            <Box>
+              <Box my={4}>
                 <OnboardingHeader status={status} />
               </Box>
               <Grid
@@ -259,6 +271,7 @@ function Onboarding() {
                 alignContent="flex-start"
                 wrap="wrap"
                 minHeight={500}
+                spacing={2}
               >
                 <OnBoardingForm
                   disabled={status === STATUS.PENDING}

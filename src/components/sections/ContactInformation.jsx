@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import TextField from "./TextField";
+import TextField from "../TextField";
 
 function ContactInformation({ disabled = false }) {
   return (
@@ -8,7 +8,7 @@ function ContactInformation({ disabled = false }) {
         id="emailAddress"
         name="emailAddress"
         label="Email Address"
-        type="email"
+        inputProps={{ type: "email" }}
         isWholeLine
         disabled
       />

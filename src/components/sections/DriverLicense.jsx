@@ -1,19 +1,14 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Grid from "@mui/material/Grid";
-import Select from "./Select";
-import profile from "../mock/data";
-import TextField from "./TextField";
-import DatePicker from "./DatePicker";
-import { Box } from "@mui/material";
+import Select from "../Select";
+import TextField from "../TextField";
+import DatePicker from "../DatePicker";
 import dayjs from "dayjs";
-import Upload from "./Upload";
+import Upload from "../Upload";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  updateField,
-  updateDriverLicense,
-} from "../store/onBoardingSlice/onBoarding.slice";
-import { selectDriverLicense } from "../store/onBoardingSlice/onBoarding.selectors";
+import { updateDriverLicense } from "../../store/onBoardingSlice/onBoarding.slice";
+import { selectDriverLicense } from "../../store/onBoardingSlice/onBoarding.selectors";
 const hasDriverLicenseOptions = [
   { label: "Yes", value: true },
   { label: "No", value: false },

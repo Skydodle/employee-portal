@@ -6,4 +6,15 @@ import Report from "./Report";
 import Onboarding from "./Onboarding";
 import VisaStatus from "./VisaStatus";
 import OnboardingTesting from "./OnboardingTesting";
-export { Housing, Login, Profile, Register, Onboarding, VisaStatus, Report, OnboardingTesting };
+import Logout from "./Logout";
+export {
+  Housing,
+  Login,
+  Profile,
+  Register,
+  Onboarding,
+  VisaStatus,
+  Report,
+  OnboardingTesting,
+  Logout,
+};

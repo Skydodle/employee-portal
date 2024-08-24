@@ -9,7 +9,7 @@ function DatePicker({ name, label, error, ...props }) {
   const value = useSelector((state) => state.onboarding.profile[name]);
   const dispatch = useDispatch();
   return (
-    <Grid item xs={12} sx={{ m: 1, p: 1 }} minWidth={250}>
+    <Grid item xs={12} sx={{ my: 2 }} minWidth={250}>
       <MUIDatePicker
         value={dayjs(value)}
         name={name}

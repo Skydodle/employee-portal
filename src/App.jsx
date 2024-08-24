@@ -1,6 +1,6 @@
 /** @format */
 
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import {
   Register,
   Login,
@@ -9,11 +9,13 @@ import {
   VisaStatus,
   Housing,
   Report,
+  Logout,
 } from "./pages";
 import LoginGuard from "./components/LoginGuard";
 import RegisterGuard from "./components/RegisterGuard";
 import OnboardingTesting from "./pages/OnboardingTesting";
 import OnboardingGuard from "./components/OnBoardingGuard";
+import Layout from "./components/Layout";
 function App() {
   return (
     <BrowserRouter>
@@ -26,12 +28,18 @@ function App() {
         <Route element={<OnboardingGuard />}>
 
           <Route path="/onboarding" element={<Onboarding />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/visa-status" element={<VisaStatus />} />
-          <Route path="/housing" element={<Housing />} />
-          <Route path="/housing/report" element={<Report />} />
-          <Route path="/testing" element={<OnboardingTesting />} />
+          <Route element={<Layout />}>
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/visa-status" element={<VisaStatus />} />
+            <Route path="/housing" element={<Housing />} />
+            <Route path="/housing/report" element={<Report />} />
+            <Route path="/testing" element={<OnboardingTesting />} />
+            <Route path="/logout" element={<Logout />} />
           </Route>
+          </Route>
+
+        {/* Catch-all route that redirects base URL to /login */}
+        <Route path="/" element={<Navigate to="/login" />} />
 
         </Route>
       </Routes>

@@ -1,9 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
-import RadioGroup from "./RadioGroup";
-import WorkAuthorization from "./WorkAuthorization";
+import RadioGroup from "../RadioGroup";
+import WorkAuthorization from "../WorkAuthorization";
 import { useSelector } from "react-redux";
-import { selectOnboardingProfile } from "../store/onBoardingSlice/onBoarding.selectors";
+import { selectOnboardingProfile } from "../../store/onBoardingSlice/onBoarding.selectors";
 
 const isUsCitizenOrResidentOptions = [
   { label: "Yes", value: "yes" },

@@ -1,8 +1,8 @@
 import PropTypes from "prop-types";
-import TextField from "./TextField";
-import { selectCarInformation } from "../store/onBoardingSlice/onBoarding.selectors";
 import { useDispatch, useSelector } from "react-redux";
-import { updateCarInformation } from "../store/onBoardingSlice/onBoarding.slice";
+import { selectCarInformation } from "../../store/onBoardingSlice/onBoarding.selectors";
+import { updateCarInformation } from "../../store/onBoardingSlice/onBoarding.slice";
+import TextField from "../TextField";
 function CarInformation({ disabled = false }) {
   const carInformation = useSelector(selectCarInformation);
   const dispatch = useDispatch();
