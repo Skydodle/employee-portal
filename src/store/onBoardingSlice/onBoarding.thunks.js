@@ -50,7 +50,7 @@ export const getUserProfile = createAsyncThunk(
 
 export const postUserProfile = createAsyncThunk(
   'employee/postUserProfile',
-  async ({ profileData, receiptFile }, { rejectWithValue }) => {
+  async ({ submitProfile, receiptFile }, { rejectWithValue }) => {
     try {
       // First, upload the visa document if a receipt file is provided
       // console.log(receiptFile)
@@ -75,9 +75,9 @@ export const postUserProfile = createAsyncThunk(
       //   profileData.citizenship.optDocument = uploadResponse.data.documentId;
       //   console.log(profileData.citizenship.optDocument)
       // }
-      console.log(profileData)
+      console.log("Inside call:", submitProfile)
       // Then, post the user profile data
-      const response = await axiosInstance.post('/employee/profile', profileData);
+      const response = await axiosInstance.post('/employee/profile', submitProfile);
 
       // Return the success message
       return response.data.message;

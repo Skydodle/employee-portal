@@ -167,9 +167,9 @@ function Onboarding() {
       }
       // Dispatch the thunk with profile and file
       const submitProfile = transformToBackendProfile(profile);
-      console.log(profile)
-      console.log(submitProfile)
-      // dispatch(postUserProfile({ submitProfile, receiptFile: file })).unwrap();
+      // console.log(profile)
+      console.log("Outside call: ",submitProfile)
+      dispatch(postUserProfile({ submitProfile, receiptFile: file })).unwrap();
       // dispatch(getOnboardingStatus());
 
       // Handle success here, e.g., redirect or show a success message
