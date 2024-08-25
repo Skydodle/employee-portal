@@ -75,7 +75,6 @@ export const postUserProfile = createAsyncThunk(
           if (uploadResponse.status !== 200 && uploadResponse.status !== 201) {
             throw new Error(`Failed to upload ${documentType} document.`);
           }
-
           return uploadResponse.data.documentId;
         }
       };
