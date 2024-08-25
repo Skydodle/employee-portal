@@ -10,7 +10,6 @@ import {
   selectOnboardingStatus,
   getUserProfile,
   postUserProfile,
-  updateOnboardingStatus,
 } from "../store";
 import { Navigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
