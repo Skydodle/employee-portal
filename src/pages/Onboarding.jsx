@@ -27,9 +27,8 @@ const sections = [
 ];
 
 function Onboarding() {
-  // const status = useSelector(selectOnboardingStatus).onboardingStatus;
-  const status = STATUS.REJECTED;
-  // const [status, setStatus] = useState(STATUS.REJECTED);
+  const status = useSelector(selectOnboardingStatus).onboardingStatus;
+  // const status = STATUS.REJECTED;
   const [completed, setCompleted] = useState([
     false,
     false,
@@ -212,7 +211,7 @@ function Onboarding() {
       // dispatch(getOnboardingStatus());
     } catch (error) {
       console.error("Failed to submit profile:", error);
-      setError("Failed to submit profile:", error);
+      setError("Please upload the file again!");
     }
   };
 
