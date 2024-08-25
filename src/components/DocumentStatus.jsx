@@ -12,6 +12,7 @@ export default function DocumentStatus({
   feedback,
   onUpload,
   previousDocumentApproved,
+  url,
 }) {
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
@@ -25,7 +26,7 @@ export default function DocumentStatus({
         <Paper sx={{ m: 3, p: 3, maxWidth: 500 }}>
           <Typography variant="body1">
             {documentType}{" "}
-            <Button href={""} target="_blank">
+            <Button href={url} target="_blank">
               preview
             </Button>
           </Typography>
@@ -107,4 +108,5 @@ DocumentStatus.propTypes = {
   feedback: PropTypes.string,
   onUpload: PropTypes.func,
   previousDocumentApproved: PropTypes.bool,
+  url: PropTypes.string
 };
