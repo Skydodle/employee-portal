@@ -1,8 +1,6 @@
-import React from "react";
-import PropTypes from "prop-types";
 import ResponsiveAppBar from "./ResponsiveAppBar";
 import { Outlet } from "react-router-dom";
-function Layout({ children }) {
+function Layout() {
   return (
     <>
       <ResponsiveAppBar />
@@ -10,9 +8,5 @@ function Layout({ children }) {
     </>
   );
 }
-
-Layout.propTypes = {
-  children: PropTypes.node,
-};
 
 export default Layout;
