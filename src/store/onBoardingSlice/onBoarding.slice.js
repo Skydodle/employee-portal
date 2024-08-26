@@ -5,12 +5,13 @@ import {
   getOnboardingStatus,
   getUserProfile,
   postUserProfile,
+  updateProfilePicture,
 } from "./onBoarding.thunks"; // Adjust the path if necessary
 import mockProfile from "../../mock/data";
 // Initial state
 const initialState = {
   status: null,
-  profile: {},
+  profile: { profilePicture: "" },
   // profile: {mockProfile},
   loading: false,
   error: null,
@@ -81,6 +82,9 @@ const onboardingSlice = createSlice({
     updateOnboardingStatus: (state, action) => {
       state.status.onboardingStatus = "Pending";
     },
+    // updateProfilePicture: (state, action) => {
+    //   state.profile.profilePicture = action.payload;
+    // },
   },
   extraReducers: (builder) => {
     // Handle getOnboardingStatus actions
@@ -197,6 +201,9 @@ const onboardingSlice = createSlice({
       .addCase(getUserProfile.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+      .addCase(updateProfilePicture.fulfilled, (state, action) => {
+        state.profile.profilePicture = action.payload;
       });
 
     // Handle postUserProfile actions
@@ -228,6 +235,7 @@ export const {
   updateOnboardingStatus,
   updateWorkAuthorization,
   deleteEmergencyContact,
+  // updateProfilePicture,
 } = onboardingSlice.actions;
 export const updateField = (e, dispatch) =>
   dispatch(update({ [e.target.name]: e.target.value }));

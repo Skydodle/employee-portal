@@ -111,3 +111,27 @@ export const postUserProfile = createAsyncThunk(
     }
   }
 );
+
+export const updateProfilePicture = createAsyncThunk(
+  "employee/updateProfilePicture",
+  async ({ picture }, { rejectWithValue }) => {
+    const formData = new FormData();
+    formData.append("document", picture);
+    formData.append("documentType", "profilePicture");
+    try {
+      const response = await axiosInstance.put(
+        "/employee/profile/avatar",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      return response.data.message;
+    } catch (error) {
+      console.log(error);
+      rejectWithValue(error.response?.data?.message || error.message);
+    }
+  }
+);
