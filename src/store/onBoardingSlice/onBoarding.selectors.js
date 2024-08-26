@@ -20,5 +20,8 @@ export const selectSSNInfo = (state) => state.onboarding.ssnInfo;
 export const selectCitizenship = (state) => state.onboarding.citizenship;
 export const selectProfilePicture = (state) =>
   state.onboarding.profile.profilePicture;
+export const selectProfilePictureUrl = (state) =>
+  state.onboarding.profile.profilePictureUrl;
+export const selectProfileLoading = (state) => state.onboarding.loading;
 // export const selectDriverLicense = (state) => state.onboarding.driverLicense;
 // export const selectEmergencyContacts = (state) => state.onboarding.emergencyContacts;

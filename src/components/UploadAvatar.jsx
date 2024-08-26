@@ -1,24 +1,55 @@
-import React, { useState } from "react";
-import PropTypes from "prop-types";
+import React from "react";
 import Button from "@mui/material/Button";
-import src from "@emotion/styled";
 import { useSelector, useDispatch } from "react-redux";
-import { selectProfilePicture, updateProfilePicture } from "../store";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import {
+  selectProfileLoading,
+  selectProfilePictureUrl,
+  updateProfilePicture,
+} from "../store";
 import Avatar from "@mui/material/Avatar";
 
 function UploadAvatar(props) {
-  const picture = useSelector(selectProfilePicture);
+  const url = useSelector(selectProfilePictureUrl);
   const dispatch = useDispatch();
-  function handleChange(e) {
-    console.log(e.target.files);
-    dispatch(updateProfilePicture(e.target.files[0]));
-  }
+  const loading = useSelector(selectProfileLoading);
 
+  function handleChange(e) {
+    const file = e.target.files[0];
+    dispatch(updateProfilePicture(file));
+  }
   return (
     <div className="App">
-      <h2>Add Image:</h2>
-      <input type="file" onChange={handleChange} />
-      <Avatar alt="avatar" src={picture} />
+      <Avatar
+        alt="avatar"
+        src={url}
+        sx={{ width: 100, height: 100, marginBottom: "1rem" }}
+      />
+      <Button
+        component="label"
+        role={undefined}
+        variant="contained"
+        tabIndex={-1}
+        startIcon={<CloudUploadIcon />}
+        disabled={loading}
+      >
+        Upload
+        <input
+          style={{
+            clip: "rect(0 0 0 0)",
+            clipPath: "inset(50%)",
+            height: 1,
+            overflow: "hidden",
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            whiteSpace: "nowrap",
+            width: 1,
+          }}
+          type="file"
+          onChange={handleChange}
+        />
+      </Button>
     </div>
   );
 }
