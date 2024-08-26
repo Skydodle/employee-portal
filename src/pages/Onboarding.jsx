@@ -10,7 +10,6 @@ import {
   selectOnboardingStatus,
   getUserProfile,
   postUserProfile,
-  updateOnboardingStatus,
 } from "../store";
 import { Navigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
@@ -28,7 +27,7 @@ const sections = [
 
 function Onboarding() {
   const status = useSelector(selectOnboardingStatus).onboardingStatus;
-  // const [status, setStatus] = useState(STATUS.REJECTED);
+  // const status = STATUS.REJECTED;
   const [completed, setCompleted] = useState([
     false,
     false,
@@ -39,7 +38,7 @@ function Onboarding() {
     false,
     false,
   ]);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState("");
   const [activeStep, setActiveStep] = useState(0);
   const profile = useSelector((state) => state.onboarding.profile);
 
@@ -49,6 +48,7 @@ function Onboarding() {
     dispatch(getOnboardingStatus())
       .then((action) => {
         const onboardingStatus = action.payload.onboardingStatus;
+
         // setStatus(onboardingStatus);
         if (onboardingStatus === STATUS.PENDING) {
           setCompleted([true, true, true, true, true, true, true, true]);
@@ -75,10 +75,7 @@ function Onboarding() {
       setError("Some field is invalid");
       return;
     }
-    //handle error happening in finish
-    if (error) {
-      return;
-    }
+
     setError("");
     setCompleted((prev) =>
       prev.map((val, index) => (index === activeStep ? true : val))
@@ -88,6 +85,7 @@ function Onboarding() {
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    setError("");
   };
   const blobUrlToFile = async (blobUrl) => {
     try {
@@ -169,41 +167,50 @@ function Onboarding() {
       })),
     };
   };
-  const handleFinish = async () => {
+  const handleFinish = async (e) => {
+    e.preventDefault();
     const receiptBlobUrl = profile.workAuthorization?.receipt;
     const licenseCopyBlobUrl = profile.driverLicense?.driverLicense;
-  
+
     try {
       let receiptFile = null;
       let licenseFile = null;
-  
+
       // Process receipt file
-      if (receiptBlobUrl && receiptBlobUrl.startsWith('blob:')) {
+      if (receiptBlobUrl && receiptBlobUrl.startsWith("blob:")) {
         receiptFile = await blobUrlToFile(receiptBlobUrl);
       } else {
         receiptFile = receiptBlobUrl; // If it's already a File object or a URL
       }
-  
+
       // Process license copy file
-      if (licenseCopyBlobUrl && licenseCopyBlobUrl.startsWith('blob:')) {
+      if (licenseCopyBlobUrl && licenseCopyBlobUrl.startsWith("blob:")) {
         licenseFile = await blobUrlToFile(licenseCopyBlobUrl);
       } else {
         licenseFile = licenseCopyBlobUrl; // If it's already a File object or a URL
       }
-  
+
       // Transform the profile data to match the backend requirements
       const submitProfile = transformToBackendProfile(profile);
 
       // Dispatch the thunk with the profile data and both files
       console.log("Submitting profile:", submitProfile);
-      dispatch(postUserProfile({ submitProfile, receiptFile, licenseFile })).unwrap();
-      
+      dispatch(postUserProfile({ submitProfile, receiptFile, licenseFile }))
+        .unwrap()
+        .then(
+          (res) => {
+            setActiveStep((prev) => prev + 1);
+          },
+          (error) => {
+            setError(error);
+          }
+        );
+
       // Optionally dispatch the onboarding status if needed
       // dispatch(getOnboardingStatus());
-  
     } catch (error) {
-      console.error('Failed to submit profile:', error);
-      setHasError(true);
+      console.error("Failed to submit profile:", error);
+      setError("Please upload the file again!");
     }
   };
 
@@ -261,7 +268,9 @@ function Onboarding() {
         maxWidth={800}
         padding={4}
         component={"form"}
-        onSubmit={handleNext}
+        onSubmit={
+          activeStep === sections.length - 1 ? handleFinish : handleNext
+        }
         noValidate
       >
         {activeStep === sections.length ? (
@@ -316,16 +325,9 @@ function Onboarding() {
               >
                 Back
               </Button>
-              {/* <Button type="submit">
+              <Button type="submit">
                 {activeStep === sections.length - 1 ? "Finish" : "Next"}
-              </Button> */}
-              {activeStep === sections.length - 1 ? (
-                <Button type="submit" onClick={handleFinish}>
-                  Finish
-                </Button>
-              ) : (
-                <Button type="submit">Next</Button>
-              )}
+              </Button>
             </Box>
           </React.Fragment>
         )}

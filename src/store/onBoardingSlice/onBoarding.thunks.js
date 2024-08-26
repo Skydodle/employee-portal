@@ -1,14 +1,13 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
-import axiosInstance from '../../interceptors/axiosInstance'; // Adjust the path if necessary
+import { createAsyncThunk } from "@reduxjs/toolkit";
+import axiosInstance from "../../interceptors/axiosInstance"; // Adjust the path if necessary
 import { jwtDecode } from "jwt-decode";
-
 
 // Thunk to get onboarding status
 export const getOnboardingStatus = createAsyncThunk(
-  'onboarding/getOnboardingStatus',
+  "onboarding/getOnboardingStatus",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get('/employee/status');
+      const response = await axiosInstance.get("/employee/status");
       return response.data; // Assuming the response data is what you want
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || error.message);
@@ -18,17 +17,17 @@ export const getOnboardingStatus = createAsyncThunk(
 
 // Thunk to get user profile
 export const getUserProfile = createAsyncThunk(
-  'employee/getUserProfile',
+  "employee/getUserProfile",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get('/employee/profile');
-      const token = localStorage.getItem('token');
+      const response = await axiosInstance.get("/employee/profile");
+      const token = localStorage.getItem("token");
       // console.log(token)
       const userProfile = response.data.user;
       // const decoded = jwtDecode(token);
-      // userProfile.emailAddress = decoded.email; 
+      // userProfile.emailAddress = decoded.email;
 
-      return userProfile;  
+      return userProfile;
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || error.message);
     }
@@ -49,36 +48,41 @@ export const getUserProfile = createAsyncThunk(
 // );
 
 export const postUserProfile = createAsyncThunk(
-  'employee/postUserProfile',
+  "employee/postUserProfile",
   async ({ submitProfile, receiptFile, licenseFile }, { rejectWithValue }) => {
     try {
       // post the user profile data first
       // console.log("Inside call:", submitProfile)
-      const response = await axiosInstance.post('/employee/profile', submitProfile);
+      const response = await axiosInstance.post(
+        "/employee/profile",
+        submitProfile
+      );
 
       const uploadFile = async (file, documentType) => {
         if (file) {
           const formData = new FormData();
-          formData.append('document', file);
-          formData.append('documentType', documentType); 
-          const uploadResponse = await axiosInstance.post('/visa/employee', formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-          });
-          
+          formData.append("document", file);
+          formData.append("documentType", documentType);
+          const uploadResponse = await axiosInstance.post(
+            "/visa/employee",
+            formData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            }
+          );
           if (uploadResponse.status !== 200 && uploadResponse.status !== 201) {
             throw new Error(`Failed to upload ${documentType} document.`);
-        }
-
+          }
           return uploadResponse.data.documentId;
         }
       };
-      const receiptDocumentId = await uploadFile(receiptFile, 'optReceipt');
+      const receiptDocumentId = await uploadFile(receiptFile, "optReceipt");
       console.log("Receipt Document ID:", receiptDocumentId);
 
       // Upload license file
-      const licenseDocumentId = await uploadFile(licenseFile, 'driverLicense');
+      const licenseDocumentId = await uploadFile(licenseFile, "driverLicense");
       console.log("License Document ID:", licenseDocumentId);
       // if (receiptFile) {
       //   const formData = new FormData();
@@ -91,7 +95,7 @@ export const postUserProfile = createAsyncThunk(
       //       'Content-Type': 'multipart/form-data',
       //     },
       //   });
-        
+
       //   // Check if the upload was successful
       //   if (uploadResponse.status !== 200) {
       //     throw new Error('Failed to upload visa document.');

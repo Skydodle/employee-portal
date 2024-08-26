@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { logout } from "../store/userSlice/user.slice";
 import { Navigate } from "react-router-dom";
-function Logout3() {
+function Logout() {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(logout());
@@ -10,4 +10,4 @@ function Logout3() {
   return <Navigate to="/login" />;
 }
 
-export default Logout3;
+export default Logout;

@@ -59,14 +59,14 @@ function DriverLicense({ disabled = false }) {
             }}
           />
           <Upload
-            name="driverLicense"
-            id="driverLicense"
+            name="licenseCopy"
+            id="licenseCopy"
             label="Upload Driver's License *"
-            value={driverLicense?.driverLicense}
+            value={driverLicense?.licenseCopy}
             onChange={(e) =>
               dispatch(
                 updateDriverLicense({
-                  driverLicense: URL.createObjectURL(e.target.files[0]),
+                  licenseCopy: URL.createObjectURL(e.target.files[0]),
                 })
               )
             }

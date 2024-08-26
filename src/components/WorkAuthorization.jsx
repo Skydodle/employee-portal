@@ -1,14 +1,13 @@
-import React from "react";
-import PropTypes from "prop-types";
 import { Grid } from "@mui/material";
-import Select from "./Select";
-import TextField from "./TextField";
-import DatePicker from "./DatePicker";
-import Upload from "./Upload";
+import dayjs from "dayjs";
+import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
 import { selectWorkAuthorization } from "../store/onBoardingSlice/onBoarding.selectors";
 import { updateWorkAuthorization } from "../store/onBoardingSlice/onBoarding.slice";
-import dayjs from "dayjs";
+import DatePicker from "./DatePicker";
+import Select from "./Select";
+import TextField from "./TextField";
+import Upload from "./Upload";
 const options = [
   { label: "H1-B", value: "H1-b" },
   { label: "L2", value: "L2" },
