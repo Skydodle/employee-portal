@@ -114,13 +114,13 @@ export const postUserProfile = createAsyncThunk(
 
 export const updateProfilePicture = createAsyncThunk(
   "employee/updateProfilePicture",
-  async ({ picture }, { rejectWithValue }) => {
+  async (picture, { rejectWithValue }) => {
     const formData = new FormData();
-    formData.append("document", picture);
+    formData.append("file", picture);
     formData.append("documentType", "profilePicture");
     try {
       const response = await axiosInstance.put(
-        "/employee/profile/avatar",
+        "/employee/info/profile",
         formData,
         {
           headers: {
@@ -128,9 +128,31 @@ export const updateProfilePicture = createAsyncThunk(
           },
         }
       );
-      return response.data.message;
+      //fetch the url of the updated picture
+      const profilePicture = response.data.profilePicture;
+      const pictureUrlresponse = await axiosInstance.put("/employee/info/url", {
+        documentName: profilePicture,
+      });
+      const profilePictureUrl = pictureUrlresponse.data.url;
+
+      return { profilePicture, profilePictureUrl };
     } catch (error) {
       console.log(error);
+      rejectWithValue(error.response?.data?.message || error.message);
+    }
+  }
+);
+
+export const getProfilePictureUrl = createAsyncThunk(
+  "employee/getProfilePictureUrl",
+  async (profilePicture, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.put("/employee/info/url", {
+        documentName: profilePicture,
+      });
+      const profilePictureUrl = response.data.url;
+      return profilePictureUrl;
+    } catch (error) {
       rejectWithValue(error.response?.data?.message || error.message);
     }
   }
