@@ -16,11 +16,6 @@ import styles from "./Profile.module.css";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { getProfilePictureUrl } from "../store";
 import { useDispatch } from "react-redux";
-import { model, get } from "mongoose";
-import React from "react";
-import { replace } from "react-router-dom";
-import { put } from "../../../backend-portal/routes/EmployeeRoute";
-import data from "../mock/data";
 
 const mockData = {
   address: {
@@ -509,8 +504,8 @@ export default function Profile() {
               type="text"
               disabled={!isEditingAddress}
               defaultValue={profileData.address?.city}
-              value={profileData.address.zip}
-              onChange={(e) => handleChange("address", "zip", e.target.value)}
+              value={profileData.address.city}
+              onChange={(e) => handleChange("address", "city", e.target.value)}
             />
           </div>
           <div className={styles.profileField}>
