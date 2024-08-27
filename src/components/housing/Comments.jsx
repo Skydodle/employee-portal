@@ -1,17 +1,18 @@
-import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   fetchComments,
   addComment,
   updateComment,
-  selectCommentsByReportId
-} from '../../store';
-import PropTypes from 'prop-types';
+  selectCommentsByReportId,
+} from "../../store";
+import PropTypes from "prop-types";
+import { Button, List, Paper, TextField, Typography } from "@mui/material";
 
 const Comments = ({ reportId, currentUserId }) => {
   const dispatch = useDispatch();
   const comments = useSelector(selectCommentsByReportId(reportId));
-  const [commentText, setCommentText] = useState('');
+  const [commentText, setCommentText] = useState("");
   const [editCommentId, setEditCommentId] = useState(null);
 
   useEffect(() => {
@@ -27,13 +28,13 @@ const Comments = ({ reportId, currentUserId }) => {
         dispatch(
           updateComment({
             commentId: editCommentId,
-            updatedComment: commentText
+            updatedComment: commentText,
           })
         )
           .unwrap()
           .then(() => {
             setEditCommentId(null);
-            setCommentText('');
+            setCommentText("");
             dispatch(fetchComments(reportId));
           });
       } else {
@@ -41,7 +42,7 @@ const Comments = ({ reportId, currentUserId }) => {
         dispatch(addComment({ reportId, comment: commentText }))
           .unwrap()
           .then(() => {
-            setCommentText('');
+            setCommentText("");
             dispatch(fetchComments(reportId));
           });
       }
@@ -54,49 +55,55 @@ const Comments = ({ reportId, currentUserId }) => {
   };
 
   return (
-    <div className='comments-section'>
-      <h3>Comments</h3>
-      <ul>
+    <div className="comments-section">
+      <Typography variant="h3">Comments</Typography>
+      <List>
         {comments.length > 0 ? (
           comments.map((comment) => (
-            <li key={comment._id || comment.description}>
+            <Paper
+              key={comment._id || comment.description}
+              sx={{ display: "block" }}
+            >
               <p>{comment.description}</p>
               <p>
-                <strong>By:</strong>{' '}
+                <strong>By:</strong>{" "}
                 {comment.createdBy
                   ? `${comment.createdBy.firstName} ${comment.createdBy.lastName}`
-                  : 'Unknown'}
+                  : "Unknown"}
               </p>
               <p>
-                <strong>At:</strong>{' '}
+                <strong>At:</strong>{" "}
                 {new Date(comment.timestamp).toLocaleString()}
               </p>
 
               {/* {comment.createdBy && comment.createdBy === currentUserId && ( */}
-              <button
+              <Button
                 onClick={() =>
                   handleEditComment(comment._id, comment.description)
                 }
               >
                 Edit
-              </button>
+              </Button>
               {/* )} */}
-            </li>
+            </Paper>
           ))
         ) : (
           <p>No comments yet. Be the first to comment!</p>
         )}
-      </ul>
+      </List>
       <form onSubmit={handleAddComment}>
-        <textarea
+        <TextField
+          multiline
+          rows={3}
           value={commentText}
           onChange={(e) => setCommentText(e.target.value)}
-          placeholder='Add a comment'
+          placeholder="Add a comment"
           required
         />
-        <button type='submit'>
-          {editCommentId ? 'Update Comment' : 'Submit Comment'}
-        </button>
+        <br />
+        <Button type="submit">
+          {editCommentId ? "Update Comment" : "Submit Comment"}
+        </Button>
       </form>
     </div>
   );
@@ -104,7 +111,7 @@ const Comments = ({ reportId, currentUserId }) => {
 
 Comments.propTypes = {
   reportId: PropTypes.string.isRequired,
-  currentUserId: PropTypes.string.isRequired // Pass the current user's ID
+  currentUserId: PropTypes.string.isRequired, // Pass the current user's ID
 };
 
 export default Comments;

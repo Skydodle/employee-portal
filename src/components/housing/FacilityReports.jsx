@@ -1,25 +1,41 @@
-import { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   fetchFacilityReports,
   submitFacilityReport,
   selectFacilityReports,
-  selectUser // Import the user selector
-} from '../../store';
-import Comments from './Comments'; // Import the Comments component
-import PropTypes from 'prop-types';
+  selectUser, // Import the user selector
+} from "../../store";
+import Comments from "./Comments"; // Import the Comments component
+import PropTypes from "prop-types";
+import {
+  Button,
+  Card,
+  List,
+  Paper,
+  TextField,
+  Typography,
+} from "@mui/material";
 
 const FacilityReports = ({ houseId }) => {
   const dispatch = useDispatch();
   const facilityReports = useSelector(selectFacilityReports);
+  // const facilityReports = [
+  //   {
+  //     id: "csd",
+  //     title: "csdc",
+  //     createdAt: "csdcsd",
+  //     createdBy: { firstName: "csdc", lastName: "cdc" },
+  //   },
+  // ];
   const user = useSelector(selectUser); // Get user from Redux state
 
   // Fallback to get user from local storage if not in Redux state
   const currentUserId =
-    user?._id || JSON.parse(localStorage.getItem('user'))._id;
+    user?._id || JSON.parse(localStorage.getItem("user"))._id;
 
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
 
   useEffect(() => {
     if (houseId) {
@@ -42,74 +58,82 @@ const FacilityReports = ({ houseId }) => {
         });
 
       // Clear form fields after submission
-      setTitle('');
-      setDescription('');
+      setTitle("");
+      setDescription("");
     }
   };
 
   return (
-    <div className='facility-reports'>
-      <h2>Facility Reports</h2>
+    <Card className="facility-reports" sx={{ p: "1rem" }}>
+      <Typography variant="h2" sx={{ marginBottom: "1rem" }}>
+        Facility Reports
+      </Typography>
       {/* Form to submit a new facility report */}
       <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor='title'>Title:</label>
-          <input
-            type='text'
-            id='title'
+        <div style={{ marginBottom: "1rem" }}>
+          <TextField
+            type="text"
+            label="Title:"
+            id="title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             required
           />
         </div>
-        <div>
-          <label htmlFor='description'>Description:</label>
-          <textarea
-            id='description'
+        <div style={{ marginBottom: "1rem" }}>
+          <TextField
+            multiline
+            row={3}
+            label="Description:"
+            id="description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             required
           />
         </div>
-        <button type='submit'>Submit Report</button>
+        <Button type="submit">Submit Report</Button>
       </form>
 
       {/* Display existing facility reports */}
-      <h3>Your Submitted Reports</h3>
+      <Typography variant="h3">Your Submitted Reports</Typography>
       {facilityReports.length > 0 ? (
-        <ul>
+        <List sx={{ display: "flex", flexWrap: "nowrap" }}>
           {facilityReports.map((report) => (
-            <li key={report._id || report.title + report.createdAt}>
-              <h4>{report.title}</h4>
+            <Paper
+              elevation={3}
+              key={report._id || report.title + report.createdAt}
+              sx={{ display: "block", p: "1rem" }}
+            >
+              <Typography variant="h4">{report.title}</Typography>
               <p>{report.description}</p>
               <p>
                 <strong>Created By:</strong>
                 {report.createdBy
                   ? `${report.createdBy.firstName} ${report.createdBy.lastName}`
-                  : 'Unknown'}
+                  : "Unknown"}
               </p>
               <p>
-                <strong>Status:</strong> {report.status || 'Open'}
+                <strong>Status:</strong> {report.status || "Open"}
               </p>
               <p>
-                <strong>Submitted At:</strong>{' '}
+                <strong>Submitted At:</strong>{" "}
                 {new Date(report.createdAt || new Date()).toLocaleString()}
               </p>
 
               {/* Include the Comments component for each report */}
               <Comments reportId={report._id} currentUserId={currentUserId} />
-            </li>
+            </Paper>
           ))}
-        </ul>
+        </List>
       ) : (
         <p>You have not submitted any facility reports yet.</p>
       )}
-    </div>
+    </Card>
   );
 };
 
 FacilityReports.propTypes = {
-  houseId: PropTypes.string.isRequired
+  houseId: PropTypes.string.isRequired,
 };
 
 export default FacilityReports;

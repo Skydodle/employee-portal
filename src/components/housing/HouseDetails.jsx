@@ -1,35 +1,49 @@
-import PropTypes from 'prop-types';
+import { Box, Card, List, ListItem, Typography } from "@mui/material";
+import PropTypes from "prop-types";
 
 const HouseDetails = ({ address, roommates }) => {
   return (
-    <div className='house-details'>
-      <h2>House Details</h2>
-      <div className='address'>
-        <strong>Address:</strong>
-        <p>{address}</p>
-      </div>
-      <div className='roommates'>
-        <h3>Roommates</h3>
+    <Card
+      className="house-details"
+      sx={{
+        p: "1rem",
+        my: "1rem",
+        display: "flex",
+        flexDirection: "column",
+        gap: "1rem",
+      }}
+    >
+      <Box>
+        <Typography variant="h3" sx={{ mb: "1rem" }}>
+          House Details
+        </Typography>
+        <Box className="address">
+          <strong>Address:</strong>
+          <p>{address}</p>
+        </Box>
+      </Box>
+      <Box className="roommates">
+        <Typography variant="h3">Roommates</Typography>
         {roommates.length > 0 ? (
-          <ul>
+          <List>
             {roommates.map((roommate, index) => (
-              <li key={index}>
-                <p>
-                  <strong>Name:</strong> {roommate.firstName}{' '}
+              <ListItem key={index}>
+                <div style={{ marginRight: "1rem" }}>
+                  <strong>Name:</strong> {roommate.firstName}{" "}
                   {roommate.lastName}
-                </p>
-                <p>
-                  <strong>Phone:</strong>{' '}
-                  {roommate.cellPhoneNumber || 'Not Provided'}
-                </p>
-              </li>
+                </div>
+                <div>
+                  <strong>Phone:</strong>{" "}
+                  {roommate.cellPhoneNumber || "Not Provided"}
+                </div>
+              </ListItem>
             ))}
-          </ul>
+          </List>
         ) : (
           <p>No roommates assigned to this house.</p>
         )}
-      </div>
-    </div>
+      </Box>
+    </Card>
   );
 };
 
@@ -39,9 +53,9 @@ HouseDetails.propTypes = {
     PropTypes.shape({
       firstName: PropTypes.string.isRequired,
       lastName: PropTypes.string.isRequired,
-      cellPhoneNumber: PropTypes.string.isRequired
+      cellPhoneNumber: PropTypes.string.isRequired,
     })
-  ).isRequired
+  ).isRequired,
 };
 
 export default HouseDetails;
