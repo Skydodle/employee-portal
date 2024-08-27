@@ -371,7 +371,7 @@ export default function Profile() {
           expandIcon={<ExpandMoreIcon />}
           aria-controls="name-panel"
         >
-          Name
+          Personal Details
         </AccordionSummary>
         <AccordionDetails>
           <div className={styles.profileField}>
