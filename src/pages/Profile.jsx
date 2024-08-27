@@ -78,7 +78,7 @@ export default function Profile() {
   const [isEditingContact, setIsEditingContact] = useState(false);
   const [isEditingEmployment, setIsEditingEmployment] = useState(false);
   const [isEditingEmergency, setIsEditingEmergency] = useState(false);
-
+  const [email, setEmail] = useState("");
   const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -91,7 +91,11 @@ export default function Profile() {
 
       setProfileData(response.data);
       dispatch(getProfilePictureUrl(response.data.profilePicture));
+      setEmail(response.data.userId.email);
       setLoading(false);
+      setIsEditingEmergency(
+        new Array(response.data.emergencyContacts.length).fill(false)
+      );
     } catch (err) {
       setError(err.message);
       setLoading(false);
@@ -177,26 +181,28 @@ export default function Profile() {
       setError("Failed to fetch file URL");
     }
   };
-
   const handleEditClick = (section) => {
-    switch (section) {
-      case "name":
-        setIsEditingName(true);
-        break;
-      case "address":
-        setIsEditingAddress(true);
-        break;
-      case "contact":
-        setIsEditingContact(true);
-        break;
-      case "employment":
-        setIsEditingEmployment(true);
-        break;
-      case "emergency":
-        setIsEditingEmergency(true);
-        break;
-      default:
-        break;
+    if (!isEditing) {
+      setIsEditing(true);
+      switch (section) {
+        case "name":
+          setIsEditingName(true);
+          break;
+        case "address":
+          setIsEditingAddress(true);
+          break;
+        case "contact":
+          setIsEditingContact(true);
+          break;
+        case "employment":
+          setIsEditingEmployment(true);
+          break;
+        case "emergency":
+          setIsEditingEmergency(true);
+          break;
+        default:
+          break;
+      }
     }
   };
 
@@ -231,48 +237,61 @@ export default function Profile() {
 
   const handleSaveClick = async (section) => {
     try {
-      let dataToUpdate = {};
-      switch (section) {
-        case "address":
-          dataToUpdate = {
-            address: {
-              street: profileData.address.street,
-              city: profileData.address.city,
-              state: profileData.address.state,
-              zip: profileData.address.zip,
-            },
-          };
-          setIsEditingAddress(false);
-          break;
-        case "contact":
-          dataToUpdate = {
-            cellPhoneNumber: profileData.cellPhoneNumber,
-            workPhoneNumber: profileData.workPhoneNumber,
-          };
-          setIsEditingContact(false);
-          break;
-        case "employment":
-          dataToUpdate = {
-            citizenship: {
-              visaStatus: profileData.citizenship.visaStatus,
-              startDate: profileData.citizenship.startDate,
-              endDate: profileData.citizenship.endDate,
-            },
-          };
-          setIsEditingEmployment(false);
-          break;
-        case "emergency":
-          dataToUpdate = {
-            emergencyContacts: profileData.emergencyContacts,
-          };
-          setIsEditingEmergency(false);
-          break;
-        default:
-          break;
-      }
+      if (section === "name") {
+        let dataToUpdate = {
+          firstName: profileData.firstName,
+          middleName: profileData.middleName,
+          lastName: profileData.lastName,
+          preferredName: profileData.preferredName,
+          ssn: profileData.ssn,
+          dateOfBirth: profileData.dateOfBirth,
+          gender: profileData.gender,
+        };
 
-      const response = await axiosInstance.put("/employee/info", dataToUpdate);
-      setProfileData(response.data);
+        // Update general information
+        await axiosInstance.put("/employee/info", dataToUpdate);
+
+        // Update email separately
+        await axiosInstance.put("/employee/info/email", { email });
+
+        setIsEditingName(false);
+      } else if (section === "address") {
+        let dataToUpdate = {
+          address: {
+            street: profileData.address.street,
+            city: profileData.address.city,
+            state: profileData.address.state,
+            zip: profileData.address.zip,
+          },
+        };
+        await axiosInstance.put("/employee/info", dataToUpdate);
+        setIsEditingAddress(false);
+      } else if (section === "contact") {
+        let dataToUpdate = {
+          cellPhoneNumber: profileData.cellPhoneNumber,
+          workPhoneNumber: profileData.workPhoneNumber,
+        };
+        await axiosInstance.put("/employee/info", dataToUpdate);
+        setIsEditingContact(false);
+      } else if (section === "employment") {
+        let dataToUpdate = {
+          citizenship: {
+            visaStatus: profileData.citizenship.visaStatus,
+            startDate: profileData.citizenship.startDate,
+            endDate: profileData.citizenship.endDate,
+          },
+        };
+        await axiosInstance.put("/employee/info", dataToUpdate);
+        setIsEditingEmployment(false);
+      } else if (section === "emergency") {
+        let dataToUpdate = {
+          emergencyContacts: profileData.emergencyContacts,
+        };
+        await axiosInstance.put("/employee/info", dataToUpdate);
+        setIsEditingEmergency(false);
+      }
+      setIsEditing(false);
+      fetchProfileData(); // Re-fetch data after saving
     } catch (error) {
       console.error("Error updating profile:", error.message);
       setError("Failed to update profile");
@@ -360,7 +379,7 @@ export default function Profile() {
             <TextField
               type="text"
               disabled={!isEditingName}
-              defaultValue={profileData.firstName}
+              value={profileData.firstName}
               onChange={(e) =>
                 handleChange("name", "firstName", e.target.value)
               }
@@ -371,7 +390,10 @@ export default function Profile() {
             <TextField
               type="text"
               disabled={!isEditingName}
-              defaultValue={profileData.middleName}
+              value={profileData.middleName}
+              onChange={(e) =>
+                handleChange("name", "middleName", e.target.value)
+              }
             />
           </div>
           <div className={styles.profileField}>
@@ -379,7 +401,8 @@ export default function Profile() {
             <TextField
               type="text"
               disabled={!isEditingName}
-              defaultValue={profileData.lastName}
+              value={profileData.lastName}
+              onChange={(e) => handleChange("name", "lastName", e.target.value)}
             />
           </div>
           <div className={styles.profileField}>
@@ -387,7 +410,10 @@ export default function Profile() {
             <TextField
               type="text"
               disabled={!isEditingName}
-              defaultValue={profileData.preferredName}
+              value={profileData.preferredName}
+              onChange={(e) =>
+                handleChange("name", "preferredName", e.target.value)
+              }
             />
           </div>
           <div className={styles.profileField}>
@@ -395,7 +421,8 @@ export default function Profile() {
             <TextField
               type="email"
               disabled={!isEditingName}
-              defaultValue={profileData.userId.email}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
           <div className={styles.profileField}>
@@ -403,7 +430,8 @@ export default function Profile() {
             <TextField
               type="text"
               disabled={!isEditingName}
-              defaultValue={profileData.ssn}
+              value={profileData.ssn}
+              onChange={(e) => handleChange("name", "ssn", e.target.value)}
             />
           </div>
           <div className={styles.profileField}>
@@ -411,14 +439,21 @@ export default function Profile() {
             <TextField
               type="date"
               disabled={!isEditingName}
-              defaultValue={
+              value={
                 new Date(profileData.dateOfBirth).toISOString().split("T")[0]
+              }
+              onChange={(e) =>
+                handleChange("name", "dateOfBirth", e.target.value)
               }
             />
           </div>
           <div className={styles.profileField}>
             <label>Gender:</label>
-            <Select disabled={!isEditingName} defaultValue={profileData.gender}>
+            <Select
+              disabled={!isEditingName}
+              value={profileData.gender}
+              onChange={(e) => handleChange("name", "gender", e.target.value)}
+            >
               <MenuItem value="Male">Male</MenuItem>
               <MenuItem value="Female">Female</MenuItem>
               <MenuItem value="Other">Other</MenuItem>
@@ -713,13 +748,11 @@ export default function Profile() {
                       <Button onClick={() => handlePreviewClick(doc.name)}>
                         Preview
                       </Button>
-                      <a
-                        href={`/${doc.name}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        Download
-                      </a>
+                      {/* Show file input only if `doc.name` is not empty */}
+                      <input
+                        type="file"
+                        onChange={(e) => handleFileChange(e, key)}
+                      />
                     </>
                   ) : (
                     <span>No document available</span>
