@@ -1,20 +1,21 @@
-import React, { useEffect, useState } from "react";
-import { selectProfilePicture } from "../store";
-import { useSelector, useDispatch } from "react-redux";
+import React, { useState, useEffect } from "react";
 import axiosInstance from "../interceptors/axiosInstance";
-import { getProfilePictureUrl } from "../store/onBoardingSlice/onBoarding.thunks";
 import Emergency from "../components/Emergency";
-import styles from "./Profile.module.css";
+import UploadAvatar from "../components/UploadAvatar";
 import {
-  AccordionDetails,
   Accordion,
-  AccordionActions,
   AccordionSummary,
-  Button,
-  Select,
+  AccordionDetails,
   TextField,
+  AccordionActions,
+  Button,
   MenuItem,
+  Select,
 } from "@mui/material";
+import styles from "./Profile.module.css";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { getProfilePictureUrl } from "../store";
+import { useDispatch } from "react-redux";
 
 const mockData = {
   address: {
@@ -71,38 +72,111 @@ const mockData = {
   __v: 0,
 };
 
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import UploadAvatar from "../components/UploadAvatar";
 export default function Profile() {
-  const dispatch = useDispatch();
-  const profilePicture = useSelector(selectProfilePicture);
-
   const [isEditingName, setIsEditingName] = useState(false);
   const [isEditingAddress, setIsEditingAddress] = useState(false);
   const [isEditingContact, setIsEditingContact] = useState(false);
   const [isEditingEmployment, setIsEditingEmployment] = useState(false);
   const [isEditingEmergency, setIsEditingEmergency] = useState(false);
 
-  const [profileData, setProfileData] = useState({ citizenship: {} });
+  const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const dispatch = useDispatch();
 
+  const fetchProfileData = async () => {
+    try {
+      const response = await axiosInstance.get("/employee/info");
+
+      setProfileData(response.data);
+      dispatch(getProfilePictureUrl(response.data.profilePicture));
+      setLoading(false);
+    } catch (err) {
+      setError(err.message);
+      setLoading(false);
+    }
+  };
   useEffect(() => {
-    const fetchProfileData = async () => {
-      try {
-        const response = await axiosInstance.get("/employee/info");
-        // const response = { data: mockData };
-        setProfileData(response.data);
-        dispatch(getProfilePictureUrl(response.data.profilePicture));
-        setLoading(false);
-      } catch (err) {
-        setError(err.message);
-        setLoading(false);
-      }
-    };
-
     fetchProfileData();
   }, []);
+
+  // Upload file for driver's license
+  const handleLicenseUpload = async (file) => {
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const response = await axiosInstance.put(
+        "/employee/info/license",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      // Fetch updated data after successful upload
+      fetchProfileData();
+      alert("Driver's License updated successfully");
+    } catch (error) {
+      console.error("Error uploading license:", error.message);
+      setError("Failed to upload license");
+    }
+  };
+
+  // Upload file for other documents
+  const handleDocumentUpload = async (file, docType) => {
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("documentType", docType);
+
+    try {
+      const response = await axiosInstance.put(
+        "/employee/info/visa",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      // Fetch updated data after successful upload
+      fetchProfileData();
+      alert("Document updated successfully");
+    } catch (error) {
+      console.error("Error uploading document:", error.message);
+      setError("Failed to upload document");
+    }
+  };
+
+  const handleFileChange = (e, docType) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (docType === "license") {
+      handleLicenseUpload(file);
+    } else {
+      handleDocumentUpload(file, docType);
+    }
+  };
+
+  const handlePreviewClick = async (documentName) => {
+    try {
+      const response = await axiosInstance.put("/employee/info/url", {
+        documentName,
+      });
+      const { url } = response.data;
+      window.open(url, "_blank");
+    } catch (error) {
+      console.error("Error fetching file URL:", error.message);
+      setError("Failed to fetch file URL");
+    }
+  };
 
   const handleEditClick = (section) => {
     switch (section) {
@@ -131,6 +205,7 @@ export default function Profile() {
       "Do you want to discard all of your changes?"
     );
     if (confirmCancel) {
+      setIsEditing(false);
       switch (section) {
         case "name":
           setIsEditingName(false);
@@ -150,7 +225,7 @@ export default function Profile() {
         default:
           break;
       }
-      // Logic to undo changes can be added here
+      fetchProfileData(); // Reset state by refetching data
     }
   };
 
@@ -204,6 +279,24 @@ export default function Profile() {
     }
   };
 
+  const handleChange = (section, field, value, index = null) => {
+    const updatedData = { ...profileData };
+
+    if (section === "emergency" && index !== null) {
+      updatedData.emergencyContacts[index][field] = value;
+    } else if (section === "address") {
+      updatedData.address[field] = value;
+    } else if (section === "contact") {
+      updatedData[field] = value;
+    } else if (section === "employment") {
+      updatedData.citizenship[field] = value;
+    } else if (section === "name") {
+      updatedData[field] = value;
+    }
+
+    setProfileData(updatedData);
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -217,15 +310,36 @@ export default function Profile() {
   }
 
   const handleEditEmergencyContact = (index) => {
-    setIsEditingEmergency(true);
+    if (!isEditing) {
+      setIsEditing(true);
+      const updatedEditingState = isEditingEmergency.map(
+        (editState, i) => i === index
+      );
+      setIsEditingEmergency(updatedEditingState);
+    }
   };
 
-  const handleSaveEmergencyContact = (updatedContact) => {
-    setIsEditingEmergency(false);
+  const handleSaveEmergencyContact = async (updatedContact, index) => {
+    try {
+      const dataToUpdate = {
+        emergencyContacts: [...profileData.emergencyContacts],
+      };
+      dataToUpdate.emergencyContacts[index] = updatedContact;
+
+      const response = await axiosInstance.put("/employee/info", dataToUpdate);
+      fetchProfileData();
+      setIsEditing(false);
+      setIsEditingEmergency(isEditingEmergency.map(() => false));
+    } catch (error) {
+      console.error("Error updating emergency contact:", error.message);
+      setError("Failed to update emergency contact");
+    }
   };
 
   const handleCancelEmergencyContact = () => {
-    setIsEditingEmergency(false);
+    setIsEditing(false);
+    const updatedEditingState = isEditingEmergency.map(() => false);
+    setIsEditingEmergency(updatedEditingState);
   };
 
   return (
@@ -247,6 +361,9 @@ export default function Profile() {
               type="text"
               disabled={!isEditingName}
               defaultValue={profileData.firstName}
+              onChange={(e) =>
+                handleChange("name", "firstName", e.target.value)
+              }
             />
           </div>
           <div className={styles.profileField}>
@@ -346,6 +463,10 @@ export default function Profile() {
               type="text"
               disabled={!isEditingAddress}
               defaultValue={profileData.address?.street}
+              value={profileData.address.street}
+              onChange={(e) =>
+                handleChange("address", "street", e.target.value)
+              }
             />
           </div>
           <div className={styles.profileField}>
@@ -354,6 +475,8 @@ export default function Profile() {
               type="text"
               disabled={!isEditingAddress}
               defaultValue={profileData.address?.city}
+              value={profileData.address.zip}
+              onChange={(e) => handleChange("address", "zip", e.target.value)}
             />
           </div>
           <div className={styles.profileField}>
@@ -362,6 +485,8 @@ export default function Profile() {
               type="text"
               disabled={!isEditingAddress}
               defaultValue={profileData.address?.state}
+              value={profileData.address.state}
+              onChange={(e) => handleChange("address", "state", e.target.value)}
             />
           </div>
           <div className={styles.profileField}>
@@ -370,6 +495,8 @@ export default function Profile() {
               type="text"
               disabled={!isEditingAddress}
               defaultValue={profileData.address?.zip}
+              value={profileData.address.zip}
+              onChange={(e) => handleChange("address", "zip", e.target.value)}
             />
           </div>
           <AccordionActions>
@@ -405,6 +532,10 @@ export default function Profile() {
               type="text"
               disabled={!isEditingContact}
               defaultValue={profileData.cellPhoneNumber}
+              value={profileData.cellPhoneNumber}
+              onChange={(e) =>
+                handleChange("contact", "cellPhoneNumber", e.target.value)
+              }
             />
           </div>
           <div className={styles.profileField}>
@@ -413,6 +544,10 @@ export default function Profile() {
               type="text"
               disabled={!isEditingContact}
               defaultValue={profileData.workPhoneNumber}
+              value={profileData.workPhoneNumber}
+              onChange={(e) =>
+                handleChange("contact", "workPhoneNumber", e.target.value)
+              }
             />
           </div>
           <AccordionActions>
@@ -444,21 +579,34 @@ export default function Profile() {
         <AccordionDetails>
           <div className={styles.profileField}>
             <label>Visa Status:</label>
-            <TextField
-              type="text"
+            <Select
               disabled={!isEditingEmployment}
-              defaultValue={profileData.citizenship?.visaStatus}
-            />
+              value={profileData.citizenship.visaStatus}
+              onChange={(e) =>
+                handleChange("employment", "visaStatus", e.target.value)
+              }
+            >
+              <MenuItem value="H1-b">H1-B</MenuItem>
+              <MenuItem value="L2">L2</MenuItem>
+              <MenuItem value="F1">F1(CPT/OPT)</MenuItem>
+              <MenuItem value="H4">H4</MenuItem>
+              <MenuItem value="other">Other</MenuItem>
+              <MenuItem value="Green Card">Green Card</MenuItem>
+              <MenuItem value="Citizen">Citizen</MenuItem>
+            </Select>
           </div>
           <div className={styles.profileField}>
             <label>Start Date:</label>
             <TextField
               type="date"
               disabled={!isEditingEmployment}
-              defaultValue={
-                new Date(profileData.citizenship?.startDate)
+              value={
+                new Date(profileData.citizenship.startDate)
                   .toISOString()
                   .split("T")[0]
+              }
+              onChange={(e) =>
+                handleChange("employment", "startDate", e.target.value)
               }
             />
           </div>
@@ -467,10 +615,13 @@ export default function Profile() {
             <TextField
               type="date"
               disabled={!isEditingEmployment}
-              defaultValue={
+              value={
                 new Date(profileData.citizenship.endDate)
                   .toISOString()
                   .split("T")[0]
+              }
+              onChange={(e) =>
+                handleChange("employment", "endDate", e.target.value)
               }
             />
           </div>
@@ -509,9 +660,11 @@ export default function Profile() {
             <Emergency
               key={index}
               contact={contact}
-              isEditing={isEditingEmergency}
+              isEditing={isEditingEmergency[index]}
               onEdit={() => handleEditEmergencyContact(index)}
-              onSave={handleSaveEmergencyContact}
+              onSave={(updatedContact) =>
+                handleSaveEmergencyContact(updatedContact, index)
+              }
               onCancel={handleCancelEmergencyContact}
             />
           ))}
@@ -534,10 +687,7 @@ export default function Profile() {
               <>
                 <Button
                   onClick={() =>
-                    window.open(
-                      `/${profileData.driverLicense?.licenseCopy}`,
-                      "_blank"
-                    )
+                    handlePreviewClick(profileData.driverLicense.licenseCopy)
                   }
                 >
                   Preview
@@ -556,33 +706,32 @@ export default function Profile() {
           </div>
 
           {/* Other Documents */}
-          {Object.entries(profileData.citizenship?.optDocument)
-            .filter(
-              ([key]) => key !== "_id" && key !== "userid" && key !== "__v"
-            ) // 过滤掉不需要的字段
-            .map(([key, doc]) => (
-              <div className={styles.profileField} key={key}>
-                <label>{key.replace(/([A-Z])/g, " $1")}:</label>
-                {doc.name ? (
-                  <>
-                    <Button
-                      onClick={() => window.open(`/${doc.name}`, "_blank")}
-                    >
-                      Preview
-                    </Button>
-                    <a
-                      href={`/${doc.name}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Download
-                    </a>
-                  </>
-                ) : (
-                  <span>No document available</span>
-                )}
-              </div>
-            ))}
+          {profileData.citizenship?.optDocument &&
+            Object.entries(profileData.citizenship?.optDocument)
+              .filter(
+                ([key]) => key !== "_id" && key !== "userid" && key !== "__v"
+              )
+              .map(([key, doc]) => (
+                <div className={styles.profileField} key={key}>
+                  <label>{key.replace(/([A-Z])/g, " $1")}:</label>
+                  {doc.name ? (
+                    <>
+                      <Button onClick={() => handlePreviewClick(doc.name)}>
+                        Preview
+                      </Button>
+                      <a
+                        href={`/${doc.name}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Download
+                      </a>
+                    </>
+                  ) : (
+                    <span>No document available</span>
+                  )}
+                </div>
+              ))}
         </AccordionDetails>
       </Accordion>
     </div>

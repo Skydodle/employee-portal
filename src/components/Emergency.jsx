@@ -5,14 +5,37 @@ import {
   Button,
   TextField,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "../pages/Profile.module.css";
+
 function Emergency({ contact, isEditing, onEdit, onSave, onCancel }) {
   const [localContact, setLocalContact] = useState(contact);
+  const [initialContact, setInitialContact] = useState(contact);
+
+  useEffect(() => {
+    setLocalContact(contact);
+    setInitialContact(contact);
+  }, [contact]);
+
+  useEffect(() => {
+    if (!isEditing) {
+      setLocalContact(initialContact);
+    }
+  }, [isEditing, initialContact]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setLocalContact((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleCancel = () => {
+    const confirmCancel = window.confirm(
+      "Do you want to discard all of your changes?"
+    );
+    if (confirmCancel) {
+      setLocalContact(initialContact);
+      onCancel();
+    }
   };
 
   return (
@@ -72,7 +95,7 @@ function Emergency({ contact, isEditing, onEdit, onSave, onCancel }) {
       <CardActions sx={{ justifyContent: "end" }}>
         {isEditing ? (
           <>
-            <Button onClick={onCancel} color="error">
+            <Button onClick={handleCancel} color="error">
               Cancel
             </Button>
             <Button onClick={() => onSave(localContact)}>Save</Button>
