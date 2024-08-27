@@ -391,12 +391,6 @@ export default function Profile() {
             />
           </div>
           <div className={styles.profileField}>
-            <label>Profile Picture:</label>
-            {!isEditingName && (
-              <img src={`/${profileData.profilePicture}`} alt="Profile" />
-            )}
-          </div>
-          <div className={styles.profileField}>
             <label>Email:</label>
             <TextField
               type="email"
