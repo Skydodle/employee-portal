@@ -1,11 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 function Emergency({ contact, isEditing, onEdit, onSave, onCancel, inputStyle }) {
   const [localContact, setLocalContact] = useState(contact);
+  const [initialContact, setInitialContact] = useState(contact);
+
+  useEffect(() => {
+    setLocalContact(contact);
+    setInitialContact(contact);
+  }, [contact]);
+
+  useEffect(() => {
+    if (!isEditing) {
+      setLocalContact(initialContact); // 如果退出编辑模式，重置本地状态
+    }
+  }, [isEditing, initialContact]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setLocalContact((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleCancel = () => {
+    const confirmCancel = window.confirm('Do you want to discard all of your changes?');
+    if (confirmCancel) {
+      setLocalContact(initialContact);
+      onCancel();
+    }
   };
 
   return (
@@ -67,8 +87,8 @@ function Emergency({ contact, isEditing, onEdit, onSave, onCancel, inputStyle })
       </div>
       {isEditing ? (
         <>
+          <button onClick={handleCancel}>Cancel</button>
           <button onClick={() => onSave(localContact)}>Save</button>
-          <button onClick={onCancel}>Cancel</button>
         </>
       ) : (
         <button onClick={onEdit}>Edit</button>
