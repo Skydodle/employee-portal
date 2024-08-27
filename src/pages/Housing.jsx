@@ -1,3 +1,4 @@
+
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import HouseDetails from "../components/housing/HouseDetails";
@@ -7,27 +8,19 @@ import { fetchHouseDetails, selectHouseDetails } from "../store";
 import { selectUser } from "../store";
 import { Box, Typography } from "@mui/material";
 
+
 const Housing = () => {
   const dispatch = useDispatch();
 
   // Accessing the user object correctly from Redux state or localStorage
   const userState = useSelector(selectUser);
-  const user = userState || JSON.parse(localStorage.getItem("user"));
+
+  const user = userState || JSON.parse(localStorage.getItem('user'));
   const assignedHouseId = user?.assignedHouse;
 
   const houseDetails = useSelector(selectHouseDetails);
-  // const houseDetails = {
-  //   address: "cscds",
-  //   residents: [
-  //     {
-  //       userId: {
-  //         firstName: "cs",
-  //         lastName: "csdcds",
-  //         cellPhoneNumber: "cdcs",
-  //       },
-  //     },
-  //   ],
-  // };
+
+
   useEffect(() => {
     if (assignedHouseId) {
       dispatch(fetchHouseDetails(assignedHouseId));
@@ -35,8 +28,10 @@ const Housing = () => {
   }, [dispatch, assignedHouseId]);
 
   return (
+
     <Box className="housing-page" sx={{ padding: "2rem" }}>
       <Typography variant="h2">Housing</Typography>
+
       {houseDetails && (
         <>
           <HouseDetails
@@ -44,7 +39,7 @@ const Housing = () => {
             roommates={houseDetails.residents.map((resident) => ({
               firstName: resident.userId.firstName,
               lastName: resident.userId.lastName,
-              cellPhoneNumber: resident.userId.cellPhoneNumber,
+              cellPhoneNumber: resident.userId.cellPhoneNumber
             }))}
           />
 
@@ -56,6 +51,7 @@ const Housing = () => {
       {/* CommentSection component will be added here */}
       {/* <CommentSection reportId="someReportId" comments={[]} /> */}
     </Box>
+
   );
 };
 

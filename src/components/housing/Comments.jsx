@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -9,10 +10,11 @@ import {
 import PropTypes from "prop-types";
 import { Button, List, Paper, TextField, Typography } from "@mui/material";
 
+
 const Comments = ({ reportId, currentUserId }) => {
   const dispatch = useDispatch();
   const comments = useSelector(selectCommentsByReportId(reportId));
-  const [commentText, setCommentText] = useState("");
+  const [commentText, setCommentText] = useState('');
   const [editCommentId, setEditCommentId] = useState(null);
 
   useEffect(() => {
@@ -29,12 +31,13 @@ const Comments = ({ reportId, currentUserId }) => {
           updateComment({
             commentId: editCommentId,
             updatedComment: commentText,
+
           })
         )
           .unwrap()
           .then(() => {
             setEditCommentId(null);
-            setCommentText("");
+            setCommentText('');
             dispatch(fetchComments(reportId));
           });
       } else {
@@ -42,7 +45,7 @@ const Comments = ({ reportId, currentUserId }) => {
         dispatch(addComment({ reportId, comment: commentText }))
           .unwrap()
           .then(() => {
-            setCommentText("");
+            setCommentText('');
             dispatch(fetchComments(reportId));
           });
       }
@@ -54,7 +57,7 @@ const Comments = ({ reportId, currentUserId }) => {
     setCommentText(currentText);
   };
 
-  return (
+  return ( 
     <div className="comments-section">
       <Typography variant="h3">Comments</Typography>
       <List>
@@ -86,6 +89,7 @@ const Comments = ({ reportId, currentUserId }) => {
               </Button>
               {/* )} */}
             </Paper>
+
           ))
         ) : (
           <p>No comments yet. Be the first to comment!</p>
@@ -104,6 +108,7 @@ const Comments = ({ reportId, currentUserId }) => {
         <Button type="submit">
           {editCommentId ? "Update Comment" : "Submit Comment"}
         </Button>
+
       </form>
     </div>
   );
@@ -112,6 +117,7 @@ const Comments = ({ reportId, currentUserId }) => {
 Comments.propTypes = {
   reportId: PropTypes.string.isRequired,
   currentUserId: PropTypes.string.isRequired, // Pass the current user's ID
+
 };
 
 export default Comments;

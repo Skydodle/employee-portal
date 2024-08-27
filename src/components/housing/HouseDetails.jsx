@@ -1,3 +1,4 @@
+
 import { Box, Card, List, ListItem, Typography } from "@mui/material";
 import PropTypes from "prop-types";
 
@@ -53,9 +54,9 @@ HouseDetails.propTypes = {
     PropTypes.shape({
       firstName: PropTypes.string.isRequired,
       lastName: PropTypes.string.isRequired,
-      cellPhoneNumber: PropTypes.string.isRequired,
+      cellPhoneNumber: PropTypes.string.isRequired
     })
-  ).isRequired,
+  ).isRequired
 };
 
 export default HouseDetails;

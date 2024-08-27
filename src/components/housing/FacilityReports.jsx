@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+
+import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   fetchFacilityReports,
   submitFacilityReport,
@@ -17,25 +18,19 @@ import {
   Typography,
 } from "@mui/material";
 
+
 const FacilityReports = ({ houseId }) => {
   const dispatch = useDispatch();
   const facilityReports = useSelector(selectFacilityReports);
-  // const facilityReports = [
-  //   {
-  //     id: "csd",
-  //     title: "csdc",
-  //     createdAt: "csdcsd",
-  //     createdBy: { firstName: "csdc", lastName: "cdc" },
-  //   },
-  // ];
   const user = useSelector(selectUser); // Get user from Redux state
 
   // Fallback to get user from local storage if not in Redux state
   const currentUserId =
-    user?._id || JSON.parse(localStorage.getItem("user"))._id;
+    user?._id || JSON.parse(localStorage.getItem('user'))._id;
 
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+
 
   useEffect(() => {
     if (houseId) {
@@ -58,8 +53,10 @@ const FacilityReports = ({ houseId }) => {
         });
 
       // Clear form fields after submission
-      setTitle("");
-      setDescription("");
+
+      setTitle('');
+      setDescription('');
+
     }
   };
 
@@ -75,11 +72,13 @@ const FacilityReports = ({ houseId }) => {
             type="text"
             label="Title:"
             id="title"
+
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             required
           />
         </div>
+
         <div style={{ marginBottom: "1rem" }}>
           <TextField
             multiline
@@ -91,6 +90,7 @@ const FacilityReports = ({ houseId }) => {
             required
           />
         </div>
+
         <Button type="submit">Submit Report</Button>
       </form>
 
@@ -105,23 +105,25 @@ const FacilityReports = ({ houseId }) => {
               sx={{ display: "block", p: "1rem" }}
             >
               <Typography variant="h4">{report.title}</Typography>
+
               <p>{report.description}</p>
               <p>
                 <strong>Created By:</strong>
                 {report.createdBy
                   ? `${report.createdBy.firstName} ${report.createdBy.lastName}`
-                  : "Unknown"}
+                  : 'Unknown'}
               </p>
               <p>
-                <strong>Status:</strong> {report.status || "Open"}
+                <strong>Status:</strong> {report.status || 'Open'}
               </p>
               <p>
-                <strong>Submitted At:</strong>{" "}
+                <strong>Submitted At:</strong>{' '}
                 {new Date(report.createdAt || new Date()).toLocaleString()}
               </p>
 
               {/* Include the Comments component for each report */}
               <Comments reportId={report._id} currentUserId={currentUserId} />
+
             </Paper>
           ))}
         </List>
@@ -129,11 +131,14 @@ const FacilityReports = ({ houseId }) => {
         <p>You have not submitted any facility reports yet.</p>
       )}
     </Card>
+
   );
 };
 
 FacilityReports.propTypes = {
-  houseId: PropTypes.string.isRequired,
+
+  houseId: PropTypes.string.isRequired
+
 };
 
 export default FacilityReports;
