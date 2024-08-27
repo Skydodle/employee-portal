@@ -169,6 +169,12 @@ function Onboarding() {
   };
   const handleFinish = async (e) => {
     e.preventDefault();
+
+    if (!e.target.checkValidity()) {
+      setError("Some field is invalid");
+      return;
+    }
+
     const receiptBlobUrl = profile.workAuthorization?.receipt;
     const licenseCopyBlobUrl = profile.driverLicense?.licenseCopy;
 
@@ -199,6 +205,9 @@ function Onboarding() {
         .unwrap()
         .then(
           (res) => {
+            setCompleted((prev) =>
+              prev.map((val, index) => (index === activeStep ? true : val))
+            );
             setActiveStep((prev) => prev + 1);
           },
           (error) => {
