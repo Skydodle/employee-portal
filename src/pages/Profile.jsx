@@ -16,6 +16,11 @@ import styles from "./Profile.module.css";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { getProfilePictureUrl } from "../store";
 import { useDispatch } from "react-redux";
+import { model, get } from "mongoose";
+import React from "react";
+import { replace } from "react-router-dom";
+import { put } from "../../../backend-portal/routes/EmployeeRoute";
+import data from "../mock/data";
 
 const mockData = {
   address: {
@@ -721,17 +726,14 @@ export default function Profile() {
                 >
                   Preview
                 </Button>
-                <a
-                  href={`/${profileData.driverLicense?.licenseCopy}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Download
-                </a>
               </>
             ) : (
               <span>No document available</span>
             )}
+            <input
+              type="file"
+              onChange={(e) => handleFileChange(e, "license")}
+            />
           </div>
 
           {/* Other Documents */}
