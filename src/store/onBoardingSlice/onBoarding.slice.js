@@ -5,12 +5,14 @@ import {
   getOnboardingStatus,
   getUserProfile,
   postUserProfile,
+  updateProfilePicture,
+  getProfilePictureUrl,
 } from "./onBoarding.thunks"; // Adjust the path if necessary
 import mockProfile from "../../mock/data";
 // Initial state
 const initialState = {
   status: null,
-  profile: {},
+  profile: { profilePicture: "", profilePictureUrl: "" },
   // profile: {mockProfile},
   loading: false,
   error: null,
@@ -197,6 +199,24 @@ const onboardingSlice = createSlice({
       .addCase(getUserProfile.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      });
+    //profile picture
+    builder
+      .addCase(updateProfilePicture.fulfilled, (state, action) => {
+        state.loading = false;
+        const { profilePicture, profilePictureUrl } = action.payload;
+        state.profile.profilePicture = profilePicture;
+        state.profile.profilePictureUrl = profilePictureUrl;
+      })
+      .addCase(updateProfilePicture.pending, (state, action) => {
+        state.loading = true;
+      })
+      .addCase(updateProfilePicture.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(getProfilePictureUrl.fulfilled, (state, action) => {
+        state.profile.profilePictureUrl = action.payload;
       });
 
     // Handle postUserProfile actions
