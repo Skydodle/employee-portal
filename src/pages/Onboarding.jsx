@@ -145,7 +145,7 @@ function Onboarding() {
         hasDriverLicense: profile.driverLicense?.hasDriverLicense || false,
         licenseNumber: profile.driverLicense?.driverLicenseNumber || "",
         expirationDate: profile.driverLicense?.expirationDate || "",
-        licenseCopy: profile.driverLicense?.licenseCopy || "",
+        licenseCopy: "",
       },
 
       reference: {
@@ -170,7 +170,7 @@ function Onboarding() {
   const handleFinish = async (e) => {
     e.preventDefault();
     const receiptBlobUrl = profile.workAuthorization?.receipt;
-    const licenseCopyBlobUrl = profile.driverLicense?.driverLicense;
+    const licenseCopyBlobUrl = profile.driverLicense?.licenseCopy;
 
     try {
       let receiptFile = null;

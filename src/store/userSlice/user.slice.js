@@ -24,6 +24,7 @@ const userSlice = createSlice({
       // Clear token and onboardingRedirected from localStorage
       localStorage.removeItem('token');
       localStorage.removeItem('onboardingRedirected');
+      localStorage.removeItem('user');
 
       // Clear user data and authentication state
       state.user = null;

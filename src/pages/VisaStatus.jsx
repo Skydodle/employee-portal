@@ -5,6 +5,8 @@ import {
   selectVisaError,
   selectVisaLoading,
   uploadVisaDocument,
+  selectUploadedDocumentUrls,
+  fetchVisaDocumentUrls,
 } from "../store";
 import DocumentStatus from "../components/DocumentStatus";
 import { Typography } from "@mui/material";
@@ -15,15 +17,23 @@ export default function VisaStatus() {
   const visaDocument = useSelector(selectVisaDocument);
   const loading = useSelector(selectVisaLoading);
   const error = useSelector(selectVisaError);
+  const uploadedDocumentUrls = useSelector(selectUploadedDocumentUrls)
 
   useEffect(() => {
     dispatch(fetchVisaDocument());
+    dispatch(fetchVisaDocumentUrls());
   }, [dispatch]);
 
   const handleUpload = (documentType) => (file) => {
     dispatch(uploadVisaDocument({ documentType, file })).then(() => {
       dispatch(fetchVisaDocument());
+      dispatch(fetchVisaDocumentUrls());
     });
+  };
+
+  const getDocumentUrl = (documentType) => {
+    const document = uploadedDocumentUrls.find(doc => doc.documentType === documentType);
+    return document ? document.url : null;
   };
 
   if (loading) {
@@ -58,16 +68,16 @@ export default function VisaStatus() {
           name={visaDocument.optReceipt.name}
           status={visaDocument.optReceipt.status}
           feedback={visaDocument.optReceipt.feedback}
+          url={getDocumentUrl("optReceipt")}
         />
         <DocumentStatus
           documentType="OPT EAD"
           name={visaDocument.optEAD.name}
           status={visaDocument.optEAD.status}
           feedback={visaDocument.optEAD.feedback}
-          previousDocumentApproved={
-            visaDocument.optReceipt.status === "approved"
-          }
+          previousDocumentApproved={visaDocument.optReceipt.status === "approved"}
           onUpload={handleUpload("optEAD")}
+          url={getDocumentUrl("optEAD")}
         />
         <DocumentStatus
           documentType="I-983"
@@ -76,6 +86,7 @@ export default function VisaStatus() {
           feedback={visaDocument.i983.feedback}
           previousDocumentApproved={visaDocument.optEAD.status === "approved"}
           onUpload={handleUpload("i983")}
+          url={getDocumentUrl("i983")}
         />
         <DocumentStatus
           documentType="I-20"
@@ -84,6 +95,7 @@ export default function VisaStatus() {
           feedback={visaDocument.i20.feedback}
           previousDocumentApproved={visaDocument.i983.status === "approved"}
           onUpload={handleUpload("i20")}
+          url={getDocumentUrl("i20")}
         />
       </Grid>
       {visaDocument.i20.status === "approved" && (
