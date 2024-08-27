@@ -11,8 +11,8 @@ import {
 import mockProfile from "../../mock/data";
 // Initial state
 const initialState = {
-  status: null,
-  profile: { profilePicture: "", profilePictureUrl: "" },
+  status: { onboardingStatus: "Pending" },
+  profile: { citizenship: {}, profilePicture: "", profilePictureUrl: "" },
   // profile: {mockProfile},
   loading: false,
   error: null,
