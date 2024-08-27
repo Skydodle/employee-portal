@@ -16,8 +16,9 @@ export const loginUser = createAsyncThunk(
       if (response.status === 200) {
         const data = response.data;
 
-        // Store the JWT token in localStorage
+        // Store the JWT token and user data in localStorage
         localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
 
         // Dispatch the login action with the user data
         dispatch(login(data.user));
