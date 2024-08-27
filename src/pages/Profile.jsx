@@ -83,7 +83,7 @@ export default function Profile() {
   const [isEditingEmployment, setIsEditingEmployment] = useState(false);
   const [isEditingEmergency, setIsEditingEmergency] = useState(false);
 
-  const [profileData, setProfileData] = useState(null);
+  const [profileData, setProfileData] = useState({ citizenship: {} });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -278,7 +278,6 @@ export default function Profile() {
             {!isEditingName && (
               <img src={`/${profileData.profilePicture}`} alt="Profile" />
             )}
-            {isEditingName && <input type="file" />}
           </div>
           <div className={styles.profileField}>
             <label>Email:</label>
