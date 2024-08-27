@@ -259,7 +259,7 @@ export default function Profile() {
       dataToUpdate.emergencyContacts[index] = updatedContact;
   
       const response = await axiosInstance.put('/employee/info', dataToUpdate);
-      setProfileData(response.data);
+      fetchProfileData()
       setIsEditing(false)
       setIsEditingEmergency(isEditingEmergency.map(() => false));
     } catch (error) {
@@ -274,20 +274,8 @@ export default function Profile() {
     setIsEditingEmergency(updatedEditingState);
   };
 
-  const profilePageStyle = {
-    maxWidth: '600px',
-    margin: '0 auto',
-    padding: '20px',
-    textAlign: 'left'
-  };
-
-  const inputStyle = (isEditing) => ({
-    border: isEditing ? '1px solid #ccc' : 'none',
-    backgroundColor: isEditing ? 'white' : 'transparent',
-  });
-
   return (
-    <div className="profile-page" style={profilePageStyle}>
+    <div className="profile-page">
       <h1>Personal Information</h1>
 
       {/* Name Section */}
@@ -299,8 +287,7 @@ export default function Profile() {
             type="text"
             disabled={!isEditingName}
             value={profileData.firstName} 
-            onChange={(e) => handleChange('name', 'firstName', e.target.value)} // 使用 handleChange 更新值
-            style={inputStyle(isEditingName)}
+            onChange={(e) => handleChange('name', 'firstName', e.target.value)}
           />
         </div>
         <div className="profile-field">
@@ -310,7 +297,6 @@ export default function Profile() {
             disabled={!isEditingName}
             value={profileData.middleName}
             onChange={(e) => handleChange('name', 'middleName', e.target.value)}
-            style={inputStyle(isEditingName)}
           />
         </div>
         <div className="profile-field">
@@ -320,7 +306,6 @@ export default function Profile() {
             disabled={!isEditingName}
             value={profileData.lastName}
             onChange={(e) => handleChange('name', 'lastName', e.target.value)}
-            style={inputStyle(isEditingName)}
           />
         </div>
         <div className="profile-field">
@@ -330,7 +315,6 @@ export default function Profile() {
             disabled={!isEditingName}
             value={profileData.preferredName}
             onChange={(e) => handleChange('name', 'preferredName', e.target.value)}
-            style={inputStyle(isEditingName)}
           />
         </div>
         <div className="profile-field">
@@ -340,7 +324,6 @@ export default function Profile() {
             disabled={!isEditingName}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            style={inputStyle(isEditingName)}
           />
         </div>
         <div className="profile-field">
@@ -350,7 +333,6 @@ export default function Profile() {
             disabled={!isEditingName}
             value={profileData.ssn}
             onChange={(e) => handleChange('name', 'ssn', e.target.value)}
-            style={inputStyle(isEditingName)}
           />
         </div>
         <div className="profile-field">
@@ -360,7 +342,6 @@ export default function Profile() {
             disabled={!isEditingName}
             value={new Date(profileData.dateOfBirth).toISOString().split('T')[0]}
             onChange={(e) => handleChange('name', 'dateOfBirth', e.target.value)}
-            style={inputStyle(isEditingName)}
           />
         </div>
         <div className="profile-field">
@@ -369,7 +350,6 @@ export default function Profile() {
             disabled={!isEditingName}
             value={profileData.gender}
             onChange={(e) => handleChange('name', 'gender', e.target.value)}
-            style={inputStyle(isEditingName)}
           >
             <option value="Male">Male</option>
             <option value="Female">Female</option>
@@ -396,7 +376,6 @@ export default function Profile() {
             disabled={!isEditingAddress}
             value={profileData.address.street}
             onChange={(e) => handleChange('address', 'street', e.target.value)}
-            style={inputStyle(isEditingAddress)}
           />
         </div>
         <div className="profile-field">
@@ -406,7 +385,6 @@ export default function Profile() {
             disabled={!isEditingAddress}
             value={profileData.address.city}
             onChange={(e) => handleChange('address', 'city', e.target.value)}
-            style={inputStyle(isEditingAddress)}
           />
         </div>
         <div className="profile-field">
@@ -416,7 +394,6 @@ export default function Profile() {
             disabled={!isEditingAddress}
             value={profileData.address.state}
             onChange={(e) => handleChange('address', 'state', e.target.value)}
-            style={inputStyle(isEditingAddress)}
           />
         </div>
         <div className="profile-field">
@@ -426,7 +403,6 @@ export default function Profile() {
             disabled={!isEditingAddress}
             value={profileData.address.zip}
             onChange={(e) => handleChange('address', 'zip', e.target.value)}
-            style={inputStyle(isEditingAddress)}
           />
         </div>
         {isEditingAddress ? (
@@ -449,7 +425,6 @@ export default function Profile() {
             disabled={!isEditingContact}
             value={profileData.cellPhoneNumber}
             onChange={(e) => handleChange('contact', 'cellPhoneNumber', e.target.value)}
-            style={inputStyle(isEditingContact)}
           />
         </div>
         <div className="profile-field">
@@ -459,7 +434,6 @@ export default function Profile() {
             disabled={!isEditingContact}
             value={profileData.workPhoneNumber}
             onChange={(e) => handleChange('contact', 'workPhoneNumber', e.target.value)}
-            style={inputStyle(isEditingContact)}
           />
         </div>
         {isEditingContact ? (
@@ -481,7 +455,6 @@ export default function Profile() {
             disabled={!isEditingEmployment}
             value={profileData.citizenship.visaStatus}
             onChange={(e) => handleChange('employment', 'visaStatus', e.target.value)}
-            style={inputStyle(isEditingEmployment)}
           >
             <option value="H1-b">H1-B</option>
             <option value="L2">L2</option>
@@ -499,7 +472,6 @@ export default function Profile() {
             disabled={!isEditingEmployment}
             value={new Date(profileData.citizenship.startDate).toISOString().split('T')[0]}
             onChange={(e) => handleChange('employment', 'startDate', e.target.value)}
-            style={inputStyle(isEditingEmployment)}
           />
         </div>
         <div className="profile-field">
@@ -509,7 +481,6 @@ export default function Profile() {
             disabled={!isEditingEmployment}
             value={new Date(profileData.citizenship.endDate).toISOString().split('T')[0]}
             onChange={(e) => handleChange('employment', 'endDate', e.target.value)}
-            style={inputStyle(isEditingEmployment)}
           />
         </div>
         {isEditingEmployment ? (
@@ -533,7 +504,6 @@ export default function Profile() {
           onEdit={() => handleEditEmergencyContact(index)}
           onSave={(updatedContact) => handleSaveEmergencyContact(updatedContact, index)}
           onCancel={handleCancelEmergencyContact}
-          inputStyle={inputStyle}
         />
       ))}
     </section>

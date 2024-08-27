@@ -25,7 +25,7 @@ function App() {
         </Route>
         <Route path="/login" element={<Login />} />
         <Route element={<LoginGuard />}>
-        <Route element={<OnboardingGuard />}>
+        {/* <Route element={<OnboardingGuard />}> */}
 
           <Route path="/onboarding" element={<Onboarding />} />
           <Route element={<Layout />}>
@@ -35,7 +35,7 @@ function App() {
             <Route path="/housing/report" element={<Report />} />
             <Route path="/testing" element={<OnboardingTesting />} />
             <Route path="/logout" element={<Logout />} />
-          </Route>
+          {/* </Route> */}
           </Route>
 
         {/* Catch-all route that redirects base URL to /login */}

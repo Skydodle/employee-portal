@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-function Emergency({ contact, isEditing, onEdit, onSave, onCancel, inputStyle }) {
+function Emergency({ contact, isEditing, onEdit, onSave, onCancel }) {
   const [localContact, setLocalContact] = useState(contact);
   const [initialContact, setInitialContact] = useState(contact);
 
@@ -11,7 +11,7 @@ function Emergency({ contact, isEditing, onEdit, onSave, onCancel, inputStyle })
 
   useEffect(() => {
     if (!isEditing) {
-      setLocalContact(initialContact); // 如果退出编辑模式，重置本地状态
+      setLocalContact(initialContact);
     }
   }, [isEditing, initialContact]);
 
@@ -38,7 +38,6 @@ function Emergency({ contact, isEditing, onEdit, onSave, onCancel, inputStyle })
           disabled={!isEditing}
           value={localContact.firstName}
           onChange={handleChange}
-          style={inputStyle(isEditing)}
         />
       </div>
       <div className="profile-field">
@@ -49,7 +48,6 @@ function Emergency({ contact, isEditing, onEdit, onSave, onCancel, inputStyle })
           disabled={!isEditing}
           value={localContact.lastName}
           onChange={handleChange}
-          style={inputStyle(isEditing)}
         />
       </div>
       <div className="profile-field">
@@ -60,7 +58,6 @@ function Emergency({ contact, isEditing, onEdit, onSave, onCancel, inputStyle })
           disabled={!isEditing}
           value={localContact.phoneNumber}
           onChange={handleChange}
-          style={inputStyle(isEditing)}
         />
       </div>
       <div className="profile-field">
@@ -71,7 +68,6 @@ function Emergency({ contact, isEditing, onEdit, onSave, onCancel, inputStyle })
           disabled={!isEditing}
           value={localContact.emailAddress}
           onChange={handleChange}
-          style={inputStyle(isEditing)}
         />
       </div>
       <div className="profile-field">
@@ -82,7 +78,6 @@ function Emergency({ contact, isEditing, onEdit, onSave, onCancel, inputStyle })
           disabled={!isEditing}
           value={localContact.relationship}
           onChange={handleChange}
-          style={inputStyle(isEditing)}
         />
       </div>
       {isEditing ? (
