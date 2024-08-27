@@ -1,0 +1,14 @@
+.profileField {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+.page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.profileSection {
+  max-width: 90%;
+  min-width: 500px;
+}
