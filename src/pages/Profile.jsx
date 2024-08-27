@@ -1,15 +1,81 @@
-import React, { useState, useEffect } from 'react';
-import axiosInstance from '../interceptors/axiosInstance';
-import Emergency from '../components/Emergency';
+import React, { useState, useEffect } from "react";
+import axiosInstance from "../interceptors/axiosInstance";
+import Emergency from "../components/Emergency";
+import styles from "./Profile.module.css";
+import {
+  AccordionDetails,
+  Accordion,
+  AccordionActions,
+  AccordionSummary,
+  Button,
+  Select,
+  TextField,
+  MenuItem,
+} from "@mui/material";
 
+const mockData = {
+  address: {
+    street: "123 Main St",
+    city: "Anytown",
+    state: "CA",
+    zip: "12345",
+  },
+  car: {
+    make: "Toyota",
+    model: "Camry",
+    color: "Blue",
+  },
+  citizenship: {
+    visaStatus: "Citizen",
+    document: "",
+    startDate: null,
+    endDate: null,
+    optDocument: { i983: {} },
+  },
+  driverLicense: {
+    hasDriverLicense: true,
+    licenseNumber: "D1234567",
+    expirationDate: "2030-01-01T00:00:00.000Z",
+  },
+  _id: "66c8ca4df751cd97d4f77439",
+  userId: {
+    _id: "66c8ca4df751cd97d4f77437",
+    email: "employee@company.com",
+  },
+  onboardingStatus: "Approved",
+  profilePicture: "profilePicture-employeeTest123.png",
+  firstName: "John",
+  lastName: "Doe",
+  middleName: "M.",
+  preferredName: "Johnny",
+  cellPhoneNumber: "555-123-4567",
+  workPhoneNumber: "555-987-6543",
+  ssn: "123-45-6789",
+  dateOfBirth: "1990-01-01T00:00:00.000Z",
+  gender: "Male",
+  emergencyContacts: [
+    {
+      firstName: "Jane",
+      lastName: "Doe",
+      middleName: "",
+      phone: "555-123-9999",
+      email: "jane.doe@example.com",
+      relationship: "Spouse",
+      _id: "66c8ca4df751cd97d4f7743a",
+    },
+  ],
+  feedback: "",
+  __v: 0,
+};
+
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 export default function Profile() {
-
   const [isEditingName, setIsEditingName] = useState(false);
   const [isEditingAddress, setIsEditingAddress] = useState(false);
   const [isEditingContact, setIsEditingContact] = useState(false);
   const [isEditingEmployment, setIsEditingEmployment] = useState(false);
   const [isEditingEmergency, setIsEditingEmergency] = useState(false);
- 
+
   const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -17,7 +83,7 @@ export default function Profile() {
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
-        const response = await axiosInstance.get('/employee/info');
+        const response = await axiosInstance.get("/employee/info");
         setProfileData(response.data);
         setLoading(false);
       } catch (err) {
@@ -31,19 +97,19 @@ export default function Profile() {
 
   const handleEditClick = (section) => {
     switch (section) {
-      case 'name':
+      case "name":
         setIsEditingName(true);
         break;
-      case 'address':
+      case "address":
         setIsEditingAddress(true);
         break;
-      case 'contact':
+      case "contact":
         setIsEditingContact(true);
         break;
-      case 'employment':
+      case "employment":
         setIsEditingEmployment(true);
         break;
-      case 'emergency':
+      case "emergency":
         setIsEditingEmergency(true);
         break;
       default:
@@ -52,22 +118,24 @@ export default function Profile() {
   };
 
   const handleCancelClick = (section) => {
-    const confirmCancel = window.confirm('Do you want to discard all of your changes?');
+    const confirmCancel = window.confirm(
+      "Do you want to discard all of your changes?"
+    );
     if (confirmCancel) {
       switch (section) {
-        case 'name':
+        case "name":
           setIsEditingName(false);
           break;
-        case 'address':
+        case "address":
           setIsEditingAddress(false);
           break;
-        case 'contact':
+        case "contact":
           setIsEditingContact(false);
           break;
-        case 'employment':
+        case "employment":
           setIsEditingEmployment(false);
           break;
-        case 'emergency':
+        case "emergency":
           setIsEditingEmergency(false);
           break;
         default:
@@ -81,37 +149,37 @@ export default function Profile() {
     try {
       let dataToUpdate = {};
       switch (section) {
-        case 'address':
+        case "address":
           dataToUpdate = {
             address: {
               street: profileData.address.street,
               city: profileData.address.city,
               state: profileData.address.state,
-              zip: profileData.address.zip
-            }
+              zip: profileData.address.zip,
+            },
           };
           setIsEditingAddress(false);
           break;
-        case 'contact':
+        case "contact":
           dataToUpdate = {
             cellPhoneNumber: profileData.cellPhoneNumber,
-            workPhoneNumber: profileData.workPhoneNumber
+            workPhoneNumber: profileData.workPhoneNumber,
           };
           setIsEditingContact(false);
           break;
-        case 'employment':
+        case "employment":
           dataToUpdate = {
             citizenship: {
               visaStatus: profileData.citizenship.visaStatus,
               startDate: profileData.citizenship.startDate,
-              endDate: profileData.citizenship.endDate
-            }
+              endDate: profileData.citizenship.endDate,
+            },
           };
           setIsEditingEmployment(false);
           break;
-        case 'emergency':
+        case "emergency":
           dataToUpdate = {
-            emergencyContacts: profileData.emergencyContacts
+            emergencyContacts: profileData.emergencyContacts,
           };
           setIsEditingEmergency(false);
           break;
@@ -119,11 +187,11 @@ export default function Profile() {
           break;
       }
 
-      const response = await axiosInstance.put('/employee/info', dataToUpdate);
-      setProfileData(response.data); 
+      const response = await axiosInstance.put("/employee/info", dataToUpdate);
+      setProfileData(response.data);
     } catch (error) {
-      console.error('Error updating profile:', error.message);
-      setError('Failed to update profile');
+      console.error("Error updating profile:", error.message);
+      setError("Failed to update profile");
     }
   };
 
@@ -152,285 +220,370 @@ export default function Profile() {
   };
 
   const profilePageStyle = {
-    maxWidth: '600px',
-    margin: '0 auto',
-    padding: '20px',
-    textAlign: 'left'
+    maxWidth: "600px",
+    margin: "0 auto",
+    padding: "20px",
+    textAlign: "left",
   };
-
-
-  const inputStyle = (isEditing) => ({
-    border: isEditing ? '1px solid #ccc' : 'none',
-    backgroundColor: isEditing ? 'white' : 'transparent',
-  });
 
   return (
     <div className="profile-page" style={profilePageStyle}>
       <h1>Personal Information</h1>
 
       {/* Name Section */}
-      <section className="profile-section">
-        <h2>Name</h2>
-        <div className="profile-field">
-          <label>First Name:</label>
-          <input 
-            type="text" 
-            disabled={!isEditingName} 
-            defaultValue={profileData.firstName} 
-            style={inputStyle(isEditingName)} 
-          />
-        </div>
-        <div className="profile-field">
-          <label>Middle Name:</label>
-          <input 
-            type="text" 
-            disabled={!isEditingName} 
-            defaultValue={profileData.middleName} 
-            style={inputStyle(isEditingName)} 
-          />
-        </div>
-        <div className="profile-field">
-          <label>Last Name:</label>
-          <input 
-            type="text" 
-            disabled={!isEditingName} 
-            defaultValue={profileData.lastName} 
-            style={inputStyle(isEditingName)}
-          />
-        </div>
-        <div className="profile-field">
-          <label>Preferred Name:</label>
-          <input 
-            type="text" 
-            disabled={!isEditingName} 
-            defaultValue={profileData.preferredName} 
-            style={inputStyle(isEditingName)} 
-          />
-        </div>
-        <div className="profile-field">
-          <label>Profile Picture:</label>          
-          {!isEditingName && <img src={`/${profileData.profilePicture}`} alt="Profile" />}
-          {isEditingName && <input type="file" />}
-        </div>
-        <div className="profile-field">
-          <label>Email:</label>
-          <input 
-            type="email" 
-            disabled={!isEditingName} 
-            defaultValue={profileData.userId.email} 
-            style={inputStyle(isEditingName)} 
-          />
-        </div>
-        <div className="profile-field">
-          <label>SSN:</label>
-          <input 
-            type="text" 
-            disabled={!isEditingName} 
-            defaultValue={profileData.ssn} 
-            style={inputStyle(isEditingName)}
-          />
-        </div>
-        <div className="profile-field">
-          <label>Date of Birth:</label>
-          <input 
-            type="date" 
-            disabled={!isEditingName} 
-            defaultValue={new Date(profileData.dateOfBirth).toISOString().split('T')[0]} 
-            style={inputStyle(isEditingName)}
-          />
-        </div>
-        <div className="profile-field">
-          <label>Gender:</label>
-          <select 
-            disabled={!isEditingName} 
-            defaultValue={profileData.gender}
-            style={inputStyle(isEditingName)}
-          >
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-            <option value="Other">Other</option>
-          </select>
-        </div>
-        {isEditingName ? (
-          <>
-            <button onClick={() => handleCancelClick('name')}>Cancel</button>
-            <button onClick={() => handleSaveClick('name')}>Save</button>
-          </>
-        ) : (
-          <button onClick={() => handleEditClick('name')}>Edit</button>
-        )}
-      </section>
+      <Accordion className="profile-section" defaultExpanded>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="name-panel"
+        >
+          Name
+        </AccordionSummary>
+        <AccordionDetails>
+          <div className={styles.profileField}>
+            <label>First Name:</label>
+            <TextField
+              type="text"
+              disabled={!isEditingName}
+              defaultValue={profileData.firstName}
+            />
+          </div>
+          <div className={styles.profileField}>
+            <label>Middle Name:</label>
+            <TextField
+              type="text"
+              disabled={!isEditingName}
+              defaultValue={profileData.middleName}
+            />
+          </div>
+          <div className={styles.profileField}>
+            <label>Last Name:</label>
+            <TextField
+              type="text"
+              disabled={!isEditingName}
+              defaultValue={profileData.lastName}
+            />
+          </div>
+          <div className={styles.profileField}>
+            <label>Preferred Name:</label>
+            <TextField
+              type="text"
+              disabled={!isEditingName}
+              defaultValue={profileData.preferredName}
+            />
+          </div>
+          <div className={styles.profileField}>
+            <label>Profile Picture:</label>
+            {!isEditingName && (
+              <img src={`/${profileData.profilePicture}`} alt="Profile" />
+            )}
+            {isEditingName && <input type="file" />}
+          </div>
+          <div className={styles.profileField}>
+            <label>Email:</label>
+            <TextField
+              type="email"
+              disabled={!isEditingName}
+              defaultValue={profileData.userId.email}
+            />
+          </div>
+          <div className={styles.profileField}>
+            <label>SSN:</label>
+            <TextField
+              type="text"
+              disabled={!isEditingName}
+              defaultValue={profileData.ssn}
+            />
+          </div>
+          <div className={styles.profileField}>
+            <label>Date of Birth:</label>
+            <TextField
+              type="date"
+              disabled={!isEditingName}
+              defaultValue={
+                new Date(profileData.dateOfBirth).toISOString().split("T")[0]
+              }
+            />
+          </div>
+          <div className={styles.profileField}>
+            <label>Gender:</label>
+            <Select disabled={!isEditingName} defaultValue={profileData.gender}>
+              <MenuItem value="Male">Male</MenuItem>
+              <MenuItem value="Female">Female</MenuItem>
+              <MenuItem value="Other">Other</MenuItem>
+            </Select>
+          </div>
+          <AccordionActions>
+            {isEditingName ? (
+              <>
+                <Button
+                  onClick={() => handleCancelClick("name")}
+                  color={"error"}
+                >
+                  Cancel
+                </Button>
+                <Button onClick={() => handleSaveClick("name")}>Save</Button>
+              </>
+            ) : (
+              <Button onClick={() => handleEditClick("name")}>Edit</Button>
+            )}
+          </AccordionActions>
+        </AccordionDetails>
+      </Accordion>
 
       {/* Address Section */}
-      <section className="profile-section">
-        <h2>Address</h2>
-        <div className="profile-field">
-          <label>Street:</label>
-          <input 
-            type="text" 
-            disabled={!isEditingAddress} 
-            defaultValue={profileData.address.street} 
-            style={inputStyle(isEditingAddress)} 
-          />
-        </div>
-        <div className="profile-field">
-          <label>City:</label>
-          <input 
-            type="text" 
-            disabled={!isEditingAddress} 
-            defaultValue={profileData.address.city} 
-            style={inputStyle(isEditingAddress)} 
-          />
-        </div>
-        <div className="profile-field">
-          <label>State:</label>
-          <input 
-            type="text" 
-            disabled={!isEditingAddress} 
-            defaultValue={profileData.address.state} 
-            style={inputStyle(isEditingAddress)} 
-          />
-        </div>
-        <div className="profile-field">
-          <label>Zip:</label>
-          <input 
-            type="text" 
-            disabled={!isEditingAddress} 
-            defaultValue={profileData.address.zip} 
-            style={inputStyle(isEditingAddress)} 
-          />
-        </div>
-        {isEditingAddress ? (
-          <>
-            <button onClick={() => handleCancelClick('address')}>Cancel</button>
-            <button onClick={() => handleSaveClick('address')}>Save</button>
-          </>
-        ) : (
-          <button onClick={() => handleEditClick('address')}>Edit</button>
-        )}
-      </section>
+      <Accordion className="profile-section">
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="address-panel"
+        >
+          Address
+        </AccordionSummary>
+        <AccordionDetails>
+          <div className={styles.profileField}>
+            <label>Street:</label>
+            <TextField
+              type="text"
+              disabled={!isEditingAddress}
+              defaultValue={profileData.address?.street}
+            />
+          </div>
+          <div className={styles.profileField}>
+            <label>City:</label>
+            <TextField
+              type="text"
+              disabled={!isEditingAddress}
+              defaultValue={profileData.address?.city}
+            />
+          </div>
+          <div className={styles.profileField}>
+            <label>State:</label>
+            <TextField
+              type="text"
+              disabled={!isEditingAddress}
+              defaultValue={profileData.address?.state}
+            />
+          </div>
+          <div className={styles.profileField}>
+            <label>Zip:</label>
+            <TextField
+              type="text"
+              disabled={!isEditingAddress}
+              defaultValue={profileData.address?.zip}
+            />
+          </div>
+          <AccordionActions>
+            {isEditingAddress ? (
+              <>
+                <Button
+                  onClick={() => handleCancelClick("address")}
+                  color="error"
+                >
+                  Cancel
+                </Button>
+                <Button onClick={() => handleSaveClick("address")}>Save</Button>
+              </>
+            ) : (
+              <Button onClick={() => handleEditClick("address")}>Edit</Button>
+            )}
+          </AccordionActions>
+        </AccordionDetails>
+      </Accordion>
 
       {/* Contact Info Section */}
-      <section className="profile-section">
-        <h2>Contact Info</h2>
-        <div className="profile-field">
-          <label>Cell Phone Number:</label>
-          <input 
-            type="text" 
-            disabled={!isEditingContact} 
-            defaultValue={profileData.cellPhoneNumber} 
-            style={inputStyle(isEditingContact)} 
-          />
-        </div>
-        <div className="profile-field">
-          <label>Work Phone Number:</label>
-          <input 
-            type="text" 
-            disabled={!isEditingContact} 
-            defaultValue={profileData.workPhoneNumber} 
-            style={inputStyle(isEditingContact)} 
-          />
-        </div>
-        {isEditingContact ? (
-          <>
-            <button onClick={() => handleCancelClick('contact')}>Cancel</button>
-            <button onClick={() => handleSaveClick('contact')}>Save</button>
-          </>
-        ) : (
-          <button onClick={() => handleEditClick('contact')}>Edit</button>
-        )}
-      </section>
+      <Accordion className="profile-section">
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="contact-panel"
+        >
+          Contact Info
+        </AccordionSummary>
+        <AccordionDetails>
+          <div className={styles.profileField}>
+            <label>Cell Phone Number:</label>
+            <TextField
+              type="text"
+              disabled={!isEditingContact}
+              defaultValue={profileData.cellPhoneNumber}
+            />
+          </div>
+          <div className={styles.profileField}>
+            <label>Work Phone Number:</label>
+            <TextField
+              type="text"
+              disabled={!isEditingContact}
+              defaultValue={profileData.workPhoneNumber}
+            />
+          </div>
+          <AccordionActions>
+            {isEditingContact ? (
+              <>
+                <Button
+                  onClick={() => handleCancelClick("contact")}
+                  color="error"
+                >
+                  Cancel
+                </Button>
+                <Button onClick={() => handleSaveClick("contact")}>Save</Button>
+              </>
+            ) : (
+              <Button onClick={() => handleEditClick("contact")}>Edit</Button>
+            )}
+          </AccordionActions>
+        </AccordionDetails>
+      </Accordion>
 
       {/* Employment Section */}
-      <section className="profile-section">
-        <h2>Employment</h2>
-        <div className="profile-field">
-          <label>Visa Status:</label>
-          <input 
-            type="text" 
-            disabled={!isEditingEmployment} 
-            defaultValue={profileData.citizenship.visaStatus} 
-            style={inputStyle(isEditingEmployment)}
-          />
-        </div>
-        <div className="profile-field">
-          <label>Start Date:</label>
-          <input 
-            type="date" 
-            disabled={!isEditingEmployment} 
-            defaultValue={new Date(profileData.citizenship.startDate).toISOString().split('T')[0]} 
-            style={inputStyle(isEditingEmployment)} 
-          />
-        </div>
-        <div className="profile-field">
-          <label>End Date:</label>
-          <input 
-            type="date" 
-            disabled={!isEditingEmployment} 
-            defaultValue={new Date(profileData.citizenship.endDate).toISOString().split('T')[0]} 
-            style={inputStyle(isEditingEmployment)} 
-          />
-        </div>
-        {isEditingEmployment ? (
-          <>
-            <button onClick={() => handleCancelClick('employment')}>Cancel</button>
-            <button onClick={() => handleSaveClick('employment')}>Save</button>
-          </>
-        ) : (
-          <button onClick={() => handleEditClick('employment')}>Edit</button>
-        )}
-      </section>
+      <Accordion className="profile-section">
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="employment-panel"
+        >
+          Employment
+        </AccordionSummary>
+        <AccordionDetails>
+          <div className={styles.profileField}>
+            <label>Visa Status:</label>
+            <TextField
+              type="text"
+              disabled={!isEditingEmployment}
+              defaultValue={profileData.citizenship?.visaStatus}
+            />
+          </div>
+          <div className={styles.profileField}>
+            <label>Start Date:</label>
+            <TextField
+              type="date"
+              disabled={!isEditingEmployment}
+              defaultValue={
+                new Date(profileData.citizenship?.startDate)
+                  .toISOString()
+                  .split("T")[0]
+              }
+            />
+          </div>
+          <div className={styles.profileField}>
+            <label>End Date:</label>
+            <TextField
+              type="date"
+              disabled={!isEditingEmployment}
+              defaultValue={
+                new Date(profileData.citizenship.endDate)
+                  .toISOString()
+                  .split("T")[0]
+              }
+            />
+          </div>
+          <AccordionActions>
+            {isEditingEmployment ? (
+              <>
+                <Button
+                  onClick={() => handleCancelClick("employment")}
+                  color="error"
+                >
+                  Cancel
+                </Button>
+                <Button onClick={() => handleSaveClick("employment")}>
+                  Save
+                </Button>
+              </>
+            ) : (
+              <Button onClick={() => handleEditClick("employment")}>
+                Edit
+              </Button>
+            )}
+          </AccordionActions>
+        </AccordionDetails>
+      </Accordion>
 
       {/* Emergency Contact Section */}
-      <section className="profile-section">
-        <h2>Emergency Contact</h2>
-        {profileData.emergencyContacts.map((contact, index) => (
-          <Emergency
-            key={index}
-            contact={contact}
-            isEditing={isEditingEmergency}
-            onEdit={() => handleEditEmergencyContact(index)}
-            onSave={handleSaveEmergencyContact}
-            onCancel={handleCancelEmergencyContact}
-            inputStyle={inputStyle}
-          />
-        ))}
-      </section>
+      <Accordion className="profile-section">
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="emergency-panel"
+        >
+          Emergency Contact
+        </AccordionSummary>
+        <AccordionDetails>
+          {profileData.emergencyContacts?.map((contact, index) => (
+            <Emergency
+              key={index}
+              contact={contact}
+              isEditing={isEditingEmergency}
+              onEdit={() => handleEditEmergencyContact(index)}
+              onSave={handleSaveEmergencyContact}
+              onCancel={handleCancelEmergencyContact}
+            />
+          ))}
+        </AccordionDetails>
+      </Accordion>
 
       {/* Documents Section */}
-      <section className="profile-section">
-        <h2>Documents</h2>
+      <Accordion className="profile-section">
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="document-panel"
+        >
+          Documents
+        </AccordionSummary>
+        <AccordionDetails>
+          {/* Driver's License */}
+          <div className={styles.profileField}>
+            <label>Driver&apos;s License:</label>
+            {profileData.driverLicense?.licenseCopy ? (
+              <>
+                <Button
+                  onClick={() =>
+                    window.open(
+                      `/${profileData.driverLicense?.licenseCopy}`,
+                      "_blank"
+                    )
+                  }
+                >
+                  Preview
+                </Button>
+                <a
+                  href={`/${profileData.driverLicense?.licenseCopy}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Download
+                </a>
+              </>
+            ) : (
+              <span>No document available</span>
+            )}
+          </div>
 
-        {/* Driver's License */}
-        <div className="profile-field">
-          <label>Driver's License:</label>
-          {profileData.driverLicense.licenseCopy ? (
-            <>
-              <button onClick={() => window.open(`/${profileData.driverLicense.licenseCopy}`, '_blank')}>Preview</button>
-              <a href={`/${profileData.driverLicense.licenseCopy}`} target="_blank" rel="noopener noreferrer">Download</a>
-            </>
-          ) : (
-            <span>No document available</span>
-          )}
-        </div>
-
-        {/* Other Documents */}
-        {Object.entries(profileData.citizenship.optDocument)
-          .filter(([key]) => key !== '_id' && key !== 'userid' && key !== '__v') // 过滤掉不需要的字段
-          .map(([key, doc]) => (
-            <div className="profile-field" key={key}>
-              <label>{key.replace(/([A-Z])/g, ' $1')}:</label>
-              {doc.name ? (
-                <>
-                  <button onClick={() => window.open(`/${doc.name}`, '_blank')}>Preview</button>
-                  <a href={`/${doc.name}`} target="_blank" rel="noopener noreferrer">Download</a>                  
-                </>
-              ) : (
-                <span>No document available</span>
-              )}
-            </div>
-          ))}
-      </section>
+          {/* Other Documents */}
+          {Object.entries(profileData.citizenship?.optDocument)
+            .filter(
+              ([key]) => key !== "_id" && key !== "userid" && key !== "__v"
+            ) // 过滤掉不需要的字段
+            .map(([key, doc]) => (
+              <div className={styles.profileField} key={key}>
+                <label>{key.replace(/([A-Z])/g, " $1")}:</label>
+                {doc.name ? (
+                  <>
+                    <Button
+                      onClick={() => window.open(`/${doc.name}`, "_blank")}
+                    >
+                      Preview
+                    </Button>
+                    <a
+                      href={`/${doc.name}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Download
+                    </a>
+                  </>
+                ) : (
+                  <span>No document available</span>
+                )}
+              </div>
+            ))}
+        </AccordionDetails>
+      </Accordion>
     </div>
   );
 }

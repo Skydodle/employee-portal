@@ -9,8 +9,10 @@ import {
 import mockProfile from "../../mock/data";
 // Initial state
 const initialState = {
-  status: null,
-  profile: {},
+  status: { onboardingStatus: "Pending" },
+  profile: {
+    citizenship: {},
+  },
   // profile: {mockProfile},
   loading: false,
   error: null,
