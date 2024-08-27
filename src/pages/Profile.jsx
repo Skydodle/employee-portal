@@ -1,5 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { selectProfilePicture } from "../store";
+import { useSelector, useDispatch } from "react-redux";
 import axiosInstance from "../interceptors/axiosInstance";
+import { getProfilePictureUrl } from "../store/onBoardingSlice/onBoarding.thunks";
 import Emergency from "../components/Emergency";
 import styles from "./Profile.module.css";
 import {
@@ -69,7 +72,11 @@ const mockData = {
 };
 
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import UploadAvatar from "../components/UploadAvatar";
 export default function Profile() {
+  const dispatch = useDispatch();
+  const profilePicture = useSelector(selectProfilePicture);
+
   const [isEditingName, setIsEditingName] = useState(false);
   const [isEditingAddress, setIsEditingAddress] = useState(false);
   const [isEditingContact, setIsEditingContact] = useState(false);
@@ -84,7 +91,9 @@ export default function Profile() {
     const fetchProfileData = async () => {
       try {
         const response = await axiosInstance.get("/employee/info");
+        // const response = { data: mockData };
         setProfileData(response.data);
+        dispatch(getProfilePictureUrl(response.data.profilePicture));
         setLoading(false);
       } catch (err) {
         setError(err.message);
@@ -219,19 +228,12 @@ export default function Profile() {
     setIsEditingEmergency(false);
   };
 
-  const profilePageStyle = {
-    maxWidth: "600px",
-    margin: "0 auto",
-    padding: "20px",
-    textAlign: "left",
-  };
-
   return (
-    <div className="profile-page" style={profilePageStyle}>
+    <div className={styles.page}>
       <h1>Personal Information</h1>
-
+      <UploadAvatar />
       {/* Name Section */}
-      <Accordion className="profile-section" defaultExpanded>
+      <Accordion className={styles.profileSection} defaultExpanded>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="name-panel"
@@ -331,7 +333,7 @@ export default function Profile() {
       </Accordion>
 
       {/* Address Section */}
-      <Accordion className="profile-section">
+      <Accordion className={styles.profileSection}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="address-panel"
@@ -390,7 +392,7 @@ export default function Profile() {
       </Accordion>
 
       {/* Contact Info Section */}
-      <Accordion className="profile-section">
+      <Accordion className={styles.profileSection}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="contact-panel"
@@ -433,7 +435,7 @@ export default function Profile() {
       </Accordion>
 
       {/* Employment Section */}
-      <Accordion className="profile-section">
+      <Accordion className={styles.profileSection}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="employment-panel"
@@ -496,7 +498,7 @@ export default function Profile() {
       </Accordion>
 
       {/* Emergency Contact Section */}
-      <Accordion className="profile-section">
+      <Accordion className={styles.profileSection}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="emergency-panel"
@@ -518,7 +520,7 @@ export default function Profile() {
       </Accordion>
 
       {/* Documents Section */}
-      <Accordion className="profile-section">
+      <Accordion className={styles.profileSection}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="document-panel"
